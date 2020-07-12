@@ -1,8 +1,19 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
+import { MaterialModule } from './material/material.module';
+import { UserModule } from './user/user.module';
+import { CommonModule } from './common/common.module';
+import { GeneralModule } from './general/general.module';
+
+
+
 
 @NgModule({
   declarations: [
@@ -10,7 +21,14 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    FormsModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    RouterModule,
+    MaterialModule,
+    UserModule,
+    CommonModule,
+    GeneralModule
   ],
   providers: [],
   bootstrap: [AppComponent]

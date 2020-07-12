@@ -1,0 +1,19 @@
+<div>
+    <a *ngIf="!currentUserName" [routerLink]="['./login']">Login</a>
+    <div *ngIf="currentUserName">
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+                <mat-icon>info</mat-icon>
+                <span>Profile</span>
+            </button>
+            <button mat-menu-item (click)="handleLogout()">
+                <mat-icon>subdirectory_arrow_left</mat-icon>
+                <span>Logout</span>
+            </button>
+        </mat-menu>
+        <span>{{currentUserName}}</span>
+    </div>
+</div>
