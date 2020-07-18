@@ -1,0 +1,33 @@
+<div class="vertical-form">
+    <h2> Create Your Credentials:</h2>
+    <form class="vertical-form" [formGroup]="registerGroup" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <mat-label>User Name</mat-label>
+            <input matInput placeholder="User Name" formControlName="userName">
+            <mat-error *ngIf="!registerGroup.controls['userName'].valid &&  registerGroup.controls['userName'].touched">
+              {{ getErrorUserName() }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Password" formControlName="password">
+            <mat-error *ngIf="!registerGroup.controls['password'].valid && registerGroup.controls['password'].touched">
+              {{ getErrorPassword() }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Confirm Password" formControlName="confirmPassword">
+            <mat-error *ngIf="!registerGroup.controls['confirmPassword'].valid && registerGroup.controls['confirmPassword'].touched">
+              {{ getErrorConfirmPassword() }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput placeholder="Email Address" formControlName="emailAddress">
+          <mat-error *ngIf="!registerGroup.controls['emailAddress'].valid && registerGroup.controls['emailAddress'].touched">
+            {{ getErrorEmailAddress() }}
+          </mat-error>
+      </mat-form-field>
+      <div>
+            <button mat-raised-button color="primary" type="submit" class="button" [disabled]="!registerGroup.valid">Register</button>
+        </div>
+    </form>
+</div>

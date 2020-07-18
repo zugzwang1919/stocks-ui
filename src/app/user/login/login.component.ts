@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { LoginService } from './login.service';
+import { UserService } from '../user.service';
 import { LoginResponse } from './login-response';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService } from 'src/app/general/alert/alert.service';
+import { CurrentUserService } from '../current-user/current-user.service';
 
 @Component({
   selector: 'app-login',
@@ -17,8 +18,9 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
+    private currentUserService: CurrentUserService,
     private formBuilder: FormBuilder,
-    private loginService: LoginService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private router: Router
     ) { }
@@ -38,13 +40,20 @@ export class LoginComponent implements OnInit {
     this.alertService.clear();
 
     // Call the login service & try to login
-    this.loginService.login(this.loginGroup.get('userName').value, this.loginGroup.get('password').value)
+    const userName: string = this.loginGroup.get('userName').value;
+    this.userService.login(userName, this.loginGroup.get('password').value)
       .subscribe(
-        // If this goes well, for now, navigate to the home page
-        success =>  this.router.navigate([this.futureUrl]),
-        // If this goes poorly, indicate that
+
+        lr  =>  {
+          // If this goes well...
+          // Set the current user
+          this.currentUserService.setCurrentUser(userName, lr.token);
+          // and navigate to the appropriate page
+          this.router.navigate([this.futureUrl]);
+        },
+          // If this goes poorly, indicate that
         error => {
-          this.alertService.error('The user name / password combination was not valid.');
+          this.alertService.error(error);
         }
       );
   }

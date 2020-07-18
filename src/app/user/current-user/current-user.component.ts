@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { CurrentUserService } from './current-user.service';
-import { LoginService } from '../login/login.service';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'app-current-user',
@@ -16,7 +16,7 @@ export class CurrentUserComponent implements OnInit {
 
   constructor(
     private currentUserService: CurrentUserService,
-    private loginService: LoginService
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -25,8 +25,7 @@ export class CurrentUserComponent implements OnInit {
   }
 
   handleLogout() {
-    alert('We got the logout request!');
-    this.loginService.logout();
+    this.userService.logout();
   }
 
 }

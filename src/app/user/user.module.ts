@@ -5,12 +5,14 @@ import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { MaterialModule } from '../material/material.module';
 import { CurrentUserComponent } from './current-user/current-user.component';
+import { RegisterComponent } from './register/register.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
-    CurrentUserComponent],
+    CurrentUserComponent,
+    RegisterComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -20,7 +22,8 @@ import { CurrentUserComponent } from './current-user/current-user.component';
   ],
   exports: [
     CurrentUserComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent
   ]
 })
 export class UserModule { }
