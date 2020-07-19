@@ -59,11 +59,11 @@ export class LoginComponent implements OnInit {
   }
 
   getErrorUserName(): string {
-    return this.loginGroup.controls['userName'].hasError('required') ? 'You must provide a user name.' : '';
+    return this.loginGroup.get('userName').hasError('required') ? 'You must provide a user name.' : '';
   }
 
   getErrorPassword(): string {
-    return this.loginGroup.controls['password'].hasError('required') ? 'You must provide a password.' : '';
+    return this.loginGroup.get('password').hasError('required') ? 'You must provide a password.' : '';
   }
 
 }
