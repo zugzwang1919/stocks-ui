@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, AbstractControl, FormControl, FormBuilder, Validators, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError } from 'rxjs/operators';
 
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { UserService } from '../user.service';
-import { compileFactoryFunction } from '@angular/compiler';
+import { CurrentUserService } from '../current-user/current-user.service';
+import { LoginResponse } from '../login/login-response';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +21,8 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private currentUserService: CurrentUserService
   ) { }
 
   ngOnInit(): void {
@@ -39,13 +40,27 @@ export class RegisterComponent implements OnInit {
     this.alertService.clear();
 
     // Call the user service to register this new user
-    this.userService.register(this.registerGroup.get('userName').value,
-                              this.registerGroup.get('password').value,
+    const userName: string = this.registerGroup.get('userName').value;
+    const password: string = this.registerGroup.get('password').value;
+    this.userService.register(userName,
+                              password,
                               this.registerGroup.get('emailAddress').value)
       .subscribe(
-        // If this goes well, for now, navigate to the login page
-        success =>  this.router.navigate(['/login']),
-        // If this goes poorly, indicate that
+        // If this goes well, login the user and then navigate to the welcome page
+        success =>  {
+          this.userService.login(userName, password)
+            .subscribe(
+              (lr: LoginResponse) => {
+                // Set the current user
+                this.currentUserService.setCurrentUser(userName, lr.token);
+                // Navigate to the welcome page
+                this.router.navigate(['/welcome']);
+              },
+              // If the login goes poorly (highly unlikely), then make something up
+              error => this.alertService.error('An unexpected error occured when logging in the new user.')
+            );
+        },
+        // If the registration goes poorly, show the error
         error => {
           this.alertService.error(error);
         }
