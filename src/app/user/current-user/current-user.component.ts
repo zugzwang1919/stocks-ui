@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { CurrentUserService } from './current-user.service';
@@ -16,6 +17,7 @@ export class CurrentUserComponent implements OnInit {
 
   constructor(
     private currentUserService: CurrentUserService,
+    private router: Router,
     private userService: UserService
   ) {}
 
@@ -26,6 +28,8 @@ export class CurrentUserComponent implements OnInit {
 
   handleLogout() {
     this.userService.logout();
+    // Navigate to the Welcome screen
+    this.router.navigate(['/welcome']);
   }
 
 }

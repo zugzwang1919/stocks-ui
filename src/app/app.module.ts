@@ -8,9 +8,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { MaterialModule } from './material/material.module';
-import { UserModule } from './user/user.module';
 import { CommonModule } from './common/common.module';
 import { GeneralModule } from './general/general.module';
+import { UserModule } from './user/user.module';
+import { TickerModule } from './ticker/ticker.module';
 
 
 
@@ -26,9 +27,10 @@ import { GeneralModule } from './general/general.module';
     BrowserAnimationsModule,
     RouterModule,
     MaterialModule,
-    UserModule,
     CommonModule,
-    GeneralModule
+    GeneralModule,
+    UserModule,
+    TickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

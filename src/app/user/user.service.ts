@@ -40,16 +40,12 @@ export class UserService {
       };
       return this.wolfeHttp.post(registerUrl, null, body)
         .pipe(
-          catchError(this.handleRegisterError)
+          catchError(this.util.handleStandardError)
         );
     }
 
     private handleLoginError(errorResponse: HttpErrorResponse) {
       return throwError('User name and password are not valid.');
-    }
-
-    private handleRegisterError(errorResponse: HttpErrorResponse) {
-        return throwError(errorResponse.error.message);
     }
 
     logout(): void {

@@ -18,7 +18,7 @@ export class WolfeHttpService {
   ) { }
 
   createAppropriateHeaders(): HttpHeaders {
-    const headers = new HttpHeaders();
+    let headers = new HttpHeaders();
     // I thought that I would need to add headers like "Content-Type" and "Accept", but it looks like
     // AngularJS's http implementation is doing all of tha for me.  If I need to add those
     // type of headers, this is the place to do it.
@@ -26,14 +26,15 @@ export class WolfeHttpService {
     // If the user has logged in, add the authorization headers
     const token: string = this.currentUserService.token;
     if (token != null) {
-      headers.append('Authorization', token);
+      headers = headers.append('Authorization', 'Bearer ' + token);
     }
+    const headersHasStuff: boolean = headers.has('Authorization');
     return headers;
   }
 
   get(url) {
     const headers = new HttpHeaders();
-    return this.httpClient.get(url, {
+    return this.httpClient.get<any>(url, {
       headers: this.createAppropriateHeaders()
     });
   }
