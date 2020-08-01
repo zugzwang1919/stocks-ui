@@ -1,13 +1,10 @@
 <mat-toolbar class="mat-elevation-z6" color = "primary">
     <mat-toolbar-row>
         <!-- <button mat-icon-button id="menu" (click)="navService.openNav()">  -->
-        <button mat-icon-button id="menu" class="nav-item nav-link-edit" [routerLink]="['/tickers']">></button>
-                <!--
-        <button mat-icon-button id="menu">
+        <button mat-icon-button id="menu" class="nav-item nav-link-edit" [routerLink]="['/tickers']">
             <mat-icon>menu</mat-icon>
         </button>
-        -->
-        <img src="assets/img/transparent-wolf.png" width="auto" height="80%">
+        <img src="assets/img/transparent-wolf.png" width="auto" height="80%" [routerLink]="['/welcome']">
         <span class="toolbar-spacer">In Search of Alpha</span>
         <app-current-user></app-current-user>
     </mat-toolbar-row>

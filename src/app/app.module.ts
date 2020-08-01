@@ -8,10 +8,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { MaterialModule } from './material/material.module';
-import { CommonModule } from './common/common.module';
+import { WolfeCommonModule } from './wolfe-common/wolfe-common.module';
 import { GeneralModule } from './general/general.module';
 import { UserModule } from './user/user.module';
 import { TickerModule } from './ticker/ticker.module';
+
 
 
 
@@ -27,7 +28,7 @@ import { TickerModule } from './ticker/ticker.module';
     BrowserAnimationsModule,
     RouterModule,
     MaterialModule,
-    CommonModule,
+    WolfeCommonModule,
     GeneralModule,
     UserModule,
     TickerModule

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from '../material/material.module';
 
 import { TickersComponent } from './tickers/tickers.component';
+import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
 
 
 
@@ -11,7 +12,8 @@ import { TickersComponent } from './tickers/tickers.component';
   declarations: [TickersComponent],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    WolfeCommonModule
   ],
   exports: [
     TickersComponent

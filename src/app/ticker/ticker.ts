@@ -1,7 +1,8 @@
-export interface Ticker {
+export class Ticker {
+    id?: number; // Id will not be present when we're creating a ticker
     ticker: string;
     name: string;
     benchmark: boolean;
-    createDate: string;
-    updateDate: string;
+    createDate: Date;
+    updateDate: Date;
 }

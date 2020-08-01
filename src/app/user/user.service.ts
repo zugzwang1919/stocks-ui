@@ -4,8 +4,8 @@ import { Observable, of, Subject, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { LoginResponse } from './login/login-response';
-import { WolfeHttpService } from '../common/wolfe-http.service';
-import { UtilService } from '../common/util.service';
+import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
+import { UtilService } from '../wolfe-common/util.service';
 import { CurrentUserService } from 'src/app/user/current-user/current-user.service';
 import { User } from './user';
 
