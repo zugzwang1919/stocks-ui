@@ -45,8 +45,14 @@ export class TickersComponent implements OnInit, AfterViewInit  {
 
   deleteSelectedTickers() {
     const ticker = this.selection.selected[0];
-    this.alertService.error('You\'re trying to delete ' + ticker.ticker +  ' !');
-    this.updateTickers();
+    this.tickerService.delete(ticker.id)
+      .subscribe(
+        success => {
+            this.alertService.success(ticker.ticker + ' was successfully deleted');
+            this.updateTickers();
+        },
+        error => this.alertService.error(error)
+      );
   }
 
   editSelectedTicker() {
@@ -62,6 +68,8 @@ export class TickersComponent implements OnInit, AfterViewInit  {
           this.dataSource.data = tickers;
           // Indicate that the data in the table has changed
           this.changeDetectorRefs.detectChanges();
+          // Reset the check boxes
+          this.selection = new SelectionModel<Ticker>(true, []);
         },
         // If the registration goes poorly, show the error
         error => this.alertService.error(error)

@@ -17,6 +17,15 @@ export class TickerService {
     private wolfeHttpService: WolfeHttpService
   ) { }
 
+  create(tickerSymbol: string, name: string, isBenchmark: boolean): Observable<Ticker> {
+    const createTickerUrl: string = this.util.buildUrl('/stock');
+    const params = { ticker: tickerSymbol, name, benchmark: isBenchmark};
+    return this.wolfeHttpService.post(createTickerUrl, params, null)
+      .pipe(
+        catchError(this.util.handleStandardError)
+      );
+  }
+
   retrieveAll(): Observable<Ticker[]> {
     const retrieveAllTickersUrl: string = this.util.buildUrl('/stock');
     return  this.wolfeHttpService.get(retrieveAllTickersUrl)

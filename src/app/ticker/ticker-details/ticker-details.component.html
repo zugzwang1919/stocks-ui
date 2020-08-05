@@ -1,0 +1,22 @@
+<div class="vertical-form">
+    <h2> Create a Stock to Track:</h2>
+    <form class="vertical-form" [formGroup]="tickerDetailsGroup" (ngSubmit)="onSubmit()">
+        <mat-form-field>
+            <mat-label>Ticker</mat-label>
+            <input matInput placeholder="Ticker" formControlName="ticker">
+            <mat-error *ngIf="!tickerDetailsGroup.controls['ticker'].valid &&  tickerDetailsGroup.controls['ticker'].touched">
+              {{ getErrorTicker() }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <input matInput placeholder="Stock or Mutual Fund Name" formControlName="name">
+            <mat-error *ngIf="!tickerDetailsGroup.controls['name'].valid && tickerDetailsGroup.controls['name'].touched">
+              {{ getErrorName() }}
+            </mat-error>
+        </mat-form-field>
+        <mat-checkbox [formControl]="benchmark">Use as benchmark?</mat-checkbox>
+        <div>
+            <button mat-raised-button color="primary" type="submit" class="ticker-details-button" [disabled]="busy || !tickerDetailsGroup.valid">Create</button>
+        </div>
+    </form>
+</div>

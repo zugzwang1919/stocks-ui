@@ -1,5 +1,5 @@
 <div class="tickers-div">
-    <h2> Stocks You're Tracking</h2>
+    <h2> Stocks, ETFs, & Mutual Funds that You're Tracking</h2>
 
     <div class="scrollable-div mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort >
@@ -50,9 +50,9 @@
         </table>
     </div>
     <div class=tickers-buttons-div>
-        <button mat-raised-button class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="editSelectedTicker()">Edit</button>
-        <button mat-raised-button class="tickers-buttons" [disabled]="!areAnySelected()" (click)="deleteSelectedTickers()">Delete</button>
-        <button mat-raised-button class="tickers-buttons">Create New</button>
+        <button mat-raised-button color="primary" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="editSelectedTicker()">Edit</button>
+        <button mat-raised-button color="primary" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="deleteSelectedTickers()">Delete</button>
+        <button mat-raised-button color="primary" class="tickers-buttons" [routerLink]="['/ticker/create']">Create New</button>
     </div>
 
 
