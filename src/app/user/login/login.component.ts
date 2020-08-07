@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     });
     // Remember where the user wanted to go.  If nowhere send him to the
     // main page ('/') when the login is successful.
-    this.futureUrl = this.route.snapshot.queryParams.returnUrl || '/';
+    this.futureUrl = this.route.snapshot.queryParams.redirectUrl || '/';
   }
 
   onSubmit() {

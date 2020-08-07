@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SelectionModel} from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -25,6 +26,7 @@ export class TickersComponent implements OnInit, AfterViewInit  {
 
 
   constructor(
+    private router: Router,
     private alertService: AlertService,
     private tickerService: TickerService,
     private changeDetectorRefs: ChangeDetectorRef
@@ -44,6 +46,9 @@ export class TickersComponent implements OnInit, AfterViewInit  {
   }
 
   deleteSelectedTickers() {
+    // Before we take any action, clear any error messages that have been previously displayed
+    this.alertService.clear();
+    // There should be exactly one ticker selected to get here
     const ticker = this.selection.selected[0];
     this.tickerService.delete(ticker.id)
       .subscribe(
@@ -56,7 +61,8 @@ export class TickersComponent implements OnInit, AfterViewInit  {
   }
 
   editSelectedTicker() {
-    this.alertService.error('You\'re trying to edit a ticker!');
+    // navigate to the appropriate page
+    this.router.navigate(['/ticker/' + this.selection.selected[0].id]);
   }
 
   updateTickers() {

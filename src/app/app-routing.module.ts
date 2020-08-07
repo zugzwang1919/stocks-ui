@@ -5,14 +5,16 @@ import { MainPageComponent } from './general/main-page/main-page.component';
 import { RegisterComponent } from './user/register/register.component';
 import { TickersComponent } from './ticker/tickers/tickers.component';
 import { TickerDetailsComponent } from './ticker/ticker-details/ticker-details.component';
+import { LoggedInGuard } from './wolfe-common/logged-in.guard';
 
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'user/register', component: RegisterComponent },
   { path: 'welcome', component: MainPageComponent},
-  { path: 'ticker', component: TickersComponent},
-  { path: 'ticker/create', component: TickerDetailsComponent},
+  { path: 'ticker', component: TickersComponent, canActivate: [LoggedInGuard]},
+  { path: 'ticker/create', component: TickerDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'ticker/:id', component: TickerDetailsComponent, canActivate: [LoggedInGuard]},
   { path: '',   redirectTo: '/welcome', pathMatch: 'full' }
 ];
 
