@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup,  Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 import { AlertService } from '../../general/alert/alert.service';
 import { CurrentUserService} from '../../user/current-user/current-user.service';
@@ -44,6 +44,15 @@ export class TickerDetailsComponent implements OnInit {
     // NOTE:  Given the two way binding, all of the controls are set to undefined.
     // NOTE:  Go ahead and set the checkbox to false, the other controls must be touched by the user.
     this.benchmark = new FormControl(false);
+
+    // Set things up so that any ticker will be converted to upper case
+    this.tickerDetailsGroup.get('ticker').valueChanges
+      .pipe(
+        distinctUntilChanged()
+      )
+      .subscribe((value: string) => {
+        this.tickerDetailsGroup.get('ticker').patchValue(value.toUpperCase());
+      });
 
     // If we've received an edit request (i.e., a non-create request)
     if (!this.attemptingToCreate) {
