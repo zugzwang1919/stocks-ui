@@ -22,7 +22,7 @@
         </mat-form-field>
         <mat-form-field>
           <input matInput placeholder="Email Address" formControlName="emailAddress">
-          <mat-error *ngIf="!registerGroup.controls['emailAddress'].valid && registerGroup.controls['emailAddress'].touched">
+          <mat-error *ngIf="!registerGroup.controls['emailAddress'].valid && registerGroup.controls['emailAddress'].touched ">
             {{ getErrorEmailAddress() }}
           </mat-error>
       </mat-form-field>

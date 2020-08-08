@@ -33,6 +33,15 @@ export class RegisterComponent implements OnInit {
       emailAddress: ['', [Validators.required, Validators.email]]
     });
 
+    // In addition to the validation above, whenever the password field changes,
+    // validate the confirmation password.  This handles the situation where one types 'a'
+    // in the password field, 'b' in the confirm field, then changes the password field to 'b'
+    // to match it.
+    this.registerGroup.get('password').valueChanges
+    .subscribe((value: string) => {
+      this.registerGroup.get('confirmPassword').updateValueAndValidity();
+    });
+
   }
 
   onSubmit() {

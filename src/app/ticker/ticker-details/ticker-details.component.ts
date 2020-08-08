@@ -48,7 +48,7 @@ export class TickerDetailsComponent implements OnInit {
     // Set things up so that any ticker will be converted to upper case
     this.tickerDetailsGroup.get('ticker').valueChanges
       .pipe(
-        distinctUntilChanged()
+        distinctUntilChanged()  // NOTE: avoids infinite loop as patchValue below will emit changes
       )
       .subscribe((value: string) => {
         this.tickerDetailsGroup.get('ticker').patchValue(value.toUpperCase());
