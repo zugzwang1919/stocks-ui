@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  serverName: 'wolfe-software.com',
-  serverPort: 1919
+  serverName: '3.94.133.94',
+  serverPort: 8081
 };

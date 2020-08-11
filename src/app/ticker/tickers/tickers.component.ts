@@ -15,10 +15,8 @@ import { AlertService } from 'src/app/general/alert/alert.service';
 })
 export class TickersComponent implements OnInit, AfterViewInit  {
 
-  initialData: Ticker[] = [{ticker: 'AAPL', name: 'Apple', benchmark: false, createDate: new Date(), updateDate: new Date() },
-                            {ticker: 'GOOG', name: 'Google', benchmark: false, createDate: new Date(), updateDate: new Date() }  ];
-
-  dataSource =  new MatTableDataSource<Ticker>(this.initialData);
+  initialData: Ticker[] = [];
+  dataSource = new MatTableDataSource<Ticker>(this.initialData);
   selection = new SelectionModel<Ticker>(true, []);
   displayedColumns: string[] = ['select', 'ticker', 'name', 'benchmark', 'createDate', 'updateDate'];
 

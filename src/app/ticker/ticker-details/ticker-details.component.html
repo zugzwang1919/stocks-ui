@@ -1,8 +1,8 @@
 <div class="vertical-form">
     <h2>
-        <span *ngIf="attemptingToCreate; else update">Create a Stock to Track</span>
+        <span *ngIf="attemptingToCreate; else update">Track a New Stock, ETF, or Mutual Fund </span>
         <ng-template #update>
-            Modify a Stock that You're Tracking
+            Modify a Stock, ETF or Mutual Fund that You're Tracking
         </ng-template>
     </h2>
     <form class="vertical-form" [formGroup]="tickerDetailsGroup" (ngSubmit)="onSubmit()">
