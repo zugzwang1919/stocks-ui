@@ -9,6 +9,7 @@ import { BottomOfPageComponent } from './bottom-of-page/bottom-of-page.component
 import { MainPageComponent } from './main-page/main-page.component';
 import { TopOfPageComponent } from './top-of-page/top-of-page.component';
 import { AlertComponent } from './alert/alert.component';
+import { MenuComponent } from './menu/menu.component';
 
 
 
@@ -18,7 +19,8 @@ import { AlertComponent } from './alert/alert.component';
     AlertComponent,
     BottomOfPageComponent,
     MainPageComponent,
-    TopOfPageComponent
+    TopOfPageComponent,
+    MenuComponent
   ],
   imports: [
     CommonModule,

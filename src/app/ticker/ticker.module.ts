@@ -8,7 +8,6 @@ import { MaterialModule } from '../material/material.module';
 import { TickersComponent } from './tickers/tickers.component';
 import { TickerDetailsComponent } from './ticker-details/ticker-details.component';
 
-import { GeneralModule } from '../general/general.module';
 import { UserModule } from '../user/user.module';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
 
@@ -22,7 +21,6 @@ import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
   imports: [
     CommonModule,
     FormsModule,
-    GeneralModule,
     MaterialModule,
     UserModule,
     ReactiveFormsModule,

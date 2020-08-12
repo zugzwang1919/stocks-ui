@@ -1,0 +1,45 @@
+
+<button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Button which will drop down menu for wolfe-software.com">
+    <mat-icon>menu</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+    <button routerLink='/welcome' mat-menu-item>
+        <mat-icon>home</mat-icon>
+        <span>Home</span>
+    </button>
+    <button mat-menu-item disabled>
+        <mat-icon>list</mat-icon>
+        <span>Portoflios</span>
+    </button>
+    <button mat-menu-item [matMenuTriggerFor]="tickers">
+        <mat-icon>trending_up</mat-icon>
+        <span>Stocks Being Tracked</span>
+    </button>
+    <button mat-menu-item disabled>
+        <mat-icon>help</mat-icon>
+        <span>Options</span>
+    </button>
+    <button mat-menu-item disabled>
+        <mat-icon>shopping_cart</mat-icon>
+        <span>Transactions</span>
+    </button>
+    <button mat-menu-item disabled>
+        <mat-icon>attach_money</mat-icon>
+        <span>Calculations</span>
+    </button>
+    <button mat-menu-item disabled>
+        <mat-icon>info</mat-icon>
+        <span>About</span>
+    </button>
+</mat-menu>
+<mat-menu #tickers="matMenu">
+    <button routerLink='/ticker' mat-menu-item>
+        <mat-icon>list</mat-icon>
+        <span>List</span>
+    </button>
+    <button routerLink='/ticker/create' mat-menu-item>
+        <mat-icon>create</mat-icon>
+        <span>Create</span>
+    </button>
+
+  </mat-menu>
