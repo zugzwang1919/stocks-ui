@@ -12,6 +12,7 @@ import { WolfeCommonModule } from './wolfe-common/wolfe-common.module';
 import { GeneralModule } from './general/general.module';
 import { UserModule } from './user/user.module';
 import { TickerModule } from './ticker/ticker.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
 
 
 
@@ -31,7 +32,8 @@ import { TickerModule } from './ticker/ticker.module';
     WolfeCommonModule,
     GeneralModule,
     UserModule,
-    TickerModule
+    TickerModule,
+    PortfolioModule
   ],
   providers: [],
   bootstrap: [AppComponent]

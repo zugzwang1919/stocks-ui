@@ -1,5 +1,5 @@
-<div class="tickers-div">
-    <h2> Stocks, ETFs, & Mutual Funds that You're Tracking</h2>
+<div class="portfolios-div">
+    <h2> Your Portfolios</h2>
 
     <div class="scrollable-div mat-elevation-z8">
         <table mat-table [dataSource]="dataSource" matSort >
@@ -20,39 +20,29 @@
                     </mat-checkbox>
                 </td>
             </ng-container>
-            <!-- Ticker Name Column-->
-            <ng-container matColumnDef="ticker">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ticker </th>
-                <td mat-cell *matCellDef="let ticker"> {{ticker.ticker}} </td>
-            </ng-container>
-            <!-- Company Name Column-->
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Company Name </th>
-                <td mat-cell *matCellDef="let ticker"> {{ticker.name}} </td>
-            </ng-container>
-            <!-- Is this a benchmark? -->
-            <ng-container matColumnDef="benchmark">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>  Benchmark </th>
-                <td mat-cell *matCellDef="let ticker"> {{ticker.benchmark | yesNo}} </td>
+            <!-- Portfolio Name Column-->
+            <ng-container matColumnDef="portfolioName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Portfolio Name </th>
+                <td mat-cell *matCellDef="let portfolio"> {{portfolio.portfolioName}} </td>
             </ng-container>
             <!-- Date of creation -->
             <ng-container matColumnDef="createDate">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>  Created </th>
-                <td mat-cell *matCellDef="let ticker"> {{ticker.createDate | date:'medium' }} </td>
+                <td mat-cell *matCellDef="let portfolio"> {{portfolio.createDate | date:'medium' }} </td>
             </ng-container>
             <!-- Last Updated -->
             <ng-container matColumnDef="updateDate">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>  Last Updated </th>
-                <td mat-cell *matCellDef="let ticker"> {{ticker.updateDate | date:'medium' }} </td>
+                <td mat-cell *matCellDef="let portfolio"> {{portfolio.updateDate | date:'medium' }} </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true" ></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
     <div class=tickers-buttons-div>
-        <button mat-raised-button color="accent" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="editSelectedTicker()">Edit</button>
-        <button mat-raised-button color="warn" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="deleteSelectedTickers()">Delete</button>
-        <button mat-raised-button color="primary" class="tickers-buttons" [routerLink]="['/ticker/create']">Create New</button>
+        <button mat-raised-button color="primary" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="editSelectedPortfolio()">Edit</button>
+        <button mat-raised-button color="warn" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="deleteSelectedPortfolio()">Delete</button>
+        <button mat-raised-button color="primary" class="tickers-buttons" [routerLink]="['/portfolio/create']">Create New</button>
     </div>
 
 
