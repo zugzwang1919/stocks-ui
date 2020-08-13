@@ -12,6 +12,7 @@ export class LoggedInGuard implements CanActivate {
     private currentUserService: CurrentUserService,
     private router: Router
   ) {}
+
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {

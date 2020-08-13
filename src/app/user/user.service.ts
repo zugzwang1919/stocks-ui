@@ -22,30 +22,16 @@ export class UserService {
   ) { }
 
     login(userName: string, password: string): Observable<LoginResponse> {
-
-      const loginUrl: string = this.util.buildUrl('/authenticate');
-      return  this.wolfeHttp.post(loginUrl, {userName, password}, null)
-        .pipe(
-          catchError(this.handleLoginError)
-        );
+      return  this.wolfeHttp.post('/authenticate', {userName, password}, null);
     }
 
     register(userName: string, password: string, emailAddress: string): Observable<User> {
-
-      const registerUrl: string = this.util.buildUrl('/user');
       const body = {
         username: userName,
         password,
         emailaddress: emailAddress
       };
-      return this.wolfeHttp.post(registerUrl, null, body)
-        .pipe(
-          catchError(this.util.handleStandardError)
-        );
-    }
-
-    private handleLoginError(errorResponse: HttpErrorResponse) {
-      return throwError('User name and password are not valid.');
+      return this.wolfeHttp.post('/user', null, body);
     }
 
     logout(): void {

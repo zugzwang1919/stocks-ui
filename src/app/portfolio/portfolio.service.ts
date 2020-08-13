@@ -1,36 +1,22 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
-import { UtilService } from '../wolfe-common/util.service';
-import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
 import { Portfolio } from './portfolio';
-
+import { WolfeRDService } from '../wolfe-common/wolfe-rd';
+import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PortfolioService {
+
+export class PortfolioService extends WolfeRDService<Portfolio> {
 
   constructor(
-    private util: UtilService,
-    private wolfeHttpService: WolfeHttpService
-  ) { }
-
-  retrieveAll(): Observable<Portfolio[]> {
-    const retrieveAllPortfoliosUrl: string = this.util.buildUrl('/portfolio');
-    return  this.wolfeHttpService.get(retrieveAllPortfoliosUrl)
-      .pipe(
-        catchError(this.util.handleStandardError)
-      );
+    wolfeHttpService: WolfeHttpService
+  ) {
+    super(wolfeHttpService, '/portfolio');
   }
 
-  delete(id: number): Observable<any> {
-    const deleteOnePortfolioUrl: string = this.util.buildUrl('/portfolio/' + id);
-    return  this.wolfeHttpService.delete(deleteOnePortfolioUrl)
-      .pipe(
-        catchError(this.util.handleStandardError)
-      );
-  }
+  // NOTE: retrieve(), retrieveAll(), and delete() are picked up
+  //       from the base class
+
 }
