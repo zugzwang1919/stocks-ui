@@ -27,9 +27,15 @@
         <mat-icon>attach_money</mat-icon>
         <span>Calculations</span>
     </button>
-    <button mat-menu-item disabled>
+    <button mat-menu-item [matMenuTriggerFor]="about">
         <mat-icon>info</mat-icon>
         <span>About</span>
+    </button>
+</mat-menu>
+<mat-menu #about="matMenu">
+    <button routerLink='/about/todo' mat-menu-item>
+        <mat-icon>check_circle</mat-icon>
+        <span>To Do</span>
     </button>
 </mat-menu>
 <mat-menu #tickers="matMenu">
@@ -52,3 +58,5 @@
         <span>Create</span>
     </button>
 </mat-menu>
+
+

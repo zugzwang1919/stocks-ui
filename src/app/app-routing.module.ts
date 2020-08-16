@@ -7,10 +7,13 @@ import { PortfolioDetailsComponent } from './portfolio/portfolio-details/portfol
 import { RegisterComponent } from './user/register/register.component';
 import { TickersComponent } from './ticker/tickers/tickers.component';
 import { TickerDetailsComponent } from './ticker/ticker-details/ticker-details.component';
+import { ToDoComponent} from './general/to-do/to-do.component';
 import { LoggedInGuard } from './wolfe-common/logged-in.guard';
+import { generate } from 'rxjs';
 
 
 const routes: Routes = [
+  { path: 'about/todo', component: ToDoComponent },
   { path: 'login', component: LoginComponent },
   { path: 'user/register', component: RegisterComponent },
   { path: 'welcome', component: MainPageComponent},
