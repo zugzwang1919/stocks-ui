@@ -68,7 +68,7 @@ export class TickerDetailsComponent implements OnInit {
           this.tickerDetailsGroup.get('name').setValue(foundTicker.name);
           this.benchmark.setValue(foundTicker.benchmark);
         },
-        // If the registration goes poorly, show the error
+        // If the retrieval goes poorly, show the error
         error => this.alertService.error(error)
       );
 

@@ -47,7 +47,7 @@ export class PortfoliosComponent implements OnInit, AfterViewInit {
     this.portfolioService.delete(portfolio.id)
       .subscribe(
         success => {
-            this.alertService.success(portfolio.id + ' was successfully deleted');
+            this.alertService.success(portfolio.portfolioName + ' was successfully deleted');
             this.updatePortfolios();
         },
         error => this.alertService.error(error)
