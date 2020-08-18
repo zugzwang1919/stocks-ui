@@ -13,6 +13,7 @@ import { GeneralModule } from './general/general.module';
 import { UserModule } from './user/user.module';
 import { TickerModule } from './ticker/ticker.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
+import { TickerTransactionModule } from './ticker-transaction/ticker-transaction.module';
 
 
 
@@ -33,7 +34,8 @@ import { PortfolioModule } from './portfolio/portfolio.module';
     GeneralModule,
     UserModule,
     TickerModule,
-    PortfolioModule
+    PortfolioModule,
+    TickerTransactionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

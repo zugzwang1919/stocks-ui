@@ -7,6 +7,7 @@ import { PortfolioDetailsComponent } from './portfolio/portfolio-details/portfol
 import { RegisterComponent } from './user/register/register.component';
 import { TickersComponent } from './ticker/tickers/tickers.component';
 import { TickerDetailsComponent } from './ticker/ticker-details/ticker-details.component';
+import { TickerTransactionsComponent } from './ticker-transaction/ticker-transactions/ticker-transactions.component';
 import { ToDoComponent} from './general/to-do/to-do.component';
 import { LoggedInGuard } from './wolfe-common/logged-in.guard';
 import { generate } from 'rxjs';
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'ticker', component: TickersComponent, canActivate: [LoggedInGuard]},
   { path: 'ticker/create', component: TickerDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'ticker/:id', component: TickerDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'ticker-transaction', component: TickerTransactionsComponent, canActivate: [LoggedInGuard]},
   { path: '',   redirectTo: '/welcome', pathMatch: 'full' }
 ];
 
