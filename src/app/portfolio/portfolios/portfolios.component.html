@@ -40,8 +40,8 @@
         </table>
     </div>
     <div class=tickers-buttons-div>
-        <button mat-raised-button color="primary" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="editSelectedPortfolio()">Edit</button>
-        <button mat-raised-button color="warn" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="deleteSelectedPortfolio()">Delete</button>
+        <button mat-raised-button color="primary" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="editSelectedItem()">Edit</button>
+        <button mat-raised-button color="warn" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="deleteSelectedItems()">Delete</button>
         <button mat-raised-button color="primary" class="tickers-buttons" [routerLink]="['/portfolio/create']">Create New</button>
     </div>
 

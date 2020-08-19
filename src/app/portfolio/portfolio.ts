@@ -1,6 +1,5 @@
-export class Portfolio {
-    id?: number; // Id will not be present when we're creating a portfolio
+import { WolfeTrackedItem } from '../wolfe-common/wolfe-tracked-item';
+
+export class Portfolio extends WolfeTrackedItem {
     portfolioName: string;
-    createDate?: Date;
-    updateDate?: Date;
 }
