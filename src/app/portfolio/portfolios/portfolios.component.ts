@@ -7,14 +7,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Portfolio } from '../portfolio';
 import { PortfolioService } from '../portfolio.service';
 import { AlertService } from 'src/app/general/alert/alert.service';
-import { WolfeListOfThings } from '../../wolfe-common/wolfe-list-of-things';
+import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list-component';
 
 @Component({
   selector: 'app-portfolios',
   templateUrl: './portfolios.component.html',
   styleUrls: ['./portfolios.component.sass']
 })
-export class PortfoliosComponent extends WolfeListOfThings<Portfolio>  implements OnInit, AfterViewInit {
+export class PortfoliosComponent extends WolfeGenericListComponent<Portfolio>  implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = ['select', 'portfolioName', 'createDate', 'updateDate'];
 

@@ -3,9 +3,9 @@
 // parts of CRUD (Retrieve and Delete)
 import { Observable } from 'rxjs';
 
-import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
+import { WolfeHttpService } from './wolfe-http.service';
 
-export class WolfeRDService<T> {
+export class WolfeGenericService<T> {
 
     constructor(
         protected wolfeHttpService: WolfeHttpService,

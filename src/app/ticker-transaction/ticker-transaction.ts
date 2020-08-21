@@ -1,19 +1,16 @@
 import { Portfolio } from '../portfolio/portfolio';
 import { Ticker } from '../ticker/ticker';
+import { WolfeTrackedItem } from '../wolfe-common/wolfe-tracked-item';
 
 
-export class TickerTransaction {
+export class TickerTransaction extends WolfeTrackedItem {
 
-    id ?: number;
     portfolio: Portfolio;
     date: Date;
     stock: Ticker;
-    activity: TickerTransactionActivity;
+    activity: string;
     tradeSize: number;
     amount: number;
-    createDate?: Date;
-    updateDate?: Date;
-
 
 }
 

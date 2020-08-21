@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { TickerTransactionsComponent } from './ticker-transactions/ticker-transactions.component';
 import { TickerTransactionDetailsComponent } from './ticker-transaction-details/ticker-transaction-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -21,6 +21,10 @@ import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
     ReactiveFormsModule,
     RouterModule,
     WolfeCommonModule
+  ],
+  providers: [
+    CurrencyPipe,
+    DatePipe
   ],
   exports: [
     TickerTransactionsComponent,

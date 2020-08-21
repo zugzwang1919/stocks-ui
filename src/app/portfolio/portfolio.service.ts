@@ -3,14 +3,14 @@ import { Observable } from 'rxjs';
 
 
 import { Portfolio } from './portfolio';
-import { WolfeRDService } from '../wolfe-common/wolfe-rd';
+import { WolfeGenericService } from '../wolfe-common/wolfe-generic-service';
 import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class PortfolioService extends WolfeRDService<Portfolio> {
+export class PortfolioService extends WolfeGenericService<Portfolio> {
 
   constructor(
     wolfeHttpService: WolfeHttpService

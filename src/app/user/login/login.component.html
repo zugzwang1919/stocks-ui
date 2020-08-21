@@ -1,14 +1,14 @@
 <div class="vertical-form">
     <h2> Enter Your Credentials:</h2>
     <form class="vertical-form" [formGroup]="loginGroup" (ngSubmit)="onSubmit()">
-        <mat-form-field>
+        <mat-form-field class="standard-control-width">
             <mat-label>User Name</mat-label>
             <input matInput placeholder="User Name" formControlName="userName">
             <mat-error *ngIf="!loginGroup.controls['userName'].valid &&  loginGroup.controls['userName'].touched">
               {{ getErrorUserName() }}
             </mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="standard-control-width">
             <input matInput placeholder="Password" formControlName="password">
             <mat-error *ngIf="!loginGroup.controls['password'].valid && loginGroup.controls['password'].touched">
               {{ getErrorPassword() }}

@@ -17,7 +17,7 @@
     </button>
     <button mat-menu-item disabled>
         <mat-icon>help</mat-icon>
-        <span>Options</span>
+        <span>Options Being Tracked</span>
     </button>
     <button mat-menu-item [matMenuTriggerFor]="transactions">
         <mat-icon>shopping_cart</mat-icon>
@@ -59,11 +59,31 @@
     </button>
 </mat-menu>
 <mat-menu #transactions="matMenu">
+    <button mat-menu-item [matMenuTriggerFor]="tickerTransactions">
+        <mat-icon>trending_up</mat-icon>
+        <span>Stock Transactions</span>
+    </button>
+    <button mat-menu-item [matMenuTriggerFor]="optionTransactions" disabled>
+        <mat-icon>help</mat-icon>
+        <span>Option Transactions</span>
+    </button>
+</mat-menu>
+<mat-menu #tickerTransactions="matMenu">
     <button routerLink='/ticker-transaction' mat-menu-item>
         <mat-icon>list_alt</mat-icon>
         <span>List</span>
     </button>
     <button routerLink='/ticker-transaction/create' mat-menu-item>
+        <mat-icon>create</mat-icon>
+        <span>Create</span>
+    </button>
+</mat-menu>
+<mat-menu #optionTransactions="matMenu">
+    <button routerLink='/option-transaction' mat-menu-item>
+        <mat-icon>list_alt</mat-icon>
+        <span>List</span>
+    </button>
+    <button routerLink='/option-transaction/create' mat-menu-item>
         <mat-icon>create</mat-icon>
         <span>Create</span>
     </button>

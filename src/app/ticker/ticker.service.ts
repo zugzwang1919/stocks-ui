@@ -4,13 +4,13 @@ import { Observable } from 'rxjs';
 
 import { UtilService } from '../wolfe-common/util.service';
 import { Ticker } from './ticker';
-import { WolfeRDService } from '../wolfe-common/wolfe-rd';
+import { WolfeGenericService } from '../wolfe-common/wolfe-generic-service';
 import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TickerService extends WolfeRDService<Ticker> {
+export class TickerService extends WolfeGenericService<Ticker> {
 
   constructor(
     wolfeHttpService: WolfeHttpService

@@ -6,7 +6,7 @@
         </ng-template>
     </h2>
     <form class="vertical-form" [formGroup]="portfolioDetailsGroup" (ngSubmit)="onSubmit()">
-        <mat-form-field>
+        <mat-form-field class="standard-control-width">
             <mat-label>Portfolio Name</mat-label>
             <input matInput placeholder="Portfolio Name" formControlName="portfolioName" />
             <mat-error *ngIf="!portfolioDetailsGroup.controls['portfolioName'].valid &&  portfolioDetailsGroup.controls['portfolioName'].touched">

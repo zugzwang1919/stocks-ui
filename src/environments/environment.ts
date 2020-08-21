@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  serverName: '3.94.133.94',
+  serverName: 'localhost',
   serverPort: 8081
 };
 

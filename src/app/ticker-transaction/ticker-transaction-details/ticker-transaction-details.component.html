@@ -1,1 +1,73 @@
-<p>ticker-transaction-details works!</p>
+<div class="vertical-form">
+    <h2>
+        <span *ngIf="attemptingToCreate; else update">Create a New Stock, ETF, or Mutual Fund Transaction </span>
+        <ng-template #update>
+            Modify a Stock, ETF, or Mutual Fund Transaction
+        </ng-template>
+    </h2>
+    <form class="vertical-form" [formGroup]="tickerTransactionDetailsGroup" (ngSubmit)="onSubmit()">
+        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+            <mat-label>Transaction Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['date'].valid &&  tickerTransactionDetailsGroup.controls['date'].touched">
+                {{ getErrorDate() }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+            <mat-label>Portfolio Name</mat-label>
+            <mat-select  formControlName="portfolio">
+                <mat-option *ngFor="let portfolio of portfolios" [value]="portfolio.id">
+                    {{portfolio.portfolioName}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['portfolio'].valid &&  tickerTransactionDetailsGroup.controls['portfolio'].touched">
+                {{ getErrorPortfolio() }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+            <mat-label>Ticker Symbol</mat-label>
+            <mat-select  formControlName="ticker">
+                <mat-option *ngFor="let ticker of tickers" [value]="ticker.id">
+                    {{ticker.ticker}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['ticker'].valid &&  tickerTransactionDetailsGroup.controls['ticker'].touched">
+                {{ getErrorTicker() }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+            <mat-label>Buy or Sell</mat-label>
+            <mat-select  formControlName="activity">
+                <mat-option *ngFor="let activity of activities" [value]="activity">
+                    {{activity}}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['activity'].valid &&  tickerTransactionDetailsGroup.controls['activity'].touched">
+                {{ getErrorActivity() }}
+            </mat-error>
+          </mat-form-field>
+        <mat-form-field class="standard-control-width" >
+            <mat-label>Number of Shares</mat-label>
+            <input matInput placeholder="Trade Size" formControlName="tradeSize" />
+            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['tradeSize'].valid &&  tickerTransactionDetailsGroup.controls['tradeSize'].touched">
+              {{ getErrorTradeSize() }}
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field class="standard-control-width" >
+            <input matInput placeholder="Total Amount in Dollars" formControlName="amount" [value]="tickerTransactionDetailsGroup.controls['amount'].value"/>
+            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['amount'].valid &&  tickerTransactionDetailsGroup.controls['amount'].touched">
+                {{ getErrorAmount() }}
+            </mat-error>
+        </mat-form-field>
+        <div>
+            <button mat-raised-button color="primary" type="submit" class="ticker-transaction-details-button" [disabled]="busy || !tickerTransactionDetailsGroup.valid">
+                <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
+                <ng-template #updateButtonText>
+                    Update
+                </ng-template>
+            </button>
+        </div>
+    </form>
+</div>

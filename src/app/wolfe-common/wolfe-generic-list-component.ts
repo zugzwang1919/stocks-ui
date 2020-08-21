@@ -5,10 +5,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { AlertService } from 'src/app/general/alert/alert.service';
-import { WolfeRDService } from './wolfe-rd';
+import { WolfeGenericService } from './wolfe-generic-service';
 import { WolfeTrackedItem } from './wolfe-tracked-item';
 
-export class WolfeListOfThings<T extends WolfeTrackedItem> {
+export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
 
     initialData: T[] = [];
     dataSource = new MatTableDataSource<T>(this.initialData);
@@ -18,7 +18,7 @@ export class WolfeListOfThings<T extends WolfeTrackedItem> {
     constructor(
         protected router: Router,
         protected alertService: AlertService,
-        protected wolfeTrackedItemService: WolfeRDService<T>,
+        protected wolfeTrackedItemService: WolfeGenericService<T>,
         protected changeDetectorRef: ChangeDetectorRef,
         private   beginningOfPath: string,
         private   itemName: ((t: T) => string)

@@ -1,8 +1,7 @@
-export class Ticker {
-    id?: number; // Id will not be present when we're creating a ticker
+import { WolfeTrackedItem } from '../wolfe-common/wolfe-tracked-item';
+
+export class Ticker extends WolfeTrackedItem {
     ticker: string;
     name: string;
     benchmark: boolean;
-    createDate: Date;
-    updateDate: Date;
 }
