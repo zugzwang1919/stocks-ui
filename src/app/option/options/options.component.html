@@ -1,0 +1,59 @@
+<div class="options-div">
+    <h2> Options You are Trading</h2>
+
+    <div class="scrollable-div mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort >
+            <!-- Checkbox Column-->
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox   (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                    [aria-label]="checkboxLabel()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox   (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)"
+                                    [aria-label]="checkboxLabel(row)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            <!-- Option Name Column-->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Option Name </th>
+                <td mat-cell *matCellDef="let option"> {{buildName(option)}} </td>
+            </ng-container>
+            <!-- Ticker Name Column-->
+            <ng-container matColumnDef="stock.ticker">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock </th>
+                <td mat-cell *matCellDef="let option"> {{option.stock.ticker}} </td>
+            </ng-container>
+            <!-- Option Type Column-->
+            <ng-container matColumnDef="optionType">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Option Type </th>
+                <td mat-cell *matCellDef="let option"> {{option.optionType}} </td>
+            </ng-container>
+            <!-- Expiration Date Column-->
+            <ng-container matColumnDef="expirationDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Expiration Date </th>
+                <td mat-cell *matCellDef="let option"> {{option.expirationDate | date:'MM/dd/yyyy' }} </td>
+            </ng-container>
+            <!-- Strike Price Column-->
+            <ng-container matColumnDef="strikePrice">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Strike Price </th>
+                <td mat-cell *matCellDef="let option" class="right-aligned"> {{option.strikePrice | currency}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true" ></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+    <div class=tickers-buttons-div>
+        <button mat-raised-button color="primary" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="editSelectedItem()">Edit</button>
+        <button mat-raised-button color="warn" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="deleteSelectedItems()">Delete</button>
+        <button mat-raised-button color="primary" class="tickers-buttons" [routerLink]="['/portfolio/create']">Create New</button>
+    </div>
+
+
+</div>

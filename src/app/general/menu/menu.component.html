@@ -15,7 +15,7 @@
         <mat-icon>trending_up</mat-icon>
         <span>Stocks Being Tracked</span>
     </button>
-    <button mat-menu-item disabled>
+    <button mat-menu-item [matMenuTriggerFor]="options">
         <mat-icon>help</mat-icon>
         <span>Options Being Tracked</span>
     </button>
@@ -44,6 +44,16 @@
         <span>List</span>
     </button>
     <button routerLink='/ticker/create' mat-menu-item>
+        <mat-icon>create</mat-icon>
+        <span>Create</span>
+    </button>
+</mat-menu>
+<mat-menu #options="matMenu">
+    <button routerLink='/option' mat-menu-item>
+        <mat-icon>list_alt</mat-icon>
+        <span>List</span>
+    </button>
+    <button routerLink='/option/create' mat-menu-item disabled>
         <mat-icon>create</mat-icon>
         <span>Create</span>
     </button>

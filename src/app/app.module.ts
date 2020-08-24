@@ -14,6 +14,8 @@ import { UserModule } from './user/user.module';
 import { TickerModule } from './ticker/ticker.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { TickerTransactionModule } from './ticker-transaction/ticker-transaction.module';
+import { OptionModule } from './option/option.module';
+
 
 
 
@@ -35,7 +37,8 @@ import { TickerTransactionModule } from './ticker-transaction/ticker-transaction
     UserModule,
     TickerModule,
     PortfolioModule,
-    TickerTransactionModule
+    TickerTransactionModule,
+    OptionModule
   ],
   providers: [],
   bootstrap: [AppComponent]
