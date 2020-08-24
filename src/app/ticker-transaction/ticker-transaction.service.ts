@@ -22,23 +22,37 @@ export class TickerTransactionService extends WolfeGenericService<TickerTransact
   // NOTE: retrieve(), retrieveAll(), and delete() are picked up
   //       from the base class
 
-  create(date: Date, portfolioId: number, stockId: boolean, activity: string, tradeSize: string, amount: string | number): Observable<TickerTransaction> {
-    // Massage the data to get it into the correct format
-    const dateString: string = this.datePipe.transform(date, 'yyyy-MM-dd');
-    const amountString: string = amount.toString().replace('$', '').replace(',', '');   // NOTE: using toString() in the event a number is passed in
+  create(date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number): Observable<TickerTransaction> {
     // Build the parameters
-    const params = { date: dateString, portfolioId, stockId, activity, tradeSize, amount: amountString };
+    const params = this.buildParams(undefined, date, portfolioId, stockId, activity, tradeSize, amount);
     // Post the request
     return this.wolfeHttpService.post('/stock-transaction', params, null);
   }
 
-  update(id: number, date: Date, portfolioId: number, stockId: boolean, activity: string, tradeSize: string, amount: string | number): Observable<TickerTransaction> {
-    // Massage the data to get it into the correct format
-    const dateString: string = this.datePipe.transform(date, 'yyyy-MM-dd');
-    const amountString: string = amount.toString().replace('$', '').replace(',', '');   // NOTE: using toString() in the event a number is passed in
+  update(id: number, date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number): Observable<TickerTransaction> {
     // Build the parameters
-    const params = { id, date: dateString, portfolioId, stockId, activity, tradeSize, amount: amountString };
+    const params = this.buildParams(id, date, portfolioId, stockId, activity, tradeSize, amount);
     // Post the request
     return this.wolfeHttpService.post('/stock-transaction/' + id, params, null);
   }
+
+  private buildParams(id: number, date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number) {
+    const params: any = {};
+    if (id) {
+      params.id = id;
+    }
+    params.date = this.datePipe.transform(date, 'yyyy-MM-dd');
+    params.portfolioId = portfolioId;
+    params.stockId = stockId;
+    params.activity = activity;
+    params.tradeSize = tradeSize.toString().replace(',', '');  // NOTE: using toString() in the event a number is passed in
+    params.amount = amount.toString().replace('$', '').replace(',', '');   // NOTE: using toString() in the event a number is passed in
+    return params;
+  }
+
+  // Override so that we can provide a fully functional Ticker object
+  buildFullyFuctionalModel(shallowTickerTransaction: any): TickerTransaction {
+    return new TickerTransaction(shallowTickerTransaction);
+  }
+
 }

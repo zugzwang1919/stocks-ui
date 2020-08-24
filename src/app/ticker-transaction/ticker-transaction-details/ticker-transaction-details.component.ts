@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup,  Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { distinctUntilChanged } from 'rxjs/operators';
 
 import { AlertService } from '../../general/alert/alert.service';
 import { CurrentUserService} from '../../user/current-user/current-user.service';
@@ -11,7 +10,7 @@ import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { Ticker } from '../../ticker/ticker';
 import { TickerService } from 'src/app/ticker/ticker.service';
 import { TickerTransactionService } from '../ticker-transaction.service';
-import { TickerTransaction, TickerTransactionActivity } from '../ticker-transaction';
+
 
 
 

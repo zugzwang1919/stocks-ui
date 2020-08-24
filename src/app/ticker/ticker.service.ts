@@ -31,4 +31,9 @@ export class TickerService extends WolfeGenericService<Ticker> {
     return this.wolfeHttpService.post('/stock/' + id, params, null);
   }
 
+  // Override so that we can provide a fully functional Ticker object
+  buildFullyFuctionalModel(shallowTicker: any): Ticker {
+    return new Ticker(shallowTicker);
+  }
+
 }

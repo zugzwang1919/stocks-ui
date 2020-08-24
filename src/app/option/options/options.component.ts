@@ -33,6 +33,7 @@ export class OptionsComponent extends WolfeGenericListComponent<Option>  impleme
           (o: Option): string => 'The selected option' );
   }
 
+
   buildName(option: Option): string {
       const dayOfMonth: number = +this.datePipe.transform(option.expirationDate, 'dd');
       const dateSubstring: string = dayOfMonth > 14 && dayOfMonth < 22 ?
@@ -41,4 +42,5 @@ export class OptionsComponent extends WolfeGenericListComponent<Option>  impleme
       return option.stock.ticker + ':' +  dateSubstring + ' - ' +
         this.currencyPipe.transform(option.strikePrice) + ' : ' + option.optionType;
   }
+
 }

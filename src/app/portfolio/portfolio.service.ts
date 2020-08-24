@@ -29,4 +29,9 @@ export class PortfolioService extends WolfeGenericService<Portfolio> {
     return this.wolfeHttpService.post('/portfolio/' + id, { portfolioName }, null);
   }
 
+  // Override so that we can provide a fully functional Portfolio object
+  buildFullyFuctionalModel(thinPortfolio: any): Portfolio {
+    return new Portfolio(thinPortfolio);
+  }
+
 }
