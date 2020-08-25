@@ -1,11 +1,11 @@
-<div class="vertical-form">
+<div class="vertical-div">
     <h2>
         <span *ngIf="attemptingToCreate; else update">Create a New Stock, ETF, or Mutual Fund Transaction </span>
         <ng-template #update>
             Modify a Stock, ETF, or Mutual Fund Transaction
         </ng-template>
     </h2>
-    <form class="vertical-form" [formGroup]="tickerTransactionDetailsGroup" (ngSubmit)="onSubmit()">
+    <form class="vertical-div" [formGroup]="tickerTransactionDetailsGroup" (ngSubmit)="onSubmit()">
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">
             <mat-label>Transaction Date</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="date">

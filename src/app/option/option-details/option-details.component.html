@@ -1,11 +1,11 @@
-<div class="vertical-form">
+<div class="vertical-div">
     <h2>
         <span *ngIf="attemptingToCreate; else update">Create a New Option </span>
         <ng-template #update>
             Modify an Option
         </ng-template>
     </h2>
-    <form class="vertical-form" [formGroup]="optionDetailsGroup" (ngSubmit)="onSubmit()">
+    <form class="vertical-div" [formGroup]="optionDetailsGroup" (ngSubmit)="onSubmit()">
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">
             <mat-label>Call or Put</mat-label>
             <mat-select  formControlName="optionType">

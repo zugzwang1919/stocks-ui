@@ -1,12 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 @import '@angular/material/prebuilt-themes/indigo-pink.css'
 
+/* Used by most data entry forms ('Create Transaction', 'Edit Option', 'Login') */
+.vertical-div
+    display: flex
+    justify-content: center
+    align-items: center
+    text-align: center
+    flex-direction: column
+    /* Every component must move itself down the page from the preceeding component */
+    margin-top: 20px
+
+
+
 /* Used for calendar controls, drop-downs, input fields, etc. */
 .standard-control-width
     width: 215px
 
 /* Used for all buttons that typically sit at the bottom of pages to submit requests */
-/* The important will override Material's margin of 0px.  */
-/* Interestingly, if this were place in each component's SASS file, the !important would not be required */
+/* The !important will override Material's margin of 0px.  */
+/* Interestingly, if this were placed in each component's SASS file, the !important would not be required */
 .submit-button
     margin: 20px !important
