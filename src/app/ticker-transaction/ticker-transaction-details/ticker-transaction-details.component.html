@@ -62,7 +62,7 @@
             </mat-error>
         </mat-form-field>
         <div>
-            <button mat-raised-button color="primary" type="submit" class="ticker-transaction-details-button" [disabled]="busy || !tickerTransactionDetailsGroup.valid">
+            <button mat-raised-button color="primary" type="submit" class="submit-button" [disabled]="busy || !tickerTransactionDetailsGroup.valid">
                 <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
                 <ng-template #updateButtonText>
                     Update

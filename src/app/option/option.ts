@@ -12,7 +12,9 @@ export class Option extends WolfeTrackedItem {
         this.optionType = (obj && obj.optionType) || undefined;
         this.stock = (obj && obj.stock) ? new Ticker(obj.stock) : undefined;
         this.strikePrice = (obj && obj.strikePrice) || undefined;
-        this.expirationDate = (obj && obj.expirationDate) ? new Date(obj.expirationDate) : undefined;
+        // When the date comes in as "2020-06-12" we need to add a time component, or Typescript will assume that it's UTC,
+        // subtract 4-5 hours from it & move it back one day
+        this.expirationDate = (obj && obj.expirationDate) ? new Date(obj.expirationDate + 'T00:00:00') : undefined;
     }
 
 }

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './user/login/login.component';
 import { MainPageComponent } from './general/main-page/main-page.component';
 import { OptionsComponent } from './option//options/options.component';
+import { OptionDetailsComponent } from './option/option-details/option-details.component';
 import { PortfoliosComponent } from './portfolio/portfolios/portfolios.component';
 import { PortfolioDetailsComponent } from './portfolio/portfolio-details/portfolio-details.component';
 import { RegisterComponent } from './user/register/register.component';
@@ -12,7 +13,6 @@ import { TickerTransactionDetailsComponent } from './ticker-transaction/ticker-t
 import { TickerTransactionsComponent } from './ticker-transaction/ticker-transactions/ticker-transactions.component';
 import { ToDoComponent} from './general/to-do/to-do.component';
 import { LoggedInGuard } from './wolfe-common/logged-in.guard';
-import { generate } from 'rxjs';
 
 
 const routes: Routes = [
@@ -21,6 +21,8 @@ const routes: Routes = [
   { path: 'user/register', component: RegisterComponent },
   { path: 'welcome', component: MainPageComponent},
   { path: 'option', component: OptionsComponent, canActivate: [LoggedInGuard]},
+  { path: 'option/create', component: OptionDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'option/:id', component: OptionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'portfolio', component: PortfoliosComponent, canActivate: [LoggedInGuard]},
   { path: 'portfolio/:id', component: PortfolioDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'ticker', component: TickersComponent, canActivate: [LoggedInGuard]},

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup,  Validators } from '@angular/forms';
+import { FormBuilder, FormGroup,  Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AlertService } from '../../general/alert/alert.service';
-import { CurrentUserService} from '../../user/current-user/current-user.service';
 import { Portfolio } from '../../portfolio/portfolio';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { Ticker } from '../../ticker/ticker';
@@ -36,7 +35,6 @@ export class TickerTransactionDetailsComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
-    private currentUserService: CurrentUserService,
     private currencyPipe: CurrencyPipe,
     private formBuilder: FormBuilder,
     private portfolioService: PortfolioService,
@@ -63,7 +61,7 @@ export class TickerTransactionDetailsComponent implements OnInit {
 
     // If we've received an edit request (i.e., a non-create request)
     if (!this.attemptingToCreate) {
-      // Retrieve the requested ticker & drop it into our "ticker variable"
+      // Retrieve the requested ticker transaction & save its ID
       const id: number = +(this.route.snapshot.url[1].toString());
       this.tickerTransactionService.retrieve(id)
       .subscribe(

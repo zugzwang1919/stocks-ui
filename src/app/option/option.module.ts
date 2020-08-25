@@ -5,12 +5,14 @@ import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
 import { OptionsComponent } from './options/options.component';
+import { OptionDetailsComponent } from './option-details/option-details.component';
 
 
 
 @NgModule({
   declarations: [
-    OptionsComponent
+    OptionsComponent,
+    OptionDetailsComponent
   ],
   exports: [
     OptionsComponent

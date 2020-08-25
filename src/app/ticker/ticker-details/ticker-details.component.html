@@ -21,7 +21,7 @@
         </mat-form-field>
         <mat-checkbox  class="standard-control-width" [formControl]="benchmark"> Use as benchmark?</mat-checkbox>
         <div>
-            <button mat-raised-button color="primary" type="submit" class="ticker-details-button" [disabled]="busy || !tickerDetailsGroup.valid">
+            <button mat-raised-button color="primary" type="submit" class="submit-button" [disabled]="busy || !tickerDetailsGroup.valid">
                 <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
                 <ng-template #updateButtonText>
                     Update

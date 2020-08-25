@@ -54,10 +54,10 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
-    <div class=tickers-buttons-div>
-        <button mat-raised-button color="primary" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="editSelectedItem()">Edit</button>
-        <button mat-raised-button color="warn" class="tickers-buttons" [disabled]="!isExactlyOneSelected()" (click)="deleteSelectedItems()">Delete</button>
-        <button mat-raised-button color="primary" class="tickers-buttons" [routerLink]="['/ticker-transaction/create']">Create New</button>
+    <div>
+        <button mat-raised-button color="primary" class="submit-button" [disabled]="!isExactlyOneSelected()" (click)="editSelectedItem()">Edit</button>
+        <button mat-raised-button color="warn" class="submit-button" [disabled]="!isExactlyOneSelected()" (click)="deleteSelectedItems()">Delete</button>
+        <button mat-raised-button color="primary" class="submit-button" [routerLink]="['/ticker-transaction/create']">Create New</button>
     </div>
 
 

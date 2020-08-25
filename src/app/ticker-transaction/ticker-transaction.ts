@@ -17,7 +17,8 @@ export class TickerTransaction extends WolfeTrackedItem {
     constructor(obj?: any) {
         super(obj);
         this.portfolio = (obj && obj.portfolio) ? new Portfolio(obj.portfolio) : undefined;
-        // NOTE:  If we don't add the time, it assumes that the date is in UTC and backs up 4-5 hours and changes the date
+        // When the date comes in as "2020-06-12" we need to add a time component, or Typescript will assume that it's UTC,
+        // subtract 4-5 hours from it & move it back one day
         this.date = (obj && obj.date) ? new Date(obj.date + 'T00:00:00') : undefined;
         this.stock = (obj && obj.stock) ? new Ticker(obj.stock) : undefined;
         this.activity = (obj && obj.activity) || undefined;
