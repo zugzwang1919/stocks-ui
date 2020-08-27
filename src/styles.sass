@@ -1,5 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
-@import '@angular/material/prebuilt-themes/indigo-pink.css'
+@use 'wolfe-colors'
+@import '~@angular/material/theming'
+
+$wolfe-primary: wolfe-colors.$wolfe-primary
+$wolfe-accent: wolfe-colors.$wolfe-accent
 
 /* Used by most data entry forms ('Create Transaction', 'Edit Option', 'Login') */
 .vertical-div
@@ -25,4 +28,6 @@
 
 /* Used for the even rows of tables where appropriate */
 .zebra
-    background-color: #f8f8f8
+    background-color: #383838
+
+
