@@ -1,5 +1,5 @@
-/* For use in src/lib/core/theming/_palette.scss */
-$wolfe-primary-palette: (
+
+$wolfe-primary-color-range: (
     50 : #eaeee9,
     100 : #cad4c7,
     200 : #a7b8a2,
@@ -32,7 +32,7 @@ $wolfe-primary-palette: (
     )
 );
 
-$wolfe-accent-palette: (
+$wolfe-accent-color-range: (
     50 : #e6eef1,
     100 : #c1d4dd,
     200 : #98b8c7,
@@ -65,7 +65,7 @@ $wolfe-accent-palette: (
     )
 );
 
-$wolfe-warn-palette: (
+$wolfe-warn-color-range: (
     50 : #f0e5e6,
     100 : #dabebf,
     200 : #c29395,
