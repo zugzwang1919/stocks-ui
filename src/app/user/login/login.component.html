@@ -9,7 +9,8 @@
             </mat-error>
         </mat-form-field>
         <mat-form-field class="standard-control-width">
-            <input matInput placeholder="Password" formControlName="password">
+            <input matInput placeholder="Password" [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+            <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
             <mat-error *ngIf="!loginGroup.controls['password'].valid && loginGroup.controls['password'].touched">
               {{ getErrorPassword() }}
             </mat-error>

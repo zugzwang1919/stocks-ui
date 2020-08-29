@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
 
   loginGroup: FormGroup;
   futureUrl: string;
+  hidePassword = true;
 
   constructor(
     private alertService: AlertService,
