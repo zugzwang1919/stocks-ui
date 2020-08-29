@@ -1,7 +1,8 @@
 @use 'src/wolfe-colors'
 
 footer
-    position: absolute
+    position: fixed
+    overflow: hide
     bottom: 0
     left: 0
     right: 0
@@ -10,6 +11,8 @@ footer
     text-align: center
     font-size: 12px
     margin: 8px
+    // NOTE: margin-right set to 0 because I can't seem to fix the top-of-page component to have a margin-right of 8
+    margin-right: 0px
     padding: 15px
 
 
