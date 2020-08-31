@@ -23,7 +23,7 @@
             <!-- Option Name Column-->
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Option Name </th>
-                <td mat-cell *matCellDef="let option"> {{buildName(option)}} </td>
+                <td mat-cell *matCellDef="let option"> {{option.getName()}} </td>
             </ng-container>
             <!-- Ticker Name Column-->
             <ng-container matColumnDef="stock.ticker">
