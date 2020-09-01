@@ -13,7 +13,7 @@ import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list
 })
 export class OptionTransactionsComponent extends WolfeGenericListComponent<OptionTransaction> implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['select', 'date', 'portfolio.portfolioName', 'option.name', 'activity', 'numberOfContracts', 'amount'];
+  displayedColumns: string[] = ['select', 'date', 'portfolioName', 'optionName', 'activity', 'numberOfContracts', 'amount'];
 
   constructor(
     router: Router,
@@ -28,4 +28,21 @@ export class OptionTransactionsComponent extends WolfeGenericListComponent<Optio
           '/option-transaction',
           (ot: OptionTransaction): string => 'The selected option transaction was deleted' );
   }
+
+
+  flattenItemIfNecessary(ot: OptionTransaction): any {
+    const flatItem: any = {};
+    flatItem.id = ot.id;
+    flatItem.createDate = ot.createDate;
+    flatItem.updateDate = ot.updateDate;
+    flatItem.portfolioName = ot.portfolio.portfolioName;
+    flatItem.date = ot.date;
+    flatItem.activity = ot.activity;
+    flatItem.optionName = ot.option.getName();
+    flatItem.numberOfContracts = ot.numberOfContracts;
+    flatItem.amount = ot.amount;
+    return flatItem;
+  }
+
+
 }

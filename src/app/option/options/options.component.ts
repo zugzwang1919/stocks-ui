@@ -15,7 +15,7 @@ import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list
 })
 export class OptionsComponent extends WolfeGenericListComponent<Option>  implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['select', 'name', 'stock.ticker', 'optionType', 'expirationDate', 'strikePrice'];
+  displayedColumns: string[] = ['select', 'name', 'ticker', 'optionType', 'expirationDate', 'strikePrice'];
 
   constructor(
     router: Router,
@@ -33,6 +33,18 @@ export class OptionsComponent extends WolfeGenericListComponent<Option>  impleme
           (o: Option): string => 'The selected option' );
   }
 
+  flattenItemIfNecessary(o: Option): any {
+    const flatItem: any = {};
+    flatItem.id = o.id;
+    flatItem.createDate = o.createDate;
+    flatItem.updateDate = o.updateDate;
+    flatItem.optionType = o.optionType;
+    flatItem.ticker = o.stock.ticker;
+    flatItem.strikePrice = o.strikePrice;
+    flatItem.expirationDate = o.expirationDate;
+    flatItem.name = o.getName();
+    return flatItem;
+  }
 
 
 

@@ -20,9 +20,9 @@
                 </td>
             </ng-container>
             <!-- Portfolio Name Column-->
-            <ng-container matColumnDef="portfolio.portfolioName">
+            <ng-container matColumnDef="portfolioName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Portfolio Name </th>
-                <td mat-cell *matCellDef="let optionTransaction"> {{optionTransaction.portfolio.portfolioName}} </td>
+                <td mat-cell *matCellDef="let optionTransaction"> {{optionTransaction.portfolioName}} </td>
             </ng-container>
             <!-- Date -->
             <ng-container matColumnDef="date">
@@ -30,9 +30,9 @@
                 <td mat-cell *matCellDef="let optionTransaction"> {{optionTransaction.date | date:'mediumDate'}} </td>
             </ng-container>
             <!-- Option Name Column -->
-            <ng-container matColumnDef="option.name">
+            <ng-container matColumnDef="optionName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Option </th>
-                <td mat-cell *matCellDef="let optionTransaction"> {{optionTransaction.option.getName()}} </td>
+                <td mat-cell *matCellDef="let optionTransaction"> {{optionTransaction.optionName}} </td>
             </ng-container>
             <!-- Buy or Sell -->
             <ng-container matColumnDef="activity">

@@ -13,7 +13,7 @@ import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list
 })
 export class TickerTransactionsComponent extends WolfeGenericListComponent<TickerTransaction>  implements OnInit, AfterViewInit {
 
-  displayedColumns: string[] = ['select', 'date', 'portfolio.portfolioName', 'stock.ticker', 'activity', 'tradeSize', 'amount'];
+  displayedColumns: string[] = ['select', 'date', 'portfolioName', 'ticker', 'activity', 'tradeSize', 'amount'];
 
   constructor(
     router: Router,
@@ -27,5 +27,19 @@ export class TickerTransactionsComponent extends WolfeGenericListComponent<Ticke
           changeDetectorRefs,
           '/ticker-transaction',
           (tt: TickerTransaction): string => 'The selected transaction was deleted' );
+  }
+
+  flattenItemIfNecessary(tt: TickerTransaction): any {
+    const flatItem: any = {};
+    flatItem.id = tt.id;
+    flatItem.createDate = tt.createDate;
+    flatItem.updateDate = tt.updateDate;
+    flatItem.portfolioName = tt.portfolio.portfolioName;
+    flatItem.date = tt.date;
+    flatItem.ticker = tt.stock.ticker;
+    flatItem.activity = tt.activity;
+    flatItem.tradeSize = tt.tradeSize;
+    flatItem.amount = tt.amount;
+    return flatItem;
   }
 }

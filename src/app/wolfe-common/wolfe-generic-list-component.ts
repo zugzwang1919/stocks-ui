@@ -10,9 +10,9 @@ import { WolfeTrackedItem } from './wolfe-tracked-item';
 
 export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
 
-    initialData: T[] = [];
-    dataSource = new MatTableDataSource<T>(this.initialData);
-    selection = new SelectionModel<T>(true, []);
+    initialData: any[] = [];
+    dataSource = new MatTableDataSource(this.initialData);
+    selection = new SelectionModel(true, []);
 
     @ViewChild(MatSort) sort: MatSort;
     constructor(
@@ -40,12 +40,13 @@ export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
           .subscribe(
             // If this goes well, update the list of Tickers
             items =>  {
-              // Set the data in the table to be the data that was returned from the service
-              this.dataSource.data = items;
+
+              // Flatten the data that was returned by the service so that it can be sorted
+              this.dataSource.data = items.map(this.flattenItemIfNecessary);
               // Indicate that the data in the table has changed
               this.changeDetectorRef.detectChanges();
               // Reset the check boxes
-              this.selection = new SelectionModel<T>(true, []);
+              this.selection = new SelectionModel(true, []);
             },
             // If the retrieval goes poorly, show the error
             error => this.alertService.error(error)
@@ -103,4 +104,13 @@ export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
     areAnySelected(): boolean {
         return this.selection.selected.length !== 0;
     }
+
+    // NOTE: Many items are heirarchical in nature.  I could not figure out a way (short of writing a custom sorter)
+    // NOTE: that allowed these items to be sortable once they were in a list (for example transaction.portfolio.portfolioName)
+    // NOTE: The solution that I've chosen is to let the derived class flatten items if it would like to be able to sort them
+    // NOTE: In the above example, the derived class would return a field in the object that was simply transaction.portfolioName
+    flattenItemIfNecessary(t: T): any {
+        return t;
+    }
+
 }

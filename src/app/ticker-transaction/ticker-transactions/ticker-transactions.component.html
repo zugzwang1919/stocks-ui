@@ -1,4 +1,4 @@
-A<div class="ticker-transactions-div">
+<div class="ticker-transactions-div">
     <h2> Your Transactions for Stocks, ETFs, & Mutual Funds</h2>
 
     <div class="scrollable-div mat-elevation-z6">
@@ -21,9 +21,9 @@ A<div class="ticker-transactions-div">
                 </td>
             </ng-container>
             <!-- Portfolio Name Column-->
-            <ng-container matColumnDef="portfolio.portfolioName">
+            <ng-container matColumnDef="portfolioName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Portfolio Name </th>
-                <td mat-cell *matCellDef="let tickerTransaction"> {{tickerTransaction.portfolio.portfolioName}} </td>
+                <td mat-cell *matCellDef="let tickerTransaction"> {{tickerTransaction.portfolioName}} </td>
             </ng-container>
             <!-- Date -->
             <ng-container matColumnDef="date">
@@ -31,9 +31,9 @@ A<div class="ticker-transactions-div">
                 <td mat-cell *matCellDef="let tickerTransaction"> {{tickerTransaction.date | date:'mediumDate'}} </td>
             </ng-container>
             <!-- Ticker Column -->
-            <ng-container matColumnDef="stock.ticker">
+            <ng-container matColumnDef="ticker">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Ticker </th>
-                <td mat-cell *matCellDef="let tickerTransaction"> {{tickerTransaction.stock.ticker}} </td>
+                <td mat-cell *matCellDef="let tickerTransaction"> {{tickerTransaction.ticker}} </td>
             </ng-container>
             <!-- Buy or Sell -->
             <ng-container matColumnDef="activity">
