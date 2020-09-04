@@ -5,6 +5,7 @@ import { MainPageComponent } from './general/main-page/main-page.component';
 import { OptionsComponent } from './option//options/options.component';
 import { OptionDetailsComponent } from './option/option-details/option-details.component';
 import { OptionTransactionsComponent } from './option-transaction/option-transactions/option-transactions.component';
+import { OptionTransactionDetailsComponent } from './option-transaction/option-transaction-details/option-transaction-details.component';
 import { PortfoliosComponent } from './portfolio/portfolios/portfolios.component';
 import { PortfolioDetailsComponent } from './portfolio/portfolio-details/portfolio-details.component';
 import { RegisterComponent } from './user/register/register.component';
@@ -25,6 +26,8 @@ const routes: Routes = [
   { path: 'option/create', component: OptionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'option/:id', component: OptionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'option-transaction', component: OptionTransactionsComponent, canActivate: [LoggedInGuard]},
+  { path: 'option-transaction/create', component: OptionTransactionDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'option-transaction/:id', component: OptionTransactionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'portfolio', component: PortfoliosComponent, canActivate: [LoggedInGuard]},
   { path: 'portfolio/:id', component: PortfolioDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'ticker', component: TickersComponent, canActivate: [LoggedInGuard]},

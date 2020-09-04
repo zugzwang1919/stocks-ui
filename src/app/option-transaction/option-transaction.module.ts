@@ -6,11 +6,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
 import { ActivityPipe } from './activity.pipe';
+import { OptionTransactionDetailsComponent } from './option-transaction-details/option-transaction-details.component';
 
 
 
 @NgModule({
-  declarations: [OptionTransactionsComponent, ActivityPipe],
+  declarations: [OptionTransactionsComponent, ActivityPipe, OptionTransactionDetailsComponent],
   imports: [
     CommonModule,
     FormsModule,

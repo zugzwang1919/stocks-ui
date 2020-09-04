@@ -23,20 +23,17 @@ export class OptionService extends WolfeGenericService<Option> {
   //       from the base class
 
   create(optionType: string, stockId: number, strikePrice: number | string, expirationDate: Date): Observable<Option> {
-    const params = this.buildParams(undefined, optionType, stockId, strikePrice, expirationDate);
+    const params = this.buildParams(optionType, stockId, strikePrice, expirationDate);
     return this.wolfeHttpService.post('/option', params, null);
   }
 
   update(id: number, optionType: string, stockId: number, strikePrice: number | string, expirationDate: Date): Observable<Option> {
-    const params = this.buildParams(id, optionType, stockId, strikePrice, expirationDate);
+    const params = this.buildParams(optionType, stockId, strikePrice, expirationDate);
     return this.wolfeHttpService.post('/option/' + id, params, null);
   }
 
-  private buildParams(id: number, optionType: string, stockId: number, strikePrice: number | string, expirationDate: Date) {
+  private buildParams( optionType: string, stockId: number, strikePrice: number | string, expirationDate: Date) {
     const params: any = {};
-    if (id) {
-      params.id = id;
-    }
     params.optionType = optionType;
     params.stockId = stockId;
     // Remove any $ or commas

@@ -24,23 +24,20 @@ export class TickerTransactionService extends WolfeGenericService<TickerTransact
 
   create(date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number): Observable<TickerTransaction> {
     // Build the parameters
-    const params = this.buildParams(undefined, date, portfolioId, stockId, activity, tradeSize, amount);
+    const params = this.buildParams(date, portfolioId, stockId, activity, tradeSize, amount);
     // Post the request
     return this.wolfeHttpService.post('/stock-transaction', params, null);
   }
 
   update(id: number, date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number): Observable<TickerTransaction> {
     // Build the parameters
-    const params = this.buildParams(id, date, portfolioId, stockId, activity, tradeSize, amount);
+    const params = this.buildParams(date, portfolioId, stockId, activity, tradeSize, amount);
     // Post the request
     return this.wolfeHttpService.post('/stock-transaction/' + id, params, null);
   }
 
-  private buildParams(id: number, date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number) {
+  private buildParams(date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number) {
     const params: any = {};
-    if (id) {
-      params.id = id;
-    }
     params.date = this.datePipe.transform(date, 'yyyy-MM-dd');
     params.portfolioId = portfolioId;
     params.stockId = stockId;
