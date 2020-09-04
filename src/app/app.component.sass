@@ -1,11 +1,17 @@
-div.centered-70
-    width: 70%
-    margin: 0px auto
-    // NOTE: margin-top is currently set to 100px as part of a feeble attempt to make the content scrollable
-    // NOTE: the header area is fixed, so this div should leave 100px to accomodate it.
-    margin-top: 100px
-    margin-right: auto
-    // NOTE: margin-bottom is currently set to 100 as part of a feeble attempt to make the content scrollable
-    // NOTE: the footer area is fixed, so this div should leave 70px to accomodate it.
-    margin-bottom: 70px
-    margin-left: auto
+
+/* Outer div will absolutely be positioned in between the top-of-page and bottom-of-page components */
+/* When a scroll bar appears, it will be at the extreme right hand side of the page */
+div.outer-div
+    position: absolute
+    top: 80px
+    bottom: 36px
+    left: 0px
+    right: 0px
+    overflow-y: auto
+
+/* This inner div causes all content to occupy the center 80% of the page */
+div.content-80
+    margin-left: 10%
+    width: 80%
+
+

@@ -1,9 +1,11 @@
-<mat-toolbar class="top-of-page mat-elevation-z8" color = "primary">
-    <mat-toolbar-row>
-        <!-- <button mat-icon-button id="menu" (click)="navService.openNav()">  -->
-        <app-menu></app-menu>
-        <img src="assets/img/transparent-wolf.png" width="auto" height="80%" [routerLink]="['/welcome']">
-        <span class="toolbar-spacer">In Search of Alpha</span>
-        <app-current-user></app-current-user>
-    </mat-toolbar-row>
-</mat-toolbar>
+<div class="top-of-page">
+    <mat-toolbar class="mat-elevation-z8" color = "primary">
+        <mat-toolbar-row>
+            <!-- <button mat-icon-button id="menu" (click)="navService.openNav()">  -->
+            <app-menu></app-menu>
+            <img src="assets/img/transparent-wolf.png" width="auto" height="80%" [routerLink]="['/welcome']">
+            <span class="toolbar-spacer">In Search of Alpha</span>
+            <app-current-user></app-current-user>
+        </mat-toolbar-row>
+    </mat-toolbar>
+</div>

@@ -15,7 +15,7 @@ export class OptionTransactionService extends WolfeGenericService<OptionTransact
     private datePipe: DatePipe,
     wolfeHttpService: WolfeHttpService
   ) {
-    super(wolfeHttpService, '/option-transaction')
+    super(wolfeHttpService, '/option-transaction');
   }
 
   // NOTE: retrieve(), retrieveAll(), and delete() are picked up
