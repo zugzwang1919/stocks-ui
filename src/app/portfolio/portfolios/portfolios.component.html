@@ -2,7 +2,9 @@
     <h2> Your Portfolios</h2>
 
     <div class="scrollable-div mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource" matSort >
+        <table mat-table [dataSource]="dataSource"
+                matSort matSortActive="portfolioName" matSortDisableClear matSortDirection="asc">
+
             <!-- Checkbox Column-->
             <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>

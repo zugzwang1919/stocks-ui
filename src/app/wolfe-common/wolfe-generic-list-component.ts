@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectionModel} from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
@@ -27,13 +27,13 @@ export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
 
     // tslint:disable-next-line:use-lifecycle-interface
     ngOnInit(): void {
+
+        // Asynchronously populate the DataSource
         this.updateWolfeTrackedItems();
+
+
     }
 
-    // tslint:disable-next-line:use-lifecycle-interface
-    ngAfterViewInit() {
-        this.dataSource.sort = this.sort;
-    }
 
     updateWolfeTrackedItems() {
         this.wolfeTrackedItemService.retrieveAll()
@@ -42,11 +42,14 @@ export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
             items =>  {
 
               // Flatten the data that was returned by the service so that it can be sorted
+              // and then associate it with the DataSource
               this.dataSource.data = items.map(this.flattenItemIfNecessary);
               // Indicate that the data in the table has changed
               this.changeDetectorRef.detectChanges();
               // Reset the check boxes
               this.selection = new SelectionModel(true, []);
+              // Sort the data based on the existing sort criteria
+              this.dataSource.sort = this.sort;
             },
             // If the retrieval goes poorly, show the error
             error => this.alertService.error(error)

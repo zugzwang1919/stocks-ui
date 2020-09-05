@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CurrencyPipe, DatePipe} from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -13,7 +13,7 @@ import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.sass']
 })
-export class OptionsComponent extends WolfeGenericListComponent<Option>  implements OnInit, AfterViewInit {
+export class OptionsComponent extends WolfeGenericListComponent<Option>  implements OnInit {
 
   displayedColumns: string[] = ['select', 'name', 'ticker', 'optionType', 'expirationDate', 'strikePrice'];
 
@@ -30,7 +30,7 @@ export class OptionsComponent extends WolfeGenericListComponent<Option>  impleme
           optionService,
           changeDetectorRefs,
           '/option',
-          (o: Option): string => 'The selected option' );
+          (o: Option): string => 'The selected option');
   }
 
   flattenItemIfNecessary(o: Option): any {

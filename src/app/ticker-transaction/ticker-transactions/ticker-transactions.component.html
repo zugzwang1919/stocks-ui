@@ -2,7 +2,9 @@
     <h2> Your Transactions for Stocks, ETFs, & Mutual Funds</h2>
 
     <div class="scrollable-div mat-elevation-z6">
-        <table mat-table [dataSource]="dataSource" matSort >
+        <table mat-table [dataSource]="dataSource"
+                matSort matSortActive="date" matSortDisableClear matSortDirection="desc">
+
             <!-- Checkbox Column-->
             <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>

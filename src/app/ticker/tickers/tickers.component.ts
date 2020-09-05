@@ -14,7 +14,7 @@ import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list
   styleUrls: ['./tickers.component.sass']
 })
 
-export class TickersComponent extends WolfeGenericListComponent<Ticker>  implements OnInit, AfterViewInit {
+export class TickersComponent extends WolfeGenericListComponent<Ticker>  implements OnInit {
 
   displayedColumns: string[] = ['select', 'ticker', 'name', 'benchmark', 'createDate', 'updateDate'];
 
@@ -29,6 +29,6 @@ export class TickersComponent extends WolfeGenericListComponent<Ticker>  impleme
           portfolioService,
           changeDetectorRefs,
           '/ticker',
-          (t: Ticker): string => t.ticker );
+          (t: Ticker): string => t.ticker);
   }
 }

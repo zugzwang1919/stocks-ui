@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TickerTransaction } from '../ticker-transaction';
@@ -11,7 +11,7 @@ import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list
   templateUrl: './ticker-transactions.component.html',
   styleUrls: ['./ticker-transactions.component.sass']
 })
-export class TickerTransactionsComponent extends WolfeGenericListComponent<TickerTransaction>  implements OnInit, AfterViewInit {
+export class TickerTransactionsComponent extends WolfeGenericListComponent<TickerTransaction>  implements OnInit {
 
   displayedColumns: string[] = ['select', 'date', 'portfolioName', 'ticker', 'activity', 'tradeSize', 'amount'];
 
@@ -26,7 +26,7 @@ export class TickerTransactionsComponent extends WolfeGenericListComponent<Ticke
           tickerTransactionService,
           changeDetectorRefs,
           '/ticker-transaction',
-          (tt: TickerTransaction): string => 'The selected transaction was deleted' );
+          (tt: TickerTransaction): string => 'The selected transaction was deleted');
   }
 
   flattenItemIfNecessary(tt: TickerTransaction): any {

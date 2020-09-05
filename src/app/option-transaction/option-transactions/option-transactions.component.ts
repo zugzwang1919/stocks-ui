@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { OptionTransaction } from '../option-transaction';
@@ -11,7 +11,7 @@ import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list
   templateUrl: './option-transactions.component.html',
   styleUrls: ['./option-transactions.component.sass']
 })
-export class OptionTransactionsComponent extends WolfeGenericListComponent<OptionTransaction> implements OnInit, AfterViewInit {
+export class OptionTransactionsComponent extends WolfeGenericListComponent<OptionTransaction> implements OnInit {
 
   displayedColumns: string[] = ['select', 'date', 'portfolioName', 'optionName', 'activity', 'numberOfContracts', 'amount'];
 
@@ -26,7 +26,7 @@ export class OptionTransactionsComponent extends WolfeGenericListComponent<Optio
           optionTransactionService,
           changeDetectorRefs,
           '/option-transaction',
-          (ot: OptionTransaction): string => 'The selected option transaction was deleted' );
+          (ot: OptionTransaction): string => 'The selected option transaction was deleted');
   }
 
 

@@ -14,7 +14,7 @@ import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list
   templateUrl: './portfolios.component.html',
   styleUrls: ['./portfolios.component.sass']
 })
-export class PortfoliosComponent extends WolfeGenericListComponent<Portfolio>  implements OnInit, AfterViewInit {
+export class PortfoliosComponent extends WolfeGenericListComponent<Portfolio>  implements OnInit {
 
   displayedColumns: string[] = ['select', 'portfolioName', 'createDate', 'updateDate'];
 
@@ -29,6 +29,6 @@ export class PortfoliosComponent extends WolfeGenericListComponent<Portfolio>  i
           portfolioService,
           changeDetectorRefs,
           '/portfolio',
-          (p: Portfolio): string => p.portfolioName );
+          (p: Portfolio): string => p.portfolioName);
   }
 }
