@@ -27,13 +27,17 @@ export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
 
     // tslint:disable-next-line:use-lifecycle-interface
     ngOnInit(): void {
-
         // Asynchronously populate the DataSource
         this.updateWolfeTrackedItems();
-
-
     }
 
+    // tslint:disable-next-line:use-lifecycle-interface
+    ngAfterViewInit(): void {
+        // Attach the matSort to our DataSource
+        // NOTE:  This needs to occur here rather than during ngOnInit as
+        // NOTE:  the matSort has not been created yet.
+        this.dataSource.sort = this.sort;
+    }
 
     updateWolfeTrackedItems() {
         this.wolfeTrackedItemService.retrieveAll()
@@ -48,8 +52,6 @@ export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
               this.changeDetectorRef.detectChanges();
               // Reset the check boxes
               this.selection = new SelectionModel(true, []);
-              // Sort the data based on the existing sort criteria
-              this.dataSource.sort = this.sort;
             },
             // If the retrieval goes poorly, show the error
             error => this.alertService.error(error)
