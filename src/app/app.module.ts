@@ -16,7 +16,7 @@ import { PortfolioModule } from './portfolio/portfolio.module';
 import { TickerTransactionModule } from './ticker-transaction/ticker-transaction.module';
 import { OptionModule } from './option/option.module';
 import { OptionTransactionModule } from './option-transaction/option-transaction.module';
-
+import { CalculatorModule } from './calculator/calculator.module';
 
 
 
@@ -40,7 +40,8 @@ import { OptionTransactionModule } from './option-transaction/option-transaction
     PortfolioModule,
     TickerTransactionModule,
     OptionModule,
-    OptionTransactionModule
+    OptionTransactionModule,
+    CalculatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -23,9 +23,9 @@
         <mat-icon>shopping_cart</mat-icon>
         <span>Transactions</span>
     </button>
-    <button mat-menu-item disabled>
+    <button mat-menu-item [matMenuTriggerFor]="calculators">
         <mat-icon>attach_money</mat-icon>
-        <span>Calculations</span>
+        <span>Calculators</span>
     </button>
     <button mat-menu-item [matMenuTriggerFor]="about">
         <mat-icon>info</mat-icon>
@@ -92,6 +92,16 @@
     <button routerLink='/option-transaction' mat-menu-item>
         <mat-icon>list_alt</mat-icon>
         <span>List</span>
+    </button>
+    <button routerLink='/option-transaction/create' mat-menu-item>
+        <mat-icon>create</mat-icon>
+        <span>Create</span>
+    </button>
+</mat-menu>
+<mat-menu #calculators="matMenu">
+    <button routerLink='/income-calculator' mat-menu-item>
+        <mat-icon>attach_money</mat-icon>
+        <span>Income Calculator</span>
     </button>
     <button routerLink='/option-transaction/create' mat-menu-item>
         <mat-icon>create</mat-icon>

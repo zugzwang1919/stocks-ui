@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { LoginResponse } from './login-response';
@@ -11,14 +11,19 @@ import { CurrentUserService } from '../current-user/current-user.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.sass']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
 
   loginGroup: FormGroup;
   futureUrl: string;
   hidePassword = true;
 
+  // Set up an attribute for the userName input field that will be created in the form builder group
+  // We will use this element to set the focus
+  @ViewChild('userNameInput') userNameInputField: ElementRef;
+
   constructor(
     private alertService: AlertService,
+    private changeDetectorRef: ChangeDetectorRef,
     private currentUserService: CurrentUserService,
     private formBuilder: FormBuilder,
     private userService: UserService,
@@ -35,6 +40,15 @@ export class LoginComponent implements OnInit {
     // main page ('/') when the login is successful.
     this.futureUrl = this.route.snapshot.queryParams.redirectUrl || '/';
   }
+
+  ngAfterViewInit() {
+    // Set the focus to the User Name input
+    this.userNameInputField.nativeElement.focus();
+    // Indicate to the angular that we've changed something to prevent
+    // errors from showing up in the console.
+    this.changeDetectorRef.detectChanges();
+  }
+
 
   onSubmit() {
     // reset any previous alerts

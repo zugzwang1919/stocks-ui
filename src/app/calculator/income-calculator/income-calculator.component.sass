@@ -1,0 +1,43 @@
+@use 'src/wolfe-colors'
+
+.income-calculator-div
+    margin-top: 20px
+    text-align: center
+
+.left-right-container
+    display: flex
+
+.flex-child
+    flex: 1
+
+
+.flex-child:first-child
+    margin-right: 80px
+
+
+.portfolio-scrollable-div
+    height: 270px
+    overflow-y: auto
+
+.ticker-scrollable-div
+    height: 550px
+    overflow-y: auto
+
+.timeframe-div
+    background-color: wolfe-colors.$wolfe-background-card
+
+.timeframe-radio-group
+    display: flex
+    flex-direction: column
+    margin: 15px 0
+
+.timeframe-radio-button
+    margin: 5px
+
+
+/* The timeframe radio buttons are by default 20px */
+/* Make them slightly smaller for this page */
+
+::ng-deep .mat-radio-button
+    line-height: 14px !important
+    margin: 3px !important

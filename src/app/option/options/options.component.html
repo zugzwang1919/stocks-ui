@@ -1,8 +1,8 @@
 <div class="options-div">
     <h2> Options You are Trading</h2>
 
-    <div class="scrollable-div mat-elevation-z8">
-        <table  mat-table [dataSource]="dataSource"
+    <div class="full-page-scrollable-div-for-table mat-elevation-z8">
+        <table class="standard-table" mat-table [dataSource]="dataSource"
                 matSort matSortActive="expirationDate" matSortDisableClear matSortDirection="desc">
             <!-- Checkbox Column-->
             <ng-container matColumnDef="select">

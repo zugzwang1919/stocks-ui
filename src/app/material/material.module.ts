@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
@@ -22,6 +23,7 @@ const MaterialComponents = [
   MatInputModule,
   MatMenuModule,
   MatNativeDateModule,
+  MatRadioModule,
   MatSelectModule,
   MatSortModule,
   MatTableModule,

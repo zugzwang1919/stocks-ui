@@ -11,17 +11,17 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$candy-app-primary: mat-palette(wolfe-custom-color-ranges.$wolfe-primary-color-range);
-$candy-app-accent:  mat-palette(wolfe-custom-color-ranges.$wolfe-accent-color-range);
+$wolfe-primary-palette: mat-palette(wolfe-custom-color-ranges.$wolfe-primary-color-range, 600);
+$wolfe-accent-palette:  mat-palette(wolfe-custom-color-ranges.$wolfe-accent-color-range, 600);
 
 // The warn palette is optional (defaults to red).
-$candy-app-warn:    mat-palette(wolfe-custom-color-ranges.$wolfe-warn-color-range);
+$wolfe-warn-palette:    mat-palette(wolfe-custom-color-ranges.$wolfe-warn-color-range);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as `color` or `typography`.
-$candy-app-theme: mat-dark-theme($candy-app-primary, $candy-app-accent, $candy-app-warn);
+$wolfe-dark-theme: mat-dark-theme($wolfe-primary-palette, $wolfe-accent-palette, $wolfe-warn-palette);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($candy-app-theme);
+@include angular-material-theme($wolfe-dark-theme);

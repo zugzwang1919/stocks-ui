@@ -1,6 +1,12 @@
-@use 'wolfe-custom-color-ranges'
 @use 'sass:map'
+@import 'wolfe-material-theme'
 
-$wolfe-primary: map.get(wolfe-custom-color-ranges.$wolfe-primary-color-range, 500)
-$wolfe-accent: map.get(wolfe-custom-color-ranges.$wolfe-accent-color-range, 500)
+$wolfe-background-palette: map-get($wolfe-dark-theme, background)
+$wolfe-background-card: mat-color($wolfe-background-palette, card)
+
+$wolfe-primary-foreground-palette: map-get($wolfe-dark-theme, primary)
+$wolfe-primary: mat-color($wolfe-primary-foreground-palette, default)
+
+$wolfe-accent-foreground-palette: map-get($wolfe-dark-theme, accent)
+$wolfe-accent: mat-color($wolfe-accent-foreground-palette, default)
 
