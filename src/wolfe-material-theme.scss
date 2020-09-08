@@ -12,7 +12,7 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $wolfe-primary-palette: mat-palette(wolfe-custom-color-ranges.$wolfe-primary-color-range, 600);
-$wolfe-accent-palette:  mat-palette(wolfe-custom-color-ranges.$wolfe-accent-color-range, 600);
+$wolfe-accent-palette:  mat-palette(wolfe-custom-color-ranges.$wolfe-accent-color-range, 600, 400, 900);
 
 // The warn palette is optional (defaults to red).
 $wolfe-warn-palette:    mat-palette(wolfe-custom-color-ranges.$wolfe-warn-color-range);
