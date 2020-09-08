@@ -17,8 +17,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
   futureUrl: string;
   hidePassword = true;
 
-  // Set up an attribute for the userName input field that will be created in the form builder group
-  // We will use this element to set the focus
+
+  // See the comment below in ngAfterViewInit()
   @ViewChild('userNameInput') userNameInputField: ElementRef;
 
   constructor(
@@ -42,6 +42,11 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // NOTE: This seems to be overkill, but I could not get "autofocus" and "cdkInitialFocus" to work other
+    // NOTE: than on the very first time the component is displayed.  The use of a ViewChild and explicitly
+    // NOTE: setting the focus will work.  Seems ridiculous that I cannot either handle this all in the
+    // NOTE: html template OR just be able to get to the native element through the FormGroup.  Sigh.
+
     // Set the focus to the User Name input
     this.userNameInputField.nativeElement.focus();
     // Indicate to the angular that we've changed something to prevent
