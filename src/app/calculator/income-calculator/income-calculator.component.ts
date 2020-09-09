@@ -7,7 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { Ticker } from 'src/app/ticker/ticker';
+import { Portfolio } from 'src/app/portfolio/portfolio';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
+import { CalculatorService } from '../calculator.service';
 
 @Component({
   selector: 'app-income-calculator',
@@ -35,6 +37,7 @@ export class IncomeCalculatorComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
+    private calculatorService: CalculatorService,
     private changeDetectorRef: ChangeDetectorRef,
     private portfolioService: PortfolioService,
     private tickerService: TickerService
@@ -52,7 +55,27 @@ export class IncomeCalculatorComponent implements OnInit {
                                 this.changeDetectorRef, this.tickerSelection, this.alertService);
   }
 
+  onSubmit() {
+    // reset any previous alerts
+    this.alertService.clear();
 
+
+    // Try to create the new security/stock/etf/mutual fund/ticker
+
+
+    this.calculatorService.analyzeIncome( undefined,
+                                          undefined,
+                                          this.portfolioSelection.selected.map((p: Portfolio) => p.id),
+                                          this.tickerSelection.selected.map((t: Ticker) => t.id),
+                                          true,
+                                          true)
+      .subscribe(
+          // SUCCESS! ->  navigate to the Porfolio List Page
+          results  =>  { return; },
+          // ERROR! -> Display the error
+          error => this.alertService.error(error)
+      );
+  }
   private populateSelectionTable(retrievalService: WolfeGenericService<WolfeTrackedItem>, dataSource: MatTableDataSource<WolfeTrackedItem>,
                                  sortFunction: (a: any, b: any) => number,
                                  changeDetectorRef: ChangeDetectorRef, selection: SelectionModel<WolfeTrackedItem>,
@@ -79,11 +102,11 @@ export class IncomeCalculatorComponent implements OnInit {
   }
 
 
-    /** Whether the number of selected elements matches the total number of rows. */
-    areAllSelected(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
-      const numSelected = selectionModel.selected.length;
-      const numRows = dataSource.data.length;
-      return numSelected === numRows;
+  /** Whether the number of selected elements matches the total number of rows. */
+  areAllSelected(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
+    const numSelected = selectionModel.selected.length;
+    const numRows = dataSource.data.length;
+    return numSelected === numRows;
   }
 
   checkboxLabel(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>, row?: WolfeTrackedItem): string {

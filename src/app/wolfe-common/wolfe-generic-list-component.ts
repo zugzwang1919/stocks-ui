@@ -42,7 +42,7 @@ export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
     updateWolfeTrackedItems() {
         this.wolfeTrackedItemService.retrieveAll()
           .subscribe(
-            // If this goes well, update the list of Tickers
+            // If this goes well, update the list of Ites (WolfeTrackedItems to be specific)
             items =>  {
 
               // Flatten the data that was returned by the service so that it can be sorted
