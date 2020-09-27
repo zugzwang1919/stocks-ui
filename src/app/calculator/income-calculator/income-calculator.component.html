@@ -1,99 +1,210 @@
 <div class="income-calculator-div">
     <h2> Income Calculator</h2>
-    <form  (ngSubmit)="onSubmit()">
-        <div class="left-right-container">
-            <div class="flex-child">
-                <h4> Timeframe </h4>
-                <div class="timeframe-div">
-                    <mat-radio-group
-                        aria-labelledby="timeframe-radio-group-label"
-                        class="timeframe-radio-group"
-                        [(ngModel)]="selectedTimeframe">
-                        <mat-radio-button class="timeframe-radio-button" *ngFor="let timeframe of timeframes" [value]="timeframe">
-                            {{timeframe}}
-                        </mat-radio-button>
-                    </mat-radio-group>
 
-                </div>
-                <h4> Portfolios to be Included </h4>
-                <div class="portfolio-scrollable-div">
-                    <table class="compact-table" mat-table [dataSource]="portfolioDataSource">
-                        <!-- Checkbox Column-->
-                        <ng-container matColumnDef="select">
-                            <th mat-header-cell *matHeaderCellDef>
-                                <mat-checkbox   (change)="$event ? masterToggle(portfolioSelection, portfolioDataSource) : null"
-                                                [checked]="portfolioSelection.hasValue() && areAllSelected(portfolioSelection, portfolioDataSource)"
-                                                [indeterminate]="portfolioSelection.hasValue() && !areAllSelected(portfolioSelection, portfolioDataSource)"
-                                                [aria-label]="checkboxLabel(portfolioSelection, portfolioDataSource)">
-                                </mat-checkbox>
-                            </th>
-                            <td mat-cell *matCellDef="let row">
-                                <mat-checkbox   (click)="$event.stopPropagation()"
-                                                (change)="$event ? portfolioSelection.toggle(row) : null"
-                                                [checked]="portfolioSelection.isSelected(row)"
-                                                [aria-label]="checkboxLabel(portfolioSelection, portfolioDataSource,row)">
-                                </mat-checkbox>
-                            </td>
-                        </ng-container>
-                        <!-- Portfolio Name Column-->
-                        <ng-container matColumnDef="portfolioName">
-                            <th mat-header-cell *matHeaderCellDef> Portfolio Name </th>
-                            <td mat-cell *matCellDef="let portfolio"> {{portfolio.portfolioName}} </td>
-                        </ng-container>
+    <div class="left-right-container">
+        <div class="flex-child">
+            <h4> Timeframe </h4>
+            <div class="timeframe-div">
+                <mat-radio-group
+                    aria-labelledby="timeframe-radio-group-label"
+                    class="timeframe-radio-group"
+                    [(ngModel)]="selectedTimeframe">
+                    <mat-radio-button class="timeframe-radio-button" *ngFor="let timeframe of timeframes" [value]="timeframe">
+                        {{timeframe}}
+                    </mat-radio-button>
+                </mat-radio-group>
 
-                        <tr mat-header-row *matHeaderRowDef="portfolioDisplayedColumns sticky: true" ></tr>
-                        <tr mat-row *matRowDef="let row;
-                                                let even = even;
-                                                columns: portfolioDisplayedColumns;"
-                                    [ngClass]="{zebra: even}"></tr>
-                    </table>
-
-                </div>
             </div>
-            <div class="flex-child">
-                <h4> Tickers to be Included </h4>
-                <div class="ticker-scrollable-div">
-                    <table class="compact-table" mat-table [dataSource]="tickerDataSource">
-                        <!-- Checkbox Column-->
-                        <ng-container matColumnDef="select">
-                            <th mat-header-cell *matHeaderCellDef>
-                                <mat-checkbox   (change)="$event ? masterToggle(tickerSelection, tickerDataSource) : null"
-                                                [checked]="tickerSelection.hasValue() && areAllSelected(tickerSelection, tickerDataSource)"
-                                                [indeterminate]="tickerSelection.hasValue() && !areAllSelected(tickerSelection, tickerDataSource)"
-                                                [aria-label]="checkboxLabel(tickerSelection, tickerDataSource)">
-                                </mat-checkbox>
-                            </th>
-                            <td mat-cell *matCellDef="let row">
-                                <mat-checkbox   (click)="$event.stopPropagation()"
-                                                (change)="$event ? tickerSelection.toggle(row) : null"
-                                                [checked]="tickerSelection.isSelected(row)"
-                                                [aria-label]="checkboxLabel(tickerSelection, tickerDataSource,row)">
-                                </mat-checkbox>
-                            </td>
-                        </ng-container>
-                        <!-- Ticker Name Column-->
-                        <ng-container matColumnDef="ticker">
-                            <th mat-header-cell *matHeaderCellDef> Ticker </th>
-                            <td mat-cell *matCellDef="let ticker"> {{ticker.ticker}} </td>
-                        </ng-container>
-                        <!-- Company Name Column-->
-                        <ng-container matColumnDef="name">
-                            <th mat-header-cell *matHeaderCellDef> Company Name </th>
-                            <td mat-cell *matCellDef="let ticker"> {{ticker.name}} </td>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="tickerDisplayedColumns sticky: true" ></tr>
-                        <tr mat-row *matRowDef="let row;
-                                                let even = even;
-                                                columns: tickerDisplayedColumns;"
-                                    [ngClass]="{zebra: even}"></tr>
-                    </table>
-                </div>
+            <h4> Portfolios to be Included </h4>
+            <div class="portfolio-scrollable-div">
+                <table class="compact-table" mat-table [dataSource]="portfolioDataSource">
+                    <!-- Checkbox Column-->
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox   (change)="$event ? masterToggle(portfolioSelection, portfolioDataSource) : null"
+                                            [checked]="portfolioSelection.hasValue() && areAllSelected(portfolioSelection, portfolioDataSource)"
+                                            [indeterminate]="portfolioSelection.hasValue() && !areAllSelected(portfolioSelection, portfolioDataSource)"
+                                            [aria-label]="checkboxLabel(portfolioSelection, portfolioDataSource)">
+                            </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-checkbox   (click)="$event.stopPropagation()"
+                                            (change)="$event ? portfolioSelection.toggle(row) : null"
+                                            [checked]="portfolioSelection.isSelected(row)"
+                                            [aria-label]="checkboxLabel(portfolioSelection, portfolioDataSource,row)">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <!-- Portfolio Name Column-->
+                    <ng-container matColumnDef="portfolioName">
+                        <th mat-header-cell *matHeaderCellDef> Portfolio Name </th>
+                        <td mat-cell *matCellDef="let portfolio"> {{portfolio.portfolioName}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="portfolioDisplayedColumns sticky: true" ></tr>
+                    <tr mat-row *matRowDef="let row;
+                                            let even = even;
+                                            columns: portfolioDisplayedColumns;"
+                                [ngClass]="{zebra: even}"></tr>
+                </table>
+
             </div>
         </div>
-        <div>
-            <button mat-raised-button color="accent" type="submit" class="submit-button" >
-                <span>Submit</span>
-            </button>
+        <div class="flex-child">
+            <h4> Tickers to be Included </h4>
+            <div class="ticker-scrollable-div">
+                <table class="compact-table" mat-table [dataSource]="tickerDataSource">
+                    <!-- Checkbox Column-->
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox   (change)="$event ? masterToggle(tickerSelection, tickerDataSource) : null"
+                                            [checked]="tickerSelection.hasValue() && areAllSelected(tickerSelection, tickerDataSource)"
+                                            [indeterminate]="tickerSelection.hasValue() && !areAllSelected(tickerSelection, tickerDataSource)"
+                                            [aria-label]="checkboxLabel(tickerSelection, tickerDataSource)">
+                            </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-checkbox   (click)="$event.stopPropagation()"
+                                            (change)="$event ? tickerSelection.toggle(row) : null"
+                                            [checked]="tickerSelection.isSelected(row)"
+                                            [aria-label]="checkboxLabel(tickerSelection, tickerDataSource,row)">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <!-- Ticker Name Column-->
+                    <ng-container matColumnDef="ticker">
+                        <th mat-header-cell *matHeaderCellDef> Ticker </th>
+                        <td mat-cell *matCellDef="let ticker"> {{ticker.ticker}} </td>
+                    </ng-container>
+                    <!-- Company Name Column-->
+                    <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef> Company Name </th>
+                        <td mat-cell *matCellDef="let ticker"> {{ticker.name}} </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="tickerDisplayedColumns sticky: true" ></tr>
+                    <tr mat-row *matRowDef="let row;
+                                            let even = even;
+                                            columns: tickerDisplayedColumns;"
+                                [ngClass]="{zebra: even}"></tr>
+                </table>
+            </div>
         </div>
-    </form>
+    </div>
+    <div>
+        <button mat-raised-button color="accent" class="submit-button"  (click)="performAnalysis()" [disabled]=shouldSubmitBeDisabled()>Submit</button>
+    </div>
+    <div *ngIf="analysisResultsPresent">
+        <table class="compact-table" mat-table [dataSource]="analysisResultsDataSource">
+
+            <!-- Date Column-->
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Date </th>
+                <td mat-cell *matCellDef="let result"> {{result.date}} </td>
+            </ng-container>
+            <!-- Ticker Name Column-->
+            <ng-container matColumnDef="ticker">
+                <th mat-header-cell *matHeaderCellDef> Ticker </th>
+                <td mat-cell *matCellDef="let result"> {{result.ticker}} </td>
+            </ng-container>
+            <!-- Activity Column-->
+            <ng-container matColumnDef="activity">
+                <th mat-header-cell *matHeaderCellDef> Activity </th>
+                <td mat-cell *matCellDef="let result"> {{result.activity}} </td>
+            </ng-container>
+            <!-- Size Column-->
+            <ng-container matColumnDef="size">
+                <th mat-header-cell *matHeaderCellDef> Size </th>
+                <td mat-cell *matCellDef="let result"> {{result.size}} </td>
+            </ng-container>
+            <!-- Proceeds Column-->
+            <ng-container matColumnDef="proceeds">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Proceeds </th>
+                <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.proceeds | currency}} </td>
+            </ng-container>
+            <!-- Dividend Shares Column-->
+            <ng-container matColumnDef="dividendShares">
+                <th mat-header-cell *matHeaderCellDef> Dividend Shares </th>
+                <td mat-cell *matCellDef="let result"> {{result.dividendShares}} </td>
+            </ng-container>
+            <!-- Dividend Proceeds Column-->
+            <ng-container matColumnDef="dividendProceeds">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Dividend Payments </th>
+                <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.dividendPayments | currency}} </td>
+            </ng-container>
+            <!-- Options Activity Column-->
+            <ng-container matColumnDef="optionsActivity">
+                <th mat-header-cell *matHeaderCellDef> Options Activities </th>
+                <td mat-cell *matCellDef="let result"> {{result.optionsActivity}} </td>
+            </ng-container>
+            <!-- Number Contracts Column-->
+            <ng-container matColumnDef="numberContracts">
+                <th mat-header-cell *matHeaderCellDef> Number Contracts </th>
+                <td mat-cell *matCellDef="let result"> {{result.numberContracts}} </td>
+            </ng-container>
+            <!-- Options Proceeds Column-->
+            <ng-container matColumnDef="optionsProceeds">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Options Proceeds </th>
+                <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.optionsProceeds | currency}} </td>
+            </ng-container>
+            <!-- Total Gains Column-->
+            <ng-container matColumnDef="totalGains">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Total Gains </th>
+                <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.totalGains | currency}} </td>
+            </ng-container>
+            <!-- Average Capital at Risk Column-->
+            <ng-container matColumnDef="averageCapitalAtRisk">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Avg Cap At Risk </th>
+                <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.averageCapitalAtRisk | currency}} </td>
+            </ng-container>
+            <!-- Annual Return Column-->
+            <ng-container matColumnDef="annualReturn">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Annual Return </th>
+                <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.annualReturn | percent:'1.2'}} </td>
+            </ng-container>
+
+            <!-- Header Row and Zebra Rows -->
+            <tr mat-header-row *matHeaderRowDef="analysisResultsDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row;
+                                    let even = even;
+                                    columns: analysisResultsDisplayedColumns;"
+                        [ngClass]="{zebra: even}"></tr>
+        </table>
+
+        <h4>End of Period Snapshot</h4>
+
+        <table class="compact-table" mat-table [dataSource]="snapshotDataSource">
+            <!-- Ticker Name Column-->
+            <ng-container matColumnDef="ticker">
+                <th mat-header-cell *matHeaderCellDef> Ticker </th>
+                <td mat-cell *matCellDef="let snapshot"> {{snapshot.ticker}} </td>
+            </ng-container>
+            <!-- Shares Column-->
+            <ng-container matColumnDef="shares">
+                <th mat-header-cell *matHeaderCellDef> Activity </th>
+                <td mat-cell *matCellDef="let snapshot"> {{snapshot.shares}} </td>
+            </ng-container>
+            <!-- Stock Value Column-->
+            <ng-container matColumnDef="stockValue">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Stock Value </th>
+                <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.stockValue | currency}} </td>
+            </ng-container>
+            <!-- Put Exposure Column-->
+            <ng-container matColumnDef="putExposure">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Put Exposre </th>
+                <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.putExposure | currency}} </td>
+            </ng-container>
+            <!-- Call Exposure Column-->
+            <ng-container matColumnDef="callExposure">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Callable Exposure </th>
+                <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.callExposure | currency}} </td>
+            </ng-container>
+            <!-- Header Row and Zebra Rows -->
+            <tr mat-header-row *matHeaderRowDef="snapshotDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row;
+                                    let even = even;
+                                    columns: snapshotDisplayedColumns;"
+                        [ngClass]="{zebra: even}"></tr>
+        </table>
+
+    </div>
 </div>
