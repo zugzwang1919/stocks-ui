@@ -180,7 +180,7 @@
             </ng-container>
             <!-- Shares Column-->
             <ng-container matColumnDef="shares">
-                <th mat-header-cell *matHeaderCellDef> Activity </th>
+                <th mat-header-cell *matHeaderCellDef> Shares Owned </th>
                 <td mat-cell *matCellDef="let snapshot"> {{snapshot.shares}} </td>
             </ng-container>
             <!-- Stock Value Column-->
@@ -190,8 +190,13 @@
             </ng-container>
             <!-- Put Exposure Column-->
             <ng-container matColumnDef="putExposure">
-                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Put Exposre </th>
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Put Exposure </th>
                 <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.putExposure | currency}} </td>
+            </ng-container>
+            <!-- Total Long Exposure Column-->
+            <ng-container matColumnDef="totalLongExposure">
+                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Total Long Exposure </th>
+                <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.totalLongExposure | currency}} </td>
             </ng-container>
             <!-- Call Exposure Column-->
             <ng-container matColumnDef="callExposure">

@@ -50,7 +50,7 @@ export class IncomeCalculatorComponent implements OnInit {
                                                'totalGains', 'averageCapitalAtRisk', 'annualReturn'];
 
   snapshotDataSource = new MatTableDataSource();
-  snapshotDisplayedColumns: string[] = ['ticker', 'shares', 'stockValue', 'putExposure', 'callExposure'];
+  snapshotDisplayedColumns: string[] = ['ticker', 'shares', 'stockValue', 'putExposure', 'totalLongExposure', 'callExposure'];
 
 
 
@@ -142,6 +142,7 @@ export class IncomeCalculatorComponent implements OnInit {
                                   shares: lifeCycle.closingPosition.size,
                                   stockValue: lifeCycle.closingPosition.value,
                                   putExposure: lifeCycle.optionExposureToPutsAtRequestedEndDate,
+                                  totalLongExposure: lifeCycle.totalLongExposure,
                                   callExposure: lifeCycle.optionExposureToCallsAtRequestedEndDate});
 
     });
