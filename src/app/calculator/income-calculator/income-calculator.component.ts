@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { TickerService } from 'src/app/ticker/ticker.service';
 import { WolfeGenericService } from 'src/app/wolfe-common/wolfe-generic-service';
 import { WolfeTrackedItem } from 'src/app/wolfe-common/wolfe-tracked-item';
@@ -10,6 +10,7 @@ import { Ticker } from 'src/app/ticker/ticker';
 import { Portfolio } from 'src/app/portfolio/portfolio';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { CalculatorService } from '../calculator.service';
+import { MatSort } from '@angular/material/sort';
 
 
 enum TimeFrame {
@@ -56,6 +57,8 @@ export class IncomeCalculatorComponent implements OnInit {
 
   analysisResultsPresent = false;
 
+  @ViewChild(MatSort) snapshotSort: MatSort;
+
   constructor(
     private alertService: AlertService,
     private calculatorService: CalculatorService,
@@ -79,6 +82,8 @@ export class IncomeCalculatorComponent implements OnInit {
                                 (a, b) => a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0,
                                 this.changeDetectorRef, this.tickerSelection, this.alertService);
   }
+
+
 
   performAnalysis() {
     // reset any previous alerts
@@ -126,7 +131,7 @@ export class IncomeCalculatorComponent implements OnInit {
                                 dividendPayments: lifeCycle.dividendsAccrued,
                                 optionsActivity: '',
                                 numberContracts: '',
-                                optionsProceeds: lifeCycle.optionsProceedsAccrued,
+                                optionsProceeds: lifeCycle.optionProceedsAccrued,
                                 totalGains: lifeCycle.totalGains,
                                 averageCapitalAtRisk: lifeCycle.dailyAverageCapitalAtRisk,
                                 annualReturn: lifeCycle.annualizedIncomeReturnOnInvestment });
@@ -138,15 +143,17 @@ export class IncomeCalculatorComponent implements OnInit {
   private buildClosingSnapshotSection(resultsFromService) {
     const snapshotCalculations = new Array();
     resultsFromService.lifeCycles.forEach( lifeCycle => {
-      snapshotCalculations.push({ ticker: lifeCycle.stock.ticker,
-                                  shares: lifeCycle.closingPosition.size,
-                                  stockValue: lifeCycle.closingPosition.value,
-                                  putExposure: lifeCycle.optionExposureToPutsAtRequestedEndDate,
-                                  totalLongExposure: lifeCycle.totalLongExposure,
-                                  callExposure: lifeCycle.optionExposureToCallsAtRequestedEndDate});
-
+      if (lifeCycle.includedInSnapshot) {
+        snapshotCalculations.push({ ticker: lifeCycle.stock.ticker,
+                                    shares: lifeCycle.closingPosition.size,
+                                    stockValue: lifeCycle.closingPosition.value,
+                                    putExposure: lifeCycle.optionExposureToPutsAtRequestedEndDate,
+                                    totalLongExposure: lifeCycle.totalLongExposure,
+                                    callExposure: lifeCycle.optionExposureToCallsAtRequestedEndDate});
+      }
     });
     this.snapshotDataSource.data = snapshotCalculations;
+    this.snapshotDataSource.sort = this.snapshotSort;
 
   }
 
