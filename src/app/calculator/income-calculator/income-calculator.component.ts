@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { TickerService } from 'src/app/ticker/ticker.service';
 import { WolfeGenericService } from 'src/app/wolfe-common/wolfe-generic-service';
 import { WolfeTrackedItem } from 'src/app/wolfe-common/wolfe-tracked-item';
@@ -11,6 +11,7 @@ import { Portfolio } from 'src/app/portfolio/portfolio';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { CalculatorService } from '../calculator.service';
 import { MatSort } from '@angular/material/sort';
+import { ThrowStmt } from '@angular/compiler';
 
 
 enum TimeFrame {
@@ -50,14 +51,17 @@ export class IncomeCalculatorComponent implements OnInit {
                                                'optionsActivity', 'numberContracts', 'optionsProceeds',
                                                'totalGains', 'averageCapitalAtRisk', 'annualReturn'];
 
-  snapshotDataSource = new MatTableDataSource();
+  snapshotInitialData: any[] = [];
+  snapshotDataSource = new MatTableDataSource(this.snapshotInitialData);
   snapshotDisplayedColumns: string[] = ['ticker', 'shares', 'stockValue', 'putExposure', 'totalLongExposure', 'callExposure'];
 
 
-
+  analysisResults: any = null;
   analysisResultsPresent = false;
 
-  @ViewChild(MatSort) snapshotSort: MatSort;
+  @ViewChild(MatSort) set content(snapshotSort: MatSort) {
+    this.snapshotDataSource.sort = snapshotSort;
+  }
 
   constructor(
     private alertService: AlertService,
@@ -84,7 +88,6 @@ export class IncomeCalculatorComponent implements OnInit {
   }
 
 
-
   performAnalysis() {
     // reset any previous alerts
     this.alertService.clear();
@@ -108,6 +111,7 @@ export class IncomeCalculatorComponent implements OnInit {
   }
 
   private updateResults(resultsFromService) {
+    this.analysisResults = resultsFromService;
     this.analysisResultsPresent = true;
 
     // Build the Analysis Results
@@ -141,19 +145,20 @@ export class IncomeCalculatorComponent implements OnInit {
   }
 
   private buildClosingSnapshotSection(resultsFromService) {
-    const snapshotCalculations = new Array();
-    resultsFromService.lifeCycles.forEach( lifeCycle => {
-      if (lifeCycle.includedInSnapshot) {
-        snapshotCalculations.push({ ticker: lifeCycle.stock.ticker,
-                                    shares: lifeCycle.closingPosition.size,
-                                    stockValue: lifeCycle.closingPosition.value,
-                                    putExposure: lifeCycle.optionExposureToPutsAtRequestedEndDate,
-                                    totalLongExposure: lifeCycle.totalLongExposure,
-                                    callExposure: lifeCycle.optionExposureToCallsAtRequestedEndDate});
-      }
+    const snapshotCalculations: any[] = resultsFromService.lifeCycles.filter(lc => lc.includedInSnapshot)
+                                        .map(lc => { return {
+                                          ticker: lc.stock.ticker,
+                                          shares: lc.closingPosition.size,
+                                          stockValue: lc.closingPosition.value,
+                                          putExposure: lc.optionExposureToPutsAtRequestedEndDate,
+                                          totalLongExposure: lc.totalLongExposure,
+                                          callExposure: lc.optionExposureToCallsAtRequestedEndDate
+                                        };
     });
     this.snapshotDataSource.data = snapshotCalculations;
-    this.snapshotDataSource.sort = this.snapshotSort;
+    // this.snapshotDataSource.sort = this.snapshotSort;
+    // Indicate that the data in the table has changed
+    this.changeDetectorRef.detectChanges();
 
   }
 

@@ -81,6 +81,8 @@
                         <th mat-header-cell *matHeaderCellDef> Company Name </th>
                         <td mat-cell *matCellDef="let ticker"> {{ticker.name}} </td>
                     </ng-container>
+
+
                     <tr mat-header-row *matHeaderRowDef="tickerDisplayedColumns sticky: true" ></tr>
                     <tr mat-row *matRowDef="let row;
                                             let even = even;
@@ -100,66 +102,79 @@
             <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef> Date </th>
                 <td mat-cell *matCellDef="let result"> {{result.date}} </td>
+                <td mat-footer-cell *matFooterCellDef>  TOTALS </td>
             </ng-container>
             <!-- Ticker Name Column-->
             <ng-container matColumnDef="ticker">
                 <th mat-header-cell *matHeaderCellDef> Ticker </th>
                 <td mat-cell *matCellDef="let result"> {{result.ticker}} </td>
+                <td mat-footer-cell *matFooterCellDef>   </td>
             </ng-container>
             <!-- Activity Column-->
             <ng-container matColumnDef="activity">
                 <th mat-header-cell *matHeaderCellDef> Activity </th>
                 <td mat-cell *matCellDef="let result"> {{result.activity}} </td>
+                <td mat-footer-cell *matFooterCellDef>  </td>
             </ng-container>
             <!-- Size Column-->
             <ng-container matColumnDef="size">
                 <th mat-header-cell *matHeaderCellDef> Size </th>
                 <td mat-cell *matCellDef="let result"> {{result.size}} </td>
+                <td mat-footer-cell *matFooterCellDef>   </td>
             </ng-container>
             <!-- Proceeds Column-->
             <ng-container matColumnDef="proceeds">
                 <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Proceeds </th>
                 <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.proceeds | currency}} </td>
+                <td class="right-aligned" mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.totalGains | currency}} </td>
             </ng-container>
             <!-- Dividend Shares Column-->
             <ng-container matColumnDef="dividendShares">
                 <th mat-header-cell *matHeaderCellDef> Dividend Shares </th>
                 <td mat-cell *matCellDef="let result"> {{result.dividendShares}} </td>
+                <td mat-footer-cell *matFooterCellDef>   </td>
             </ng-container>
             <!-- Dividend Proceeds Column-->
             <ng-container matColumnDef="dividendProceeds">
                 <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Dividend Payments </th>
                 <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.dividendPayments | currency}} </td>
+                <td class="right-aligned" mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.dividendProceeds | currency}} </td>
             </ng-container>
             <!-- Options Activity Column-->
             <ng-container matColumnDef="optionsActivity">
                 <th mat-header-cell *matHeaderCellDef> Options Activities </th>
                 <td mat-cell *matCellDef="let result"> {{result.optionsActivity}} </td>
+                <td mat-footer-cell *matFooterCellDef>  </td>
             </ng-container>
             <!-- Number Contracts Column-->
             <ng-container matColumnDef="numberContracts">
                 <th mat-header-cell *matHeaderCellDef> Number Contracts </th>
                 <td mat-cell *matCellDef="let result"> {{result.numberContracts}} </td>
+                <td mat-footer-cell *matFooterCellDef>   </td>
             </ng-container>
             <!-- Options Proceeds Column-->
             <ng-container matColumnDef="optionsProceeds">
                 <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Options Proceeds </th>
                 <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.optionsProceeds | currency}} </td>
+                <td class="right-aligned" mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.optionProceeds | currency}} </td>
             </ng-container>
             <!-- Total Gains Column-->
             <ng-container matColumnDef="totalGains">
                 <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Total Gains </th>
                 <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.totalGains | currency}} </td>
+                <td class="right-aligned" mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.totalGains | currency}} </td>
             </ng-container>
             <!-- Average Capital at Risk Column-->
             <ng-container matColumnDef="averageCapitalAtRisk">
                 <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Avg Cap At Risk </th>
-                <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.averageCapitalAtRisk | currency}} </td>
+                <td class="right-aligned" mat-cell *matCellDef="let result">  </td>
+                <td mat-footer-cell *matFooterCellDef>  </td>
             </ng-container>
             <!-- Annual Return Column-->
             <ng-container matColumnDef="annualReturn">
                 <th class="header-right-aligned" mat-header-cell *matHeaderCellDef> Annual Return </th>
                 <td class="right-aligned" mat-cell *matCellDef="let result"> {{result.annualReturn | percent:'1.2'}} </td>
+                <td class="right-aligned" mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.annualReturn | percent:'1.2'}} </td>
             </ng-container>
 
             <!-- Header Row and Zebra Rows -->
@@ -168,49 +183,60 @@
                                     let even = even;
                                     columns: analysisResultsDisplayedColumns;"
                         [ngClass]="{zebra: even}"></tr>
+            <tr mat-footer-row *matFooterRowDef="analysisResultsDisplayedColumns"></tr>
         </table>
 
-        <h4>End of Period Snapshot</h4>
+        <div class=snapshot-div>
 
-        <table class="compact-table" mat-table [dataSource]="snapshotDataSource"
-                matSort matSortActive="ticker" matSortDisableClear matSortDirection="asc">
-            <!-- Ticker Name Column-->
-            <ng-container matColumnDef="ticker">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Ticker </th>
-                <td mat-cell *matCellDef="let snapshot"> {{snapshot.ticker}} </td>
-            </ng-container>
-            <!-- Shares Column-->
-            <ng-container matColumnDef="shares">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Shares Owned </th>
-                <td mat-cell *matCellDef="let snapshot"> {{snapshot.shares}} </td>
-            </ng-container>
-            <!-- Stock Value Column-->
-            <ng-container matColumnDef="stockValue">
-                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef mat-sort-header> Stock Value </th>
-                <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.stockValue | currency}} </td>
-            </ng-container>
-            <!-- Put Exposure Column-->
-            <ng-container matColumnDef="putExposure">
-                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef mat-sort-header> Put Exposure </th>
-                <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.putExposure | currency}} </td>
-            </ng-container>
-            <!-- Total Long Exposure Column-->
-            <ng-container matColumnDef="totalLongExposure">
-                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef mat-sort-header> Total Long Exposure </th>
-                <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.totalLongExposure | currency}} </td>
-            </ng-container>
-            <!-- Call Exposure Column-->
-            <ng-container matColumnDef="callExposure">
-                <th class="header-right-aligned" mat-header-cell *matHeaderCellDef mat-sort-header> Callable Exposure </th>
-                <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.callExposure | currency}} </td>
-            </ng-container>
-            <!-- Header Row and Zebra Rows -->
-            <tr mat-header-row *matHeaderRowDef="snapshotDisplayedColumns"></tr>
-            <tr mat-row *matRowDef="let row;
-                                    let even = even;
-                                    columns: snapshotDisplayedColumns;"
-                        [ngClass]="{zebra: even}"></tr>
-        </table>
+            <h4>End of Period Snapshot</h4>
 
+            <table class="compact-table" mat-table [dataSource]="snapshotDataSource"
+                    matSort matSortActive="ticker" matSortDisableClear matSortDirection="asc">
+                <!-- Ticker Name Column-->
+                <ng-container matColumnDef="ticker">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Ticker </th>
+                    <td mat-cell *matCellDef="let snapshot"> {{snapshot.ticker}} </td>
+                    <td mat-footer-cell *matFooterCellDef>  TOTALS </td>
+                </ng-container>
+                <!-- Shares Column-->
+                <ng-container matColumnDef="shares">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Shares Owned </th>
+                    <td mat-cell *matCellDef="let snapshot"> {{snapshot.shares}} </td>
+                    <td mat-footer-cell *matFooterCellDef>   </td>
+                </ng-container>
+                <!-- Stock Value Column-->
+                <ng-container matColumnDef="stockValue">
+                    <th class="header-right-aligned" mat-header-cell *matHeaderCellDef mat-sort-header> Stock Value </th>
+                    <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.stockValue | currency}} </td>
+                    <td class="right-aligned" mat-footer-cell *matFooterCellDef>  {{analysisResults.snapshotTotals.stockValue | currency}} </td>
+                </ng-container>
+                <!-- Put Exposure Column-->
+                <ng-container matColumnDef="putExposure">
+                    <th class="header-right-aligned" mat-header-cell *matHeaderCellDef mat-sort-header> Put Exposure </th>
+                    <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.putExposure | currency}} </td>
+                    <td class="right-aligned" mat-footer-cell *matFooterCellDef>  {{analysisResults.snapshotTotals.putExposure | currency}} </td>
+                </ng-container>
+                <!-- Total Long Exposure Column-->
+                <ng-container matColumnDef="totalLongExposure">
+                    <th class="header-right-aligned" mat-header-cell *matHeaderCellDef mat-sort-header> Total Long Exposure </th>
+                    <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.totalLongExposure | currency}} </td>
+                    <td class="right-aligned" mat-footer-cell *matFooterCellDef>  {{analysisResults.snapshotTotals.totalLongExposure | currency}} </td>
+                </ng-container>
+                <!-- Call Exposure Column-->
+                <ng-container matColumnDef="callExposure">
+                    <th class="header-right-aligned" mat-header-cell *matHeaderCellDef mat-sort-header> Callable Exposure </th>
+                    <td class="right-aligned" mat-cell *matCellDef="let snapshot"> {{snapshot.callExposure | currency}} </td>
+                    <td class="right-aligned" mat-footer-cell *matFooterCellDef>  {{analysisResults.snapshotTotals.callableExposure | currency}} </td>
+                </ng-container>
+
+                <!-- Header Row, Zebra Rows, and Footer Row -->
+                <tr mat-header-row *matHeaderRowDef="snapshotDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let row;
+                                        let even = even;
+                                        columns: snapshotDisplayedColumns;"
+                            [ngClass]="{zebra: even}"></tr>
+                <tr mat-footer-row *matFooterRowDef="snapshotDisplayedColumns"></tr>
+            </table>
+        </div>
     </div>
 </div>
