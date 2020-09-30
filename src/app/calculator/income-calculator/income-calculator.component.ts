@@ -31,6 +31,8 @@ enum TimeFrame {
 })
 export class IncomeCalculatorComponent implements OnInit {
 
+  entryIsVisible = true;
+
   selectedTimeframe: TimeFrame =  TimeFrame.ALL_DATES;
   timeframes: string[] = [TimeFrame.ALL_DATES, TimeFrame.THIS_CALENDAR_YEAR,
                           TimeFrame.PREVIOUS_CALENDAR_YEAR, TimeFrame.PREVIOUS_AND_THIS_CALENDAR_YEAR,
@@ -110,9 +112,14 @@ export class IncomeCalculatorComponent implements OnInit {
       );
   }
 
+  toggleEntryVisibility() {
+    this.entryIsVisible = !this.entryIsVisible;
+  }
+
   private updateResults(resultsFromService) {
     this.analysisResults = resultsFromService;
     this.analysisResultsPresent = true;
+    this.entryIsVisible = false;
 
     // Build the Analysis Results
     this.buildAnalysisSection(resultsFromService);
