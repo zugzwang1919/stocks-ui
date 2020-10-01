@@ -17,11 +17,11 @@ export class WolfeHttpService {
     private currentUserService: CurrentUserService
   ) { }
 
-
-  get(urlPath: string) {
+  get(urlPath: string, params?: any) {
     const url: string = this.buildUrl(urlPath);
     const headers = new HttpHeaders();
     return this.httpClient.get<any>(url, {
+      params,
       headers: this.createAppropriateHeaders()
     });
   }

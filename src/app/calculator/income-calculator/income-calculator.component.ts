@@ -12,6 +12,7 @@ import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { CalculatorService } from '../calculator.service';
 import { MatSort } from '@angular/material/sort';
 import { ThrowStmt } from '@angular/compiler';
+import { stringify } from 'querystring';
 
 
 enum TimeFrame {
@@ -184,8 +185,40 @@ export class IncomeCalculatorComponent implements OnInit {
     return (selectionModel.isSelected(row) ? 'deselect ' : 'select ')  + row.id;
   }
 
+  handlePortfolioSelectionChange(row: any) {
+    // First, toggle the check box
+    this.portfolioSelection.toggle(row);
+    // Update the Ticker Section based on the porfolios selected
+    this.updateTickerListBasedOnPortfoliosSelected();
+  }
+
+  updateTickerListBasedOnPortfoliosSelected() {
+    // Update the Ticker Section based on the porfolios selected
+    const portfolioIds: number[] = this.portfolioSelection.selected.map((p: Portfolio) => p.id);
+    this.portfolioService.retrieveSecuritiesWithTransactionsInPorfolios(portfolioIds)
+    .subscribe(
+      tickers => {
+          // Put the tickers in the DataSource
+          this.tickerDataSource.data = tickers.sort((a, b) => a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0);
+          // Indicate that the data in the table has changed
+          this.changeDetectorRef.detectChanges();
+          // Reset the check boxes
+          this.tickerSelection = new SelectionModel(true, []);
+      },
+      error => this.alertService.error(error)
+    );
+  }
+
+  masterTogglePortfolios() {
+    // First toggle the portfolio items based on their current settings
+    this.masterToggle(this.portfolioSelection, this.portfolioDataSource);
+    // Update the Ticker Section based on the porfolios selected
+    this.updateTickerListBasedOnPortfoliosSelected();
+  }
+
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
+    // First toggle the
     this.areAllSelected(selectionModel, dataSource) ?
         selectionModel.clear() :
         dataSource.data.forEach(row => selectionModel.select(row));
