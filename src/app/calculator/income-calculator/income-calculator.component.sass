@@ -1,4 +1,5 @@
 @use 'src/wolfe-colors'
+@use 'src/styles'
 
 .income-calculator-div
     margin-top: 20px
@@ -57,10 +58,39 @@
 .mat-icon-button
     background-color: wolfe-colors.$wolfe-accent
 
-
-
 .analysis-results-div
     margin-top: 20px
 
 .snapshot-div
     margin-top: 20px
+
+
+.mat-column-proceeds
+    @extend %mat-column-right-justified
+
+.mat-column-dividendProceeds
+    @extend %mat-column-right-justified
+
+.mat-column-optionsProceeds
+    @extend %mat-column-right-justified
+
+.mat-column-totalGains
+    @extend %mat-column-right-justified
+
+.mat-column-averageCapitalAtRisk
+    @extend %mat-column-right-justified
+
+.mat-column-annualReturn
+    @extend %mat-column-right-justified
+
+.mat-column-stockValue
+    @extend %mat-column-right-justified
+
+.mat-column-putExposure
+    @extend %mat-column-right-justified
+
+.mat-column-totalLongExposure
+    @extend %mat-column-right-justified
+
+.mat-column-callExposure
+    @extend %mat-column-right-justified

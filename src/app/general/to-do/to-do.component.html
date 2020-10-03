@@ -1,4 +1,5 @@
 <div>
+    <div class="left-div">
     <br>
     <h2 style="text-align:center">Things to do</h2>
     <p>
@@ -6,66 +7,74 @@
         A lot of the server side functionality is already present as a Spring Boot app running on an AWS t3a.small EC2 instance.
         Most of the work below is strictly UI work.
     </p>
-    <h4>The Basics</h4>
-    <ul>
-        <li class="completed">Create an acouunt</li>
-        <li class="completed">Login</li>
-        <li>Implement a "Busy" indicator of some type</li>
-        <li class="completed">Get Sorting Working on Compound Columns (Transaction->Ticker->Symbol)</li>
-        <li>Color Scheme</li>
+    <div class="parent-div">
+        <div class="child-div">
+            <h4>General</h4>
             <ul>
-                <li class="completed">Come up with a color scheme other than a Material predefined theme</li>
-                <li class="completed">Zebra Rows in Most Tables</li>
-                <li>Tweak colors</li>
-                <li>Allow users to change between dark scheme and light scheme</li>
+                <li class="completed">Create an acouunt</li>
+                <li class="completed">Login</li>
+                <li>Implement a "Busy" indicator of some type</li>
+                <li class="completed">Get Sorting Working on Compound Columns (Transaction->Ticker->Symbol)</li>
+                <li>Color Scheme</li>
+                    <ul>
+                        <li class="completed">Come up with a color scheme other than a Material predefined theme</li>
+                        <li class="completed">Zebra Rows in Most Tables</li>
+                        <li>Tweak colors</li>
+                        <li>Allow users to change between dark scheme and light scheme</li>
+                    </ul>
+                <li class="completed">Hide / Show password</li>
+                <li class="completed">Good Default Sort Orders for all tabular pages</li>
+                <li>About->History etc</li>
+                <li class="completed">Page Scrolling Bugs</li>
+                    <ul>
+                        <li class="completed">Content visible when scrolling behind header and footer</li>
+                        <li class="completed">Sticky headers on tables come to front even when scrolled away</li>
+                    </ul>
+                <li>SERVER: Add more sophisticated logging</li>
             </ul>
-        <li class="completed">Hide / Show password</li>
-        <li class="completed">Good Default Sort Orders for all tabular pages</li>
-        <li>About->History etc</li>
-        <li class="completed">Page Scrolling Bugs</li>
+            <h4>CRUD</h4>
             <ul>
-                <li class="completed">Content visible when scrolling behind header and footer</li>
-                <li class="completed">Sticky headers on tables come to front even when scrolled away</li>
+                <li class="completed">Stocks to be Tracked</li>
+                <li class="completed">Options</li>
+                <li class="completed">Portfolios</li>
+                <li class="completed">Stock Transactions</li>
+                <li class="completed">Option Transactions</li>
+                <li>Support multiple deletes on all List pages</li>
+                <li>User Profile</li>
             </ul>
-        <li>SERVER: Add more sophisticated logging</li>
-    </ul>
-    <h4>CRUD</h4>
-    <ul>
-        <li class="completed">Stocks to be Tracked</li>
-        <li class="completed">Options</li>
-        <li class="completed">Portfolios</li>
-        <li class="completed">Stock Transactions</li>
-        <li class="completed">Option Transactions</li>
-        <li>Support multiple deletes on all List pages</li>
-        <li>User Profile</li>
-    </ul>
-    <h4>Calculations</h4>
-    <ul>
-        <li>Comparison vs Benchmark</li>
-        <li>Income</li>
-        <ul>
-            <li class="completed">SERVER: Filter Transacations and Option Transactions with Portfolio</li>
-            <li class="completed">SERVER: Add Total Long Exposure to LifeCycle</li>
-            <li>Add Custom Dates</li>
-            <li class="completed">Add ability to slide results</li>
-            <li class="completed">Add sortability to Snapshot</li>
-            <li class="completed">Add Totals to Snapshot</li>
-            <li class="completed">Add Totals to Analysis</li>
-            <li>Filter stock selections as portfolio selecitions change</li>
-            <li>Add Ability to See Details in Analysis</li>
-            <li class="completed">Snapshot should only have current holdings</li>
-        </ul>
-        <li>Implement a better IRR calculator (backend work required)</li>
-    </ul>
-    <h4>Admin</h4>
-    <ul>
-        <li>Update all stock prices</li>
-        <li>Update one stock</li>
-        <li>Update dividends and stock splits</li>
-    </ul>
-    <h4>Minor Stuff</h4>
-    <ul>
-        <li>"Update" button should not be activated until something has actually changed</li>
-    </ul>
-    <br>
+        </div>
+        <div class="child-div">
+            <h4>Calculations</h4>
+            <ul>
+                <li>Comparison vs Benchmark</li>
+                <li>Income</li>
+                <ul>
+                    <li class="completed">SERVER: Filter Transacations and Option Transactions with Portfolio</li>
+                    <li class="completed">SERVER: Add Total Long Exposure to LifeCycle</li>
+                    <li>Add Custom Dates</li>
+                    <li class="completed">Add ability to slide results</li>
+                    <li class="completed">Add sortability to Snapshot</li>
+                    <li class="completed">Add Totals to Snapshot</li>
+                    <li class="completed">Add Totals to Analysis</li>
+                    <li class="completed">Filter stock selections as portfolio selections change</li>
+                    <li>Add Ability to See Details in Analysis</li>
+                    <li class="completed">Snapshot should only have current holdings</li>
+                    <li>Look at making results even more compact</li>
+                </ul>
+                <li>Implement a better IRR calculator (backend work required)</li>
+            </ul>
+            <h4>Admin</h4>
+            <ul>
+                <li>Update all stock prices</li>
+                <li>Update one stock</li>
+                <li>Update dividends and stock splits</li>
+            </ul>
+            <h4>Minor Stuff</h4>
+            <ul>
+                <li>"Update" button should not be activated until something has actually changed</li>
+                <li class="completed">Sortable tables do not have their headings right justified properly</li>
+            </ul>
+            </div>
+        </div>
+    </div>
 </div>

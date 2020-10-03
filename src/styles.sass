@@ -45,6 +45,14 @@
     tr
         height: 28px !important
 
+/* The compact table picks up all of the attrbitutes of the standard table */
+/* In addition, the table row height is set to a smaller number to allow more rows to be visible in the alotted space */
+.micro-table
+    @extend %standard-table
+    tr
+        height: 20px !important
+
+
 /* Simple alignment classes that will definitely be used for td's, but may be used for other items. */
 .left-aligned
     text-alignt: left
@@ -56,9 +64,12 @@
 .center-aligned
     text-align: center
 
-.header-right-aligned
-    text-align: right !important
-    padding-right: 5px !important
+
+%mat-column-right-justified
+    text-align: right
+    justify-content: flex-end
+    ::ng-deep .mat-sort-header-container
+        justify-content: flex-end
 
 
 /* Used for the even rows of tables where appropriate */
