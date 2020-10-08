@@ -5,16 +5,32 @@
         <div class="left-right-container">
             <div class="flex-child">
                 <h4> Timeframe </h4>
-                <div class="timeframe-div">
-                    <mat-radio-group
-                        aria-labelledby="timeframe-radio-group-label"
-                        class="timeframe-radio-group"
-                        [(ngModel)]="selectedTimeframe">
-                        <mat-radio-button class="timeframe-radio-button" *ngFor="let timeframe of timeframes" [value]="timeframe">
-                            {{timeframe}}
-                        </mat-radio-button>
-                    </mat-radio-group>
-
+                <div class="timeframe-div left-right-container">
+                    <div class="radio-group-div timeframe-child">
+                        <mat-radio-group
+                            aria-labelledby="timeframe-radio-group-label"
+                            class="timeframe-radio-group"
+                            [(ngModel)]="selectedTimeframe">
+                            <mat-radio-button class="timeframe-radio-button" *ngFor="let timeframe of timeframes" [value]="timeframe">
+                                {{timeframe}}
+                            </mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                    <div *ngIf=shouldCustomDatesBeVisible() class="custom-date-div timeframe-child">
+                        <h5> Custom Dates </h5>
+                        <mat-form-field color="accent">
+                            <mat-label>Start Date</mat-label>
+                            <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="selectedStartDate">
+                            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                            <mat-datepicker #startDatePicker></mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field color="accent">
+                            <mat-label>End Date</mat-label>
+                            <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="selectedEndDate">
+                            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                            <mat-datepicker #endDatePicker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
                 </div>
                 <h4> Portfolios to be Included </h4>
                 <div class="portfolio-scrollable-div">

@@ -13,6 +13,7 @@ import { CalculatorService } from '../calculator.service';
 import { MatSort } from '@angular/material/sort';
 import { ThrowStmt } from '@angular/compiler';
 import { stringify } from 'querystring';
+import { FormControl } from '@angular/forms';
 
 
 enum TimeFrame {
@@ -38,6 +39,8 @@ export class IncomeCalculatorComponent implements OnInit {
   timeframes: string[] = [TimeFrame.ALL_DATES, TimeFrame.THIS_CALENDAR_YEAR,
                           TimeFrame.PREVIOUS_CALENDAR_YEAR, TimeFrame.PREVIOUS_AND_THIS_CALENDAR_YEAR,
                           TimeFrame.LAST_TWELVE_MONTHS, TimeFrame.LAST_TWENTY_FOUR_MONTHS, TimeFrame.CUSTOM_DATES];
+  selectedStartDate: Date;
+  selectedEndDate: Date;
 
   portfolioInitialData: any[] = [];
   portfolioDataSource = new MatTableDataSource(this.portfolioInitialData);
@@ -65,6 +68,7 @@ export class IncomeCalculatorComponent implements OnInit {
   @ViewChild(MatSort) set content(snapshotSort: MatSort) {
     this.snapshotDataSource.sort = snapshotSort;
   }
+
 
   constructor(
     private alertService: AlertService,
@@ -209,6 +213,11 @@ export class IncomeCalculatorComponent implements OnInit {
     );
   }
 
+  shouldCustomDatesBeVisible(): boolean {
+    return this.selectedTimeframe === TimeFrame.CUSTOM_DATES;
+  }
+
+
   masterTogglePortfolios() {
     // First toggle the portfolio items based on their current settings
     this.masterToggle(this.portfolioSelection, this.portfolioDataSource);
@@ -265,9 +274,9 @@ export class IncomeCalculatorComponent implements OnInit {
         return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
       case TimeFrame.LAST_TWENTY_FOUR_MONTHS:
         return new Date(now.getFullYear() - 2, now.getMonth(), now.getDate());
-      case TimeFrame.ALL_DATES:
-      // FIXME
-      case TimeFrame.CUSTOM_DATES:
+       case TimeFrame.CUSTOM_DATES:
+        return this.selectedStartDate;
+       case TimeFrame.ALL_DATES:
         return undefined;
     }
   }
@@ -276,13 +285,13 @@ export class IncomeCalculatorComponent implements OnInit {
     switch (this.selectedTimeframe) {
       case TimeFrame.PREVIOUS_CALENDAR_YEAR:
         return new Date(now.getFullYear() - 1, 11, 31);
+      case TimeFrame.CUSTOM_DATES:
+        return this.selectedEndDate;
       case TimeFrame.THIS_CALENDAR_YEAR:
       case TimeFrame.PREVIOUS_AND_THIS_CALENDAR_YEAR:
       case TimeFrame.LAST_TWELVE_MONTHS:
       case TimeFrame.LAST_TWENTY_FOUR_MONTHS:
       case TimeFrame.ALL_DATES:
-      // FIXME
-      case TimeFrame.CUSTOM_DATES:
         return undefined;
     }
   }
