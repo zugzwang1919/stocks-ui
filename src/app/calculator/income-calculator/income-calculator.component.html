@@ -183,7 +183,7 @@
                 <ng-container matColumnDef="proceeds">
                     <th mat-header-cell *matHeaderCellDef> Proceeds </th>
                     <td mat-cell *matCellDef="let result"> {{result.proceeds | currency}} </td>
-                    <td mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.totalGains | currency}} </td>
+                    <td mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.proceeds | currency}} </td>
                 </ng-container>
                 <!-- Dividend Shares Column-->
                 <ng-container matColumnDef="dividendShares">
