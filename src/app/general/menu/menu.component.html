@@ -7,6 +7,10 @@
         <mat-icon>home</mat-icon>
         <span>Home</span>
     </button>
+    <button *ngIf="isAdmin" routerLink='/admin' mat-menu-item>
+        <mat-icon>settings</mat-icon>
+        <span>Admin</span>
+    </button>
     <button mat-menu-item [matMenuTriggerFor]="portfolios">
         <mat-icon>folder_open</mat-icon>
         <span>Portoflios</span>

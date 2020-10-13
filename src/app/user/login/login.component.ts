@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         lr  =>  {
           // If this goes well...
           // Set the current user
-          this.currentUserService.setCurrentUser(userName, lr.token);
+          this.currentUserService.setCurrentUser(userName, lr.token, lr.admin);
           // and navigate to the appropriate page
           this.router.navigate([this.futureUrl]);
         },

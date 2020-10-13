@@ -17,6 +17,7 @@ import { TickerTransactionModule } from './ticker-transaction/ticker-transaction
 import { OptionModule } from './option/option.module';
 import { OptionTransactionModule } from './option-transaction/option-transaction.module';
 import { CalculatorModule } from './calculator/calculator.module';
+import { AdminModule } from './admin/admin.module';
 
 
 
@@ -41,7 +42,8 @@ import { CalculatorModule } from './calculator/calculator.module';
     TickerTransactionModule,
     OptionModule,
     OptionTransactionModule,
-    CalculatorModule
+    CalculatorModule,
+    AdminModule
   ],
   providers: [],
   bootstrap: [AppComponent]

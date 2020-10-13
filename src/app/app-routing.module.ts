@@ -16,9 +16,11 @@ import { TickerTransactionsComponent } from './ticker-transaction/ticker-transac
 import { ToDoComponent} from './general/to-do/to-do.component';
 import { LoggedInGuard } from './wolfe-common/logged-in.guard';
 import { IncomeCalculatorComponent } from './calculator/income-calculator/income-calculator.component';
+import { AdminComponent } from './admin/admin/admin.component';
 
 
 const routes: Routes = [
+  { path: 'admin', component: AdminComponent },
   { path: 'about/todo', component: ToDoComponent },
   { path: 'login', component: LoginComponent },
   { path: 'user/register', component: RegisterComponent },
