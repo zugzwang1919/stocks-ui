@@ -51,6 +51,14 @@ export class AdminComponent implements OnInit {
           );
         break;
       }
+      case '3': {
+        this.adminService.updateAllStockSplits()
+          .subscribe(
+            result  =>  this.alertService.success(result.summary),
+            error => this.alertService.error(error)
+          );
+        break;
+      }
     }
   }
 }

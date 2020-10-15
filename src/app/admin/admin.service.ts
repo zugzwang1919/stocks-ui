@@ -20,4 +20,8 @@ export class AdminService {
   updateAllDividends(): Observable<any> {
     return this.wolfeHttpService.post('/admin/reloadAllDividends', null, null);
   }
+
+  updateAllStockSplits(): Observable<any> {
+    return this.wolfeHttpService.post('/admin/reloadAllStockSplits', null, null);
+  }
 }
