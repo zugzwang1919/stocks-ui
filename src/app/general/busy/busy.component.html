@@ -1,0 +1,19 @@
+<!-- These two divs exist just to allow for the placement of the spinner-div below -->
+<!-- They don't actually contain anything -->
+<div class="alignment-outer-busy-div" >
+    <div class="alignment-inner-busy-div" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
+
+    </div>
+</div>
+
+
+<ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="trigger"
+    [cdkConnectedOverlayOpen]="eventsInProgress.length > 0"
+    >
+    <div class="spinner-div">
+        <mat-spinner color="accent" diameter="150"></mat-spinner>
+    </div>
+</ng-template>
+

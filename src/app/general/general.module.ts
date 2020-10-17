@@ -11,6 +11,7 @@ import { TopOfPageComponent } from './top-of-page/top-of-page.component';
 import { AlertComponent } from './alert/alert.component';
 import { MenuComponent } from './menu/menu.component';
 import { ToDoComponent } from './to-do/to-do.component';
+import { BusyComponent } from './busy/busy.component';
 
 
 
@@ -22,7 +23,8 @@ import { ToDoComponent } from './to-do/to-do.component';
     MainPageComponent,
     TopOfPageComponent,
     MenuComponent,
-    ToDoComponent
+    ToDoComponent,
+    BusyComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +37,8 @@ import { ToDoComponent } from './to-do/to-do.component';
     BottomOfPageComponent,
     MainPageComponent,
     ToDoComponent,
-    TopOfPageComponent
+    TopOfPageComponent,
+    BusyComponent
   ]
 })
 export class GeneralModule { }

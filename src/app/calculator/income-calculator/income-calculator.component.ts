@@ -14,6 +14,7 @@ import { MatSort } from '@angular/material/sort';
 import { ThrowStmt } from '@angular/compiler';
 import { stringify } from 'querystring';
 import { FormControl } from '@angular/forms';
+import { BusyService } from 'src/app/general/busy/busy.service';
 
 
 enum TimeFrame {
@@ -34,6 +35,7 @@ enum TimeFrame {
 export class IncomeCalculatorComponent implements OnInit {
 
   entryIsVisible = true;
+  busy = false;
 
   selectedTimeframe: TimeFrame =  TimeFrame.ALL_DATES;
   timeframes: string[] = [TimeFrame.ALL_DATES, TimeFrame.THIS_CALENDAR_YEAR,
@@ -53,9 +55,9 @@ export class IncomeCalculatorComponent implements OnInit {
   tickerDisplayedColumns: string[] = ['select', 'ticker', 'name'];
 
   analysisResultsDataSource = new MatTableDataSource();
-  analysisResultsDisplayedColumns: string[] = ['date', 'ticker', 'activity', 'size', 'proceeds', 'dividendShares', 'dividendProceeds',
-                                               'optionsActivity', 'numberContracts', 'optionsProceeds',
-                                               'totalGains', 'averageCapitalAtRisk', 'annualReturn'];
+  analysisResultsDisplayedColumns: string[] = [   'ticker', 'proceeds', 'dividendProceeds',
+                                                  'optionsProceeds',
+                                                  'totalGains', 'annualReturn'];
 
   snapshotInitialData: any[] = [];
   snapshotDataSource = new MatTableDataSource(this.snapshotInitialData);
@@ -72,6 +74,7 @@ export class IncomeCalculatorComponent implements OnInit {
 
   constructor(
     private alertService: AlertService,
+    private busyService: BusyService,
     private calculatorService: CalculatorService,
     private changeDetectorRef: ChangeDetectorRef,
     private portfolioService: PortfolioService,
@@ -98,6 +101,8 @@ export class IncomeCalculatorComponent implements OnInit {
   performAnalysis() {
     // reset any previous alerts
     this.alertService.clear();
+    // indicate that we're busy to our html template and to the Busy Service
+    this.setBusyState(true);
 
 
     // Try to create the new security/stock/etf/mutual fund/ticker
@@ -111,9 +116,17 @@ export class IncomeCalculatorComponent implements OnInit {
                                           true)
       .subscribe(
           // SUCCESS! ->  Show the results
-          resultsFromService  =>  this.updateResults(resultsFromService),
+          resultsFromService  =>  {
+            this.updateResults(resultsFromService);
+            // Notify everyone that we're no longer busy
+            this.setBusyState(false);
+          },
           // ERROR! -> Display the error
-          error => this.alertService.error(error)
+          error =>  {
+            this.alertService.error(error);
+            // Notify everyone that we're no longer busy
+            this.setBusyState(false);
+          }
       );
   }
 
@@ -235,7 +248,7 @@ export class IncomeCalculatorComponent implements OnInit {
 
   shouldSubmitBeDisabled() {
     // If no portfolios are selected  OR  no stocks are selected, the submit button should be disabled
-    return this.portfolioSelection.selected.length === 0 || this.tickerSelection.selected.length === 0;
+    return this.portfolioSelection.selected.length === 0 || this.tickerSelection.selected.length === 0 || this.busy;
   }
 
   private populateSelectionTable(retrievalService: WolfeGenericService<WolfeTrackedItem>, dataSource: MatTableDataSource<WolfeTrackedItem>,
@@ -295,4 +308,17 @@ export class IncomeCalculatorComponent implements OnInit {
         return undefined;
     }
   }
+
+  private setBusyState(input: boolean) {
+    // Keep track of locally whether or not we're busy
+    this.busy = input;
+    // Tell the BusyService whether or note we're busy
+    if (input) {
+      this.busyService.busy(12);
+    }
+    else {
+      this.busyService.finished(12);
+    }
+  }
+
 }
