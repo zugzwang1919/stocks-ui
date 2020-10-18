@@ -7,7 +7,7 @@
             <mat-radio-button value="3">Update all Stock Splits</mat-radio-button>
         </mat-radio-group>
         <div>
-            <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="!adminGroup.valid">Submit</button>
+            <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="!adminGroup.valid || busy">Submit</button>
         </div>
 
     </form>
