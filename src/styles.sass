@@ -6,8 +6,10 @@
     align-items: center
     text-align: center
     flex-direction: column
-    /* Every component must move itself down the page from the preceeding component */
-    margin-top: 20px
+    /* Every component must move itself down the page from the preceeding component by 20px */
+    /*  but the busy div is currently occupying 20px - for some unknown reason, */
+    /*  so the highest div does not need to move itself down */
+    margin-top: 0px
 
 
 
@@ -66,6 +68,7 @@
 
 
 %mat-column-right-justified
+    padding-right: 20px
     text-align: right
     justify-content: flex-end
     ::ng-deep .mat-sort-header-container
@@ -76,3 +79,9 @@
 /* NOTE: This is currently set assuming a dark-theme */
 .zebra
     background-color: #383838 !important
+
+
+/* Used when an h4 is embedded in a div and needs */
+/* to provide some spacing from the component above it */
+.embedded-h4
+    margin-top: 15px

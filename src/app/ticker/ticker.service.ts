@@ -21,6 +21,10 @@ export class TickerService extends WolfeGenericService<Ticker> {
   // NOTE: retrieve(), retrieveAll(), and delete() are picked up
   //       from the base class
 
+  retrieveAllBenchmarks() {
+    return this.wolfeHttpService.get('/stock/benchmarks');
+  }
+
   create(tickerSymbol: string, name: string, isBenchmark: boolean): Observable<Ticker> {
     const params = { ticker: tickerSymbol, name, benchmark: isBenchmark };
     return this.wolfeHttpService.post('/stock', params, null);

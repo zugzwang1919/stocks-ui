@@ -15,6 +15,7 @@ import { TickerTransactionDetailsComponent } from './ticker-transaction/ticker-t
 import { TickerTransactionsComponent } from './ticker-transaction/ticker-transactions/ticker-transactions.component';
 import { ToDoComponent} from './general/to-do/to-do.component';
 import { LoggedInGuard } from './wolfe-common/logged-in.guard';
+import { BenchmarkCalculatorComponent } from './calculator/benchmark-calculator/benchmark-calculator.component';
 import { IncomeCalculatorComponent } from './calculator/income-calculator/income-calculator.component';
 import { AdminComponent } from './admin/admin/admin.component';
 
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'user/register', component: RegisterComponent },
   { path: 'welcome', component: MainPageComponent},
+  { path: 'benchmark-calculator', component: BenchmarkCalculatorComponent, canActivate: [LoggedInGuard]},
   { path: 'income-calculator', component: IncomeCalculatorComponent, canActivate: [LoggedInGuard]},
   { path: 'option', component: OptionsComponent, canActivate: [LoggedInGuard]},
   { path: 'option/create', component: OptionDetailsComponent, canActivate: [LoggedInGuard]},

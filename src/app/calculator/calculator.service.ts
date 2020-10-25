@@ -16,7 +16,7 @@ export class CalculatorService {
     private wolfeHttpService: WolfeHttpService,
   ) { }
 
-  // FIXME: Change from "any" to "IncomeAnalysis" once "IncomeAnalysis" exists.
+  // FIXME: Change from "any" to "IncomeAnalysisResponse" once "IncomeAnalysisResponse" exists.
   analyzeIncome(beginDate: Date, endDate: Date, portfolioIds: number[], stockIds: number[],
                 includeDividends: boolean, includeOptions: boolean): Observable<any> {
     const params: any = {};
@@ -30,4 +30,22 @@ export class CalculatorService {
     params.includeOptions = includeOptions;
     return this.wolfeHttpService.post('/income-analysis', params, null);
   }
+
+  // FIXME: Change from "any" to "BenchmarkAnalysisResponse" once "BenchmarkAnalysisResponse" exists.
+  analyzeVsBenchmarks(beginDate: Date, endDate: Date,
+                      portfolioIds: number[], stockIds: number[], benchmarkIds: number[],
+                      includeDividends: boolean, includeOptions: boolean): Observable<any> {
+    const params: any = {};
+    // NOTE: If the caller wants to use the null/undefined Date to indicate either the
+    // NOTE: beginning of time or NOW, pass an empty string as a request param
+    params.beginDate = beginDate ? this.datePipe.transform(beginDate, 'yyyy-MM-dd') : '';
+    params.endDate = endDate ? this.datePipe.transform(endDate, 'yyyy-MM-dd') : '';
+    params.portfolioIds = portfolioIds;
+    params.benchmarkIds = benchmarkIds;
+    params.stockIds = stockIds;
+    params.includeDividends = includeDividends;
+    params.includeOptions = includeOptions;
+    return this.wolfeHttpService.post('/benchmark-analysis', params, null);
+  }
+
 }

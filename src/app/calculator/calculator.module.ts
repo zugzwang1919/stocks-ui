@@ -6,13 +6,15 @@ import { RouterModule } from '@angular/router';
 import { IncomeCalculatorComponent } from './income-calculator/income-calculator.component';
 import { MaterialModule } from '../material/material.module';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
+import { BenchmarkCalculatorComponent } from './benchmark-calculator/benchmark-calculator.component';
 
 
 
 
 @NgModule({
   declarations: [
-    IncomeCalculatorComponent
+    IncomeCalculatorComponent,
+    BenchmarkCalculatorComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,8 @@ import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
     WolfeCommonModule
   ],
   exports: [
-    IncomeCalculatorComponent
+    IncomeCalculatorComponent,
+    BenchmarkCalculatorComponent
   ],
 })
 export class CalculatorModule { }

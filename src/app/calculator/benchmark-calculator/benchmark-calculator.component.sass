@@ -1,0 +1,96 @@
+@use 'src/wolfe-colors'
+@use 'src/styles'
+
+h4
+    margin-bottom: 5px
+
+.benchmark-calculator-div
+    margin-top: 20px
+    text-align: center
+
+.left-right-container
+    display: flex
+
+.flex-child
+    flex: 1
+
+.flex-child:first-child
+    margin-right: 80px
+
+
+.timeframe-child
+    flex: 1
+    margin-right: 20px
+    margin-left: 20px
+
+.custom-date-div
+    align-self: flex-end
+    border: 1px solid white
+    padding-top: 5px
+    margin-bottom: 5px
+
+/* Set Height to a multiple of 28 to give an even number of rows */
+.portfolio-scrollable-div
+    height: 280px
+    overflow-y: auto
+
+/* Set Height to a multiple of 28 to give an even number of rows */
+.ticker-scrollable-div
+    height: 392px
+    overflow-y: auto
+
+/* Set Height to a multiple of 28 to give an even number of rows */
+.benchmark-scrollable-div
+    height: 140px
+    overflow-y: auto
+
+.timeframe-div
+    background-color: wolfe-colors.$wolfe-background-card
+
+.timeframe-radio-group
+    display: flex
+    flex-direction: column
+    margin: 15px 0
+
+.timeframe-radio-button
+    margin: 5px
+
+
+/* The timeframe radio buttons are by default 20px */
+/* Make them slightly smaller for this page */
+
+::ng-deep .mat-radio-button
+    line-height: 14px !important
+    margin: 1px !important
+
+::ng-deep .mat-radio-inner-circle
+    width: 15px !important
+    height: 15px !important
+
+::ng-deep .mat-radio-outer-circle
+    width: 15px !important
+    height: 15px !important
+
+::ng-deep .mat-radio-label-content
+    padding-left: 5px !important
+
+.hideShowContainingDiv
+    display: flex
+    flex-direction: row
+
+.hideShowLineDiv
+    padding-top: 10px
+    flex: 2
+
+.hideShowButtonDiv
+    flex: 1
+
+.analysis-results-div
+    margin-top: 20px
+
+/* Columns in the results table that need to be right justified */
+.mat-column-startSize, .mat-column-startValue, .mat-column-endSize, .mat-column-endValue, .mat-column-return, .mat-column-benchmarkReturn, .mat-column-outperformance
+    @extend %mat-column-right-justified
+
+.mat-icon-button
+    background-color: wolfe-colors.$wolfe-accent
