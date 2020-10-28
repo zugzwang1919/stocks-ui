@@ -92,5 +92,22 @@ h4
 .mat-column-startSize, .mat-column-startValue, .mat-column-endSize, .mat-column-endValue, .mat-column-return, .mat-column-benchmarkReturn, .mat-column-outperformance
     @extend %mat-column-right-justified
 
+/* Columns in the results summary table that need to be right justified */
+.mat-column-totalInflows, .mat-column-totalOutflows, .mat-column-return, .mat-column-benchmarkInflows, .mat-column-benchmarkOutflows, .mat-column-totalOutperformance
+    @extend %mat-column-right-justified
+
+.mat-column-benchmark
+    @extend %mat-column-center-justified
+
+/* Separate the portfolio results from the benchmark results */
+.mat-column-benchmark
+    padding-left: 100px
+
+.mat-column-totalOutperformance
+    padding-left: 50px
+
+.summary-div
+    margin-top: 20px
+
 .mat-icon-button
     background-color: wolfe-colors.$wolfe-accent

@@ -192,56 +192,57 @@
             </div>
         </div> <!-- hideShowContainingDiv -->
         <div class="analysis-results-div">
-            <table class="micro-table" mat-table [dataSource]="analysisResultsDataSource">
+            <table class="micro-table" mat-table [dataSource]="analysisResultsDataSource"
+            matSort matSortActive="ticker" matSortDisableClear matSortDirection="asc">
 
                 <!-- Ticker Name Column-->
                 <ng-container matColumnDef="ticker">
-                    <th mat-header-cell *matHeaderCellDef> Ticker </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Ticker </th>
                     <td mat-cell *matCellDef="let result"> {{result.ticker}} </td>
                 </ng-container>
                 <!-- Start Date Column -->
                 <ng-container matColumnDef="startDate">
-                    <th mat-header-cell *matHeaderCellDef> Start Date </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
                     <td mat-cell *matCellDef="let result"> {{result.startDate | date:'MM/dd/yyyy'}} </td>
                 </ng-container>
                 <!-- Start Size Column -->
                 <ng-container matColumnDef="startSize">
-                    <th mat-header-cell *matHeaderCellDef> Start Size </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Size </th>
                     <td mat-cell *matCellDef="let result"> {{result.startSize}} </td>
                 </ng-container>
                 <!-- Start Value Column-->
                 <ng-container matColumnDef="startValue">
-                    <th mat-header-cell *matHeaderCellDef> Start Value </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Value </th>
                     <td mat-cell *matCellDef="let result"> {{result.startValue | currency}} </td>
                 </ng-container>
                 <!-- End Date Column -->
                 <ng-container matColumnDef="endDate">
-                    <th mat-header-cell *matHeaderCellDef> End Date </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
                     <td mat-cell *matCellDef="let result"> {{result.endDate | date:'MM/dd/yyyy'}} </td>
                 </ng-container>
                 <!-- End Size Column -->
                 <ng-container matColumnDef="endSize">
-                    <th mat-header-cell *matHeaderCellDef> End Size </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> End Size </th>
                     <td mat-cell *matCellDef="let result"> {{result.endSize}} </td>
                 </ng-container>
                 <!-- End Value Column-->
                 <ng-container matColumnDef="endValue">
-                    <th mat-header-cell *matHeaderCellDef> End Value </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> End Value </th>
                     <td mat-cell *matCellDef="let result"> {{result.endValue | currency}} </td>
                 </ng-container>
                 <!-- Return Column-->
                 <ng-container matColumnDef="return">
-                    <th mat-header-cell *matHeaderCellDef> Return </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Return </th>
                     <td mat-cell *matCellDef="let result"> {{result.return | percent:'1.2'}} </td>
                 </ng-container>
                 <!-- Benchmark Return Column-->
                 <ng-container matColumnDef="benchmarkReturn">
-                    <th mat-header-cell *matHeaderCellDef> Benchmark Return </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Benchmark Return </th>
                     <td mat-cell *matCellDef="let result"> {{result.benchmarkReturn | percent:'1.2'}} </td>
                 </ng-container>
                 <!-- Outperformance Column-->
                 <ng-container matColumnDef="outperformance">
-                    <th mat-header-cell *matHeaderCellDef> Outperformance </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Outperformance </th>
                     <td mat-cell *matCellDef="let result"> {{result.outperformance | percent:'1.2'}} </td>
                 </ng-container>
 
@@ -254,6 +255,59 @@
                             [ngClass]="{zebra: even}"></tr>
             </table>
         </div> <!-- Analysis Results Div -->
+        <div class="summary-div">
+            <table class="micro-table" mat-table [dataSource]="summaryDataSource">
+
+                <!-- Total Inflows Column-->
+                <ng-container matColumnDef="totalInflows">
+                    <th mat-header-cell *matHeaderCellDef > Total Inflows </th>
+                    <td mat-cell *matCellDef="let summary"> {{summary.totalInflows | currency}} </td>
+                </ng-container>
+                <!-- Total Outflows Column-->
+                <ng-container matColumnDef="totalOutflows">
+                    <th mat-header-cell *matHeaderCellDef > Total Outflows </th>
+                    <td mat-cell *matCellDef="let summary"> {{summary.totalOutflows | currency}} </td>
+                </ng-container>
+                <!-- Return Column-->
+                <ng-container matColumnDef="return">
+                    <th mat-header-cell *matHeaderCellDef > Return </th>
+                    <td mat-cell *matCellDef="let summary"> {{summary.return | percent:'1.2'}} </td>
+                </ng-container>
+                <!-- Benchmark Ticker-->
+                <ng-container matColumnDef="benchmark">
+                    <th mat-header-cell *matHeaderCellDef > Benchmark </th>
+                    <td mat-cell *matCellDef="let summary"> {{summary.benchmark}} </td>
+                </ng-container>
+                <!-- Benchmark Inflows-->
+                <ng-container matColumnDef="benchmarkInflows">
+                    <th mat-header-cell *matHeaderCellDef > Benchmark Inflows</th>
+                    <td mat-cell *matCellDef="let summary"> {{summary.benchmarkInflows | currency}} </td>
+                </ng-container>
+                <!-- Benchmark Outflows-->
+                <ng-container matColumnDef="benchmarkOutflows">
+                    <th mat-header-cell *matHeaderCellDef > Benchmark Outflows</th>
+                    <td mat-cell *matCellDef="let summary"> {{summary.benchmarkOutflows | currency}} </td>
+                </ng-container>
+                <!-- Benchmark Return-->
+                <ng-container matColumnDef="benchmarkReturn">
+                    <th mat-header-cell *matHeaderCellDef > Benchmark Return</th>
+                    <td mat-cell *matCellDef="let summary"> {{summary.benchmarkReturn | percent:'1.2'}} </td>
+                </ng-container>
+                <!-- Outperformance -->
+                <ng-container matColumnDef="totalOutperformance">
+                    <th mat-header-cell *matHeaderCellDef > Total Outperformance</th>
+                    <td mat-cell *matCellDef="let summary"> {{summary.totalOutperformance | percent:'1.2'}} </td>
+                </ng-container>
+
+
+                <!-- Header Row and Zebra Rows -->
+                <tr mat-header-row *matHeaderRowDef="summaryDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let row;
+                                        let even = even;
+                                        columns: summaryDisplayedColumns;"
+                            [ngClass]="{zebra: even}"></tr>
+            </table>
+        </div> <!-- Summary Div -->
 
     </div>
 </div>

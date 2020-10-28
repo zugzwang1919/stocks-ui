@@ -66,18 +66,19 @@ export class BenchmarkCalculatorComponent implements OnInit {
                                                 'startDate', 'startSize', 'startValue',
                                                 'endDate', 'endSize', 'endValue',
                                                 'return', 'benchmarkReturn', 'outperformance'];
+  @ViewChild(MatSort) set content(analysisResultsSort: MatSort) {
+    this.analysisResultsDataSource.sort = analysisResultsSort;
+  }
 
-  snapshotInitialData: any[] = [];
-  snapshotDataSource = new MatTableDataSource(this.snapshotInitialData);
-  snapshotDisplayedColumns: string[] = ['ticker', 'shares', 'stockValue', 'putExposure', 'totalLongExposure', 'callExposure'];
+  summaryInitialData: any[] = [];
+  summaryDataSource = new MatTableDataSource(this.summaryInitialData);
+  summaryDisplayedColumns: string[] = ['totalInflows', 'totalOutflows', 'return',
+                                        'benchmark', 'benchmarkInflows', 'benchmarkOutflows', 'benchmarkReturn', 'totalOutperformance'];
 
 
   analysisResults: any = null;
   analysisResultsPresent = false;
 
-  @ViewChild(MatSort) set content(snapshotSort: MatSort) {
-    this.snapshotDataSource.sort = snapshotSort;
-  }
 
 
   constructor(
@@ -160,7 +161,7 @@ export class BenchmarkCalculatorComponent implements OnInit {
     this.buildAnalysisSection(resultsFromService);
 
     // Build the snapshot on the closing date
-    // this.buildClosingSnapshotSection(resultsFromService);
+    this.buildSummarySection(resultsFromService);
 
   }
 
@@ -182,22 +183,26 @@ export class BenchmarkCalculatorComponent implements OnInit {
                                 outperformance: singleSecurityResult.outperformances[0] });
     });
     this.analysisResultsDataSource.data = displayableResults;
+    // Indicate that the data in the table has changed
+    this.changeDetectorRef.detectChanges();
 
   }
 
-  private buildClosingSnapshotSection(resultsFromService) {
-    const snapshotCalculations: any[] = resultsFromService.lifeCycles.filter(lc => lc.includedInSnapshot)
-                                        .map(lc => { return {
-                                          ticker: lc.stock.ticker,
-                                          shares: lc.closingPosition.size,
-                                          stockValue: lc.closingPosition.value,
-                                          putExposure: lc.optionExposureToPutsAtRequestedEndDate,
-                                          totalLongExposure: lc.totalLongExposure,
-                                          callExposure: lc.optionExposureToCallsAtRequestedEndDate
+  private buildSummarySection(resultsFromService) {
+    const ar = resultsFromService.calculatorResults.accumulatedResults;
+    const summaryResults: any[] = ar.listOfBenchmarkData
+                                        .map(benchmark => { return {
+                                          totalInflows: ar.baseTotalInflows,
+                                          totalOutflows: ar.baseTotalOutflows,
+                                          return: ar.baseTotalReturn,
+                                          benchmark: benchmark.benchmarkSecurity.ticker,
+                                          benchmarkInflows: benchmark.benchmarkTotalInflows,
+                                          benchmarkOutflows: benchmark.benchmarkTotalOutflows,
+                                          benchmarkReturn: benchmark.benchmarkTotalReturn,
+                                          totalOutperformance: (ar.baseTotalReturn - benchmark.benchmarkTotalReturn)
                                         };
     });
-    this.snapshotDataSource.data = snapshotCalculations;
-    // this.snapshotDataSource.sort = this.snapshotSort;
+    this.summaryDataSource.data = summaryResults;
     // Indicate that the data in the table has changed
     this.changeDetectorRef.detectChanges();
 
