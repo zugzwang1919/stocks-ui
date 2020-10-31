@@ -1,8 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { TickerService } from 'src/app/ticker/ticker.service';
-import { WolfeGenericService } from 'src/app/wolfe-common/wolfe-generic-service';
 import { WolfeTrackedItem } from 'src/app/wolfe-common/wolfe-tracked-item';
-import { DataSource } from '@angular/cdk/table';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AlertService } from 'src/app/general/alert/alert.service';
@@ -11,10 +9,8 @@ import { Portfolio } from 'src/app/portfolio/portfolio';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { CalculatorService } from '../calculator.service';
 import { MatSort } from '@angular/material/sort';
-import { ThrowStmt } from '@angular/compiler';
-import { stringify } from 'querystring';
-import { FormControl } from '@angular/forms';
 import { BusyService } from 'src/app/general/busy/busy.service';
+import { CookieService } from 'ngx-cookie-service';
 
 
 enum TimeFrame {
@@ -36,6 +32,8 @@ export class IncomeCalculatorComponent implements OnInit {
 
   entryIsVisible = true;
   busy = false;
+  firstTimeDisplayingTickers: boolean;
+
 
   selectedTimeframe: TimeFrame =  TimeFrame.ALL_DATES;
   timeframes: string[] = [TimeFrame.ALL_DATES, TimeFrame.THIS_CALENDAR_YEAR,
@@ -43,16 +41,21 @@ export class IncomeCalculatorComponent implements OnInit {
                           TimeFrame.LAST_TWELVE_MONTHS, TimeFrame.LAST_TWENTY_FOUR_MONTHS, TimeFrame.CUSTOM_DATES];
   selectedStartDate: Date;
   selectedEndDate: Date;
+  readonly TIMEFRAME_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_timeframe';
+  readonly CUSTOM_START_DATE_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_custom-start-date';
+  readonly CUSTOM_END_DATE_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_custom-end-date';
 
   portfolioInitialData: any[] = [];
   portfolioDataSource = new MatTableDataSource(this.portfolioInitialData);
   portfolioSelection = new SelectionModel(true, []);
   portfolioDisplayedColumns: string[] = ['select', 'portfolioName'];
+  readonly PORTFOLIO_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_portfolios';
 
   tickerInitialData: any[] = [];
   tickerDataSource = new MatTableDataSource(this.tickerInitialData);
   tickerSelection = new SelectionModel(true, []);
   tickerDisplayedColumns: string[] = ['select', 'ticker', 'name'];
+  readonly TICKER_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_tickers';
 
   analysisResultsDataSource = new MatTableDataSource();
   analysisResultsDisplayedColumns: string[] = [   'ticker', 'proceeds', 'dividendProceeds',
@@ -77,36 +80,26 @@ export class IncomeCalculatorComponent implements OnInit {
     private busyService: BusyService,
     private calculatorService: CalculatorService,
     private changeDetectorRef: ChangeDetectorRef,
-    private portfolioService: PortfolioService,
-    private tickerService: TickerService
-  ) { }
-
-
-
-
+    private cookieService: CookieService,
+    private portfolioService: PortfolioService  ) { }
 
   ngOnInit(): void {
+    // Reset the timeframe based on cookie values
+    this.setTimeframeValues();
+    // Indicate that this is the first time through
+    this.firstTimeDisplayingTickers = true;
+    // Populate the Portfolio and Ticker List
+    this.populatePortfolioAndTickerTables();
 
-    // Populate the Portfolio List
-    this.populateSelectionTable(this.portfolioService, this.portfolioDataSource,
-                                (a, b) => a.portfolioName < b.portfolioName ? -1 : a.portfolioName > b.portfolioName ? 1 : 0,
-                                this.changeDetectorRef, this.portfolioSelection, this.alertService);
-    // Populate the Ticker List
-    this.populateSelectionTable(this.tickerService, this.tickerDataSource,
-                                (a, b) => a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0,
-                                this.changeDetectorRef, this.tickerSelection, this.alertService);
   }
-
 
   performAnalysis() {
     // reset any previous alerts
     this.alertService.clear();
     // indicate that we're busy to our html template and to the Busy Service
     this.setBusyState(true);
-
-
-    // Try to create the new security/stock/etf/mutual fund/ticker
-
+    // Save cookies before starting the analysis
+    this.saveAllValuesToCookies();
 
     this.calculatorService.analyzeIncome( this.getStartDate(),
                                           this.getEndDate(),
@@ -132,6 +125,124 @@ export class IncomeCalculatorComponent implements OnInit {
 
   toggleEntryVisibility() {
     this.entryIsVisible = !this.entryIsVisible;
+  }
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  areAllSelected(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
+    const numSelected = selectionModel.selected.length;
+    const numRows = dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  checkboxLabel(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>, row?: WolfeTrackedItem): string {
+    if (!row) {
+        return `${this.areAllSelected(selectionModel, dataSource) ? 'select' : 'deselect'} all`;
+    }
+    return (selectionModel.isSelected(row) ? 'deselect ' : 'select ')  + row.id;
+  }
+
+  handlePortfolioSelectionChange(row: any) {
+    // First, toggle the check box
+    this.portfolioSelection.toggle(row);
+    // Update the Ticker Section based on the porfolios selected
+    this.updateTickerListBasedOnPortfoliosSelected();
+  }
+
+  updateTickerListBasedOnPortfoliosSelected() {
+
+    // Update the Ticker Section based on the porfolios selected
+    const portfolioIds: number[] = this.portfolioSelection.selected.map((p: Portfolio) => p.id);
+    this.portfolioService.retrieveSecuritiesWithTransactionsInPorfolios(portfolioIds)
+    .subscribe(
+      tickers => {
+          // Put the tickers in the DataSource
+          this.tickerDataSource.data = tickers.sort((a, b) => a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0);
+          // Indicate that the data in the table has changed
+          this.changeDetectorRef.detectChanges();
+          // If this is the first time showing the tickers, use the cookies to set up the selection
+          let selectedTickers: Ticker[] = [];
+          if (this.firstTimeDisplayingTickers) {
+            // Set the checkboxes based on cookie values
+            const tickerCookie: string = this.cookieService.get(this.TICKER_COOKIE_NAME);
+            if (tickerCookie.length > 0 ) {
+              const ids: number[] = tickerCookie.split(',').map(idAsString => +idAsString);
+              selectedTickers = ids.map(id => tickers.find(t => t.id === id));
+            }
+            this.firstTimeDisplayingTickers = false;
+          }
+          // Set the check boxes to the appropriate values
+          this.tickerSelection = new SelectionModel(true, selectedTickers);
+      },
+      error => this.alertService.error(error)
+    );
+  }
+
+  shouldCustomDatesBeVisible(): boolean {
+    return this.selectedTimeframe === TimeFrame.CUSTOM_DATES;
+  }
+
+  masterTogglePortfolios() {
+    // First toggle the portfolio items based on their current settings
+    this.masterToggle(this.portfolioSelection, this.portfolioDataSource);
+    // Update the Ticker Section based on the porfolios selected
+    this.updateTickerListBasedOnPortfoliosSelected();
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
+    // First toggle the
+    this.areAllSelected(selectionModel, dataSource) ?
+        selectionModel.clear() :
+        dataSource.data.forEach(row => selectionModel.select(row));
+  }
+
+  shouldSubmitBeDisabled() {
+    // If no portfolios are selected  OR  no stocks are selected, the submit button should be disabled
+    return this.portfolioSelection.selected.length === 0 || this.tickerSelection.selected.length === 0 || this.busy;
+  }
+
+
+  /**********************************  PRIVATE METHODS *********************************/
+
+
+  private setTimeframeValues() {
+    const timeframeCookie: string = this.cookieService.get(this.TIMEFRAME_COOKIE_NAME);
+    // NOTE: This seems like a painful way to handle enums
+    if (timeframeCookie.length > 0) {
+      const tfKey: string = Object.keys(TimeFrame).find(x => TimeFrame[x] === timeframeCookie);
+      this.selectedTimeframe = TimeFrame[tfKey];
+    }
+  }
+
+  private populatePortfolioAndTickerTables() {
+    this.portfolioService.retrieveAll()
+      .subscribe(
+        // If this goes well, update the list of Tickers
+        portfolios =>  {
+
+          // Put the returned portfolio data in the portfolio DataSource
+          this.portfolioDataSource.data = portfolios.sort((p1: Portfolio, p2: Portfolio) => p1.portfolioName < p2.portfolioName ? -1 : p1.portfolioName > p2.portfolioName ? 1 : 0);
+
+          // Set the checkboxes based on cookie values
+          const portfolioCookie: string = this.cookieService.get(this.PORTFOLIO_COOKIE_NAME);
+          let selectedPortfolios: Portfolio[] = [];
+          if (portfolioCookie.length > 0 ) {
+            const ids: number[] = portfolioCookie.split(',').map(idAsString => +idAsString);
+            selectedPortfolios = ids.map(id => this.portfolioDataSource.data.find(item => item.id === id));
+          }
+
+          // Create a new Selection Model
+          this.portfolioSelection = new SelectionModel<Portfolio>(true, selectedPortfolios );
+
+          // Indicate that the data in the table has changed
+          this.changeDetectorRef.detectChanges();
+
+          // Now that we have the portfolio list created, set up the tickers
+          this.updateTickerListBasedOnPortfoliosSelected();
+        },
+        // If the retrieval goes poorly, show the error
+        error => this.alertService.error(error)
+      );
   }
 
   private updateResults(resultsFromService) {
@@ -181,98 +292,25 @@ export class IncomeCalculatorComponent implements OnInit {
                                         };
     });
     this.snapshotDataSource.data = snapshotCalculations;
-    // this.snapshotDataSource.sort = this.snapshotSort;
-    // Indicate that the data in the table has changed
     this.changeDetectorRef.detectChanges();
 
   }
 
+  private saveAllValuesToCookies(): void {
+    // Make the cookie valid for a year
+    const oneYearFromToday: Date = new Date();
+    oneYearFromToday.setFullYear(oneYearFromToday.getFullYear() + 1);
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  areAllSelected(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
-    const numSelected = selectionModel.selected.length;
-    const numRows = dataSource.data.length;
-    return numSelected === numRows;
-  }
+    // Save the timeframe that was selected
+    this.cookieService.set(this.TIMEFRAME_COOKIE_NAME, this.selectedTimeframe, oneYearFromToday);
 
-  checkboxLabel(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>, row?: WolfeTrackedItem): string {
-    if (!row) {
-        return `${this.areAllSelected(selectionModel, dataSource) ? 'select' : 'deselect'} all`;
-    }
-    return (selectionModel.isSelected(row) ? 'deselect ' : 'select ')  + row.id;
-  }
+    // Save the portfolios that were selected.
+    const portfolioIds: string =  this.portfolioSelection.selected.map(p => p.id).join();
+    this.cookieService.set(this.PORTFOLIO_COOKIE_NAME, portfolioIds, oneYearFromToday);
 
-  handlePortfolioSelectionChange(row: any) {
-    // First, toggle the check box
-    this.portfolioSelection.toggle(row);
-    // Update the Ticker Section based on the porfolios selected
-    this.updateTickerListBasedOnPortfoliosSelected();
-  }
-
-  updateTickerListBasedOnPortfoliosSelected() {
-    // Update the Ticker Section based on the porfolios selected
-    const portfolioIds: number[] = this.portfolioSelection.selected.map((p: Portfolio) => p.id);
-    this.portfolioService.retrieveSecuritiesWithTransactionsInPorfolios(portfolioIds)
-    .subscribe(
-      tickers => {
-          // Put the tickers in the DataSource
-          this.tickerDataSource.data = tickers.sort((a, b) => a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0);
-          // Indicate that the data in the table has changed
-          this.changeDetectorRef.detectChanges();
-          // Reset the check boxes
-          this.tickerSelection = new SelectionModel(true, []);
-      },
-      error => this.alertService.error(error)
-    );
-  }
-
-  shouldCustomDatesBeVisible(): boolean {
-    return this.selectedTimeframe === TimeFrame.CUSTOM_DATES;
-  }
-
-
-  masterTogglePortfolios() {
-    // First toggle the portfolio items based on their current settings
-    this.masterToggle(this.portfolioSelection, this.portfolioDataSource);
-    // Update the Ticker Section based on the porfolios selected
-    this.updateTickerListBasedOnPortfoliosSelected();
-  }
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
-    // First toggle the
-    this.areAllSelected(selectionModel, dataSource) ?
-        selectionModel.clear() :
-        dataSource.data.forEach(row => selectionModel.select(row));
-  }
-
-  shouldSubmitBeDisabled() {
-    // If no portfolios are selected  OR  no stocks are selected, the submit button should be disabled
-    return this.portfolioSelection.selected.length === 0 || this.tickerSelection.selected.length === 0 || this.busy;
-  }
-
-  private populateSelectionTable(retrievalService: WolfeGenericService<WolfeTrackedItem>, dataSource: MatTableDataSource<WolfeTrackedItem>,
-                                 sortFunction: (a: any, b: any) => number,
-                                 changeDetectorRef: ChangeDetectorRef, selection: SelectionModel<WolfeTrackedItem>,
-                                 alertService: AlertService) {
-    retrievalService.retrieveAll()
-      .subscribe(
-        // If this goes well, update the list of Tickers
-        items =>  {
-
-          // Flatten the data that was returned by the service so that it can be sorted
-          // and then associate it with the DataSource
-          // FIXME: Eventually allow the possibility of flattening the structure
-          dataSource.data = sortFunction ? items.sort(sortFunction) : items;
-
-          // Indicate that the data in the table has changed
-          changeDetectorRef.detectChanges();
-          // Reset the check boxes
-          selection = new SelectionModel(true, []);
-        },
-        // If the retrieval goes poorly, show the error
-        error => alertService.error(error)
-      );
+    // Save the tickers that were selected.
+    const tickerIds: string =  this.tickerSelection.selected.map(t => t.id).join();
+    this.cookieService.set(this.TICKER_COOKIE_NAME, tickerIds, oneYearFromToday);
   }
 
   private getStartDate(): Date {

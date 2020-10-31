@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 import { IncomeCalculatorComponent } from './income-calculator/income-calculator.component';
 import { MaterialModule } from '../material/material.module';
@@ -23,6 +24,9 @@ import { BenchmarkCalculatorComponent } from './benchmark-calculator/benchmark-c
     ReactiveFormsModule,
     RouterModule,
     WolfeCommonModule
+  ],
+  providers: [
+    CookieService
   ],
   exports: [
     IncomeCalculatorComponent,
