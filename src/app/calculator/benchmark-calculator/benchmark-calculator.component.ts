@@ -17,6 +17,7 @@ import { FormControl } from '@angular/forms';
 import { BusyService } from 'src/app/general/busy/busy.service';
 import { subscribeOn } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 
 
 enum TimeFrame {
@@ -87,7 +88,8 @@ export class BenchmarkCalculatorComponent implements OnInit {
     private calculatorService: CalculatorService,
     private changeDetectorRef: ChangeDetectorRef,
     private portfolioService: PortfolioService,
-    private tickerService: TickerService
+    private tickerService: TickerService,
+    public  wcitService: WolfeCheckboxInTableService
   ) { }
 
 
@@ -209,19 +211,6 @@ export class BenchmarkCalculatorComponent implements OnInit {
   }
 
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  areAllSelected(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
-    const numSelected = selectionModel.selected.length;
-    const numRows = dataSource.data.length;
-    return numSelected === numRows;
-  }
-
-  checkboxLabel(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>, row?: WolfeTrackedItem): string {
-    if (!row) {
-        return `${this.areAllSelected(selectionModel, dataSource) ? 'select' : 'deselect'} all`;
-    }
-    return (selectionModel.isSelected(row) ? 'deselect ' : 'select ')  + row.id;
-  }
 
   handlePortfolioSelectionChange(row: any) {
     // First, toggle the check box
@@ -254,18 +243,11 @@ export class BenchmarkCalculatorComponent implements OnInit {
 
   masterTogglePortfolios() {
     // First toggle the portfolio items based on their current settings
-    this.masterToggle(this.portfolioSelection, this.portfolioDataSource);
+    this.wcitService.masterToggle(this.portfolioSelection, this.portfolioDataSource);
     // Update the Ticker Section based on the porfolios selected
     this.updateTickerListBasedOnPortfoliosSelected();
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
-    // First toggle the
-    this.areAllSelected(selectionModel, dataSource) ?
-        selectionModel.clear() :
-        dataSource.data.forEach(row => selectionModel.select(row));
-  }
 
   shouldSubmitButtonBeDisabled() {
     return this.portfolioSelection.selected.length === 0 ||

@@ -11,6 +11,7 @@ import { CalculatorService } from '../calculator.service';
 import { MatSort } from '@angular/material/sort';
 import { BusyService } from 'src/app/general/busy/busy.service';
 import { CookieService } from 'ngx-cookie-service';
+import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 
 
 enum TimeFrame {
@@ -81,7 +82,9 @@ export class IncomeCalculatorComponent implements OnInit {
     private calculatorService: CalculatorService,
     private changeDetectorRef: ChangeDetectorRef,
     private cookieService: CookieService,
-    private portfolioService: PortfolioService  ) { }
+    private portfolioService: PortfolioService,
+    public  wcitService: WolfeCheckboxInTableService,
+  ) { }
 
   ngOnInit(): void {
     // Reset the timeframe based on cookie values
@@ -123,30 +126,25 @@ export class IncomeCalculatorComponent implements OnInit {
       );
   }
 
+  /***** Methods that help determine the visibility of different parts of the page ******/
+
   toggleEntryVisibility() {
     this.entryIsVisible = !this.entryIsVisible;
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  areAllSelected(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
-    const numSelected = selectionModel.selected.length;
-    const numRows = dataSource.data.length;
-    return numSelected === numRows;
+  shouldCustomDatesBeVisible(): boolean {
+    return this.selectedTimeframe === TimeFrame.CUSTOM_DATES;
   }
 
-  checkboxLabel(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>, row?: WolfeTrackedItem): string {
-    if (!row) {
-        return `${this.areAllSelected(selectionModel, dataSource) ? 'select' : 'deselect'} all`;
-    }
-    return (selectionModel.isSelected(row) ? 'deselect ' : 'select ')  + row.id;
+  shouldSubmitBeDisabled() {
+    // If no portfolios are selected  OR  no stocks are selected, the submit button should be disabled
+    return this.portfolioSelection.selected.length === 0 || this.tickerSelection.selected.length === 0 || this.busy;
   }
 
-  handlePortfolioSelectionChange(row: any) {
-    // First, toggle the check box
-    this.portfolioSelection.toggle(row);
-    // Update the Ticker Section based on the porfolios selected
-    this.updateTickerListBasedOnPortfoliosSelected();
-  }
+
+  /***** Methods dealing with users clicking on check boxes in the portfolio table  *****/
+
+
 
   updateTickerListBasedOnPortfoliosSelected() {
 
@@ -177,29 +175,24 @@ export class IncomeCalculatorComponent implements OnInit {
     );
   }
 
-  shouldCustomDatesBeVisible(): boolean {
-    return this.selectedTimeframe === TimeFrame.CUSTOM_DATES;
-  }
 
-  masterTogglePortfolios() {
-    // First toggle the portfolio items based on their current settings
-    this.masterToggle(this.portfolioSelection, this.portfolioDataSource);
+  /*****  Methods that just help manage checkboxes imbedded in the Porfolio Table *****/
+
+  singleTogglePortfolio(portfolio: Portfolio) {
+    // First, toggle the check box
+    this.portfolioSelection.toggle(portfolio);
     // Update the Ticker Section based on the porfolios selected
     this.updateTickerListBasedOnPortfoliosSelected();
   }
 
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>) {
-    // First toggle the
-    this.areAllSelected(selectionModel, dataSource) ?
-        selectionModel.clear() :
-        dataSource.data.forEach(row => selectionModel.select(row));
+  masterTogglePortfolios() {
+    // First toggle the portfolio items based on their current settings
+    this.wcitService.masterToggle(this.portfolioSelection, this.portfolioDataSource);
+    // Update the Ticker Section based on the porfolios selected
+    this.updateTickerListBasedOnPortfoliosSelected();
   }
 
-  shouldSubmitBeDisabled() {
-    // If no portfolios are selected  OR  no stocks are selected, the submit button should be disabled
-    return this.portfolioSelection.selected.length === 0 || this.tickerSelection.selected.length === 0 || this.busy;
-  }
+
 
 
   /**********************************  PRIVATE METHODS *********************************/

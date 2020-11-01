@@ -39,16 +39,16 @@
                         <ng-container matColumnDef="select">
                             <th mat-header-cell *matHeaderCellDef>
                                 <mat-checkbox   (change)="$event ? masterTogglePortfolios(): null"
-                                                [checked]="portfolioSelection.hasValue() && areAllSelected(portfolioSelection, portfolioDataSource)"
-                                                [indeterminate]="portfolioSelection.hasValue() && !areAllSelected(portfolioSelection, portfolioDataSource)"
-                                                [aria-label]="checkboxLabel(portfolioSelection, portfolioDataSource)">
+                                                [checked]="portfolioSelection.hasValue() && wcitService.areAllSelected(portfolioSelection, portfolioDataSource)"
+                                                [indeterminate]="portfolioSelection.hasValue() && !wcitService.areAllSelected(portfolioSelection, portfolioDataSource)"
+                                                [aria-label]="wcitService.checkboxLabel(portfolioSelection, portfolioDataSource)">
                                 </mat-checkbox>
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 <mat-checkbox   (click)="$event.stopPropagation()"
-                                                (change)="$event ? handlePortfolioSelectionChange(row) : null"
+                                                (change)="$event ? singleTogglePortfolio(row) : null"
                                                 [checked]="portfolioSelection.isSelected(row)"
-                                                [aria-label]="checkboxLabel(portfolioSelection, portfolioDataSource,row)">
+                                                [aria-label]="wcitService.checkboxLabel(portfolioSelection, portfolioDataSource, row)">
                                 </mat-checkbox>
                             </td>
                         </ng-container>
@@ -73,17 +73,17 @@
                         <!-- Checkbox Column-->
                         <ng-container matColumnDef="select">
                             <th mat-header-cell *matHeaderCellDef>
-                                <mat-checkbox   (change)="$event ? masterToggle(tickerSelection, tickerDataSource) : null"
-                                                [checked]="tickerSelection.hasValue() && areAllSelected(tickerSelection, tickerDataSource)"
-                                                [indeterminate]="tickerSelection.hasValue() && !areAllSelected(tickerSelection, tickerDataSource)"
-                                                [aria-label]="checkboxLabel(tickerSelection, tickerDataSource)">
+                                <mat-checkbox   (change)="$event ? wcitService.masterToggle(tickerSelection, tickerDataSource) : null"
+                                                [checked]="tickerSelection.hasValue() && wcitService.areAllSelected(tickerSelection, tickerDataSource)"
+                                                [indeterminate]="tickerSelection.hasValue() && !wcitService.areAllSelected(tickerSelection, tickerDataSource)"
+                                                [aria-label]="wcitService.checkboxLabel(tickerSelection, tickerDataSource)">
                                 </mat-checkbox>
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 <mat-checkbox   (click)="$event.stopPropagation()"
                                                 (change)="$event ? tickerSelection.toggle(row) : null"
                                                 [checked]="tickerSelection.isSelected(row)"
-                                                [aria-label]="checkboxLabel(tickerSelection, tickerDataSource,row)">
+                                                [aria-label]="wcitService.checkboxLabel(tickerSelection, tickerDataSource,row)">
                                 </mat-checkbox>
                             </td>
                         </ng-container>
