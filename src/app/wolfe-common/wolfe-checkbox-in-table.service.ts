@@ -18,7 +18,7 @@ export class WolfeCheckboxInTableService {
       return numSelected === numRows;
     }
 
-    checkboxLabel(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>, row?: WolfeTrackedItem): string {
+    createCheckboxLabel(selectionModel: SelectionModel<any>, dataSource: MatTableDataSource<any>, row?: WolfeTrackedItem): string {
       if (!row) {
           return `${this.areAllSelected(selectionModel, dataSource) ? 'select' : 'deselect'} all`;
       }

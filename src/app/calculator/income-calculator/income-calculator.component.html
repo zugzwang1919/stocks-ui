@@ -41,14 +41,14 @@
                                 <mat-checkbox   (change)="$event ? masterTogglePortfolios(): null"
                                                 [checked]="portfolioSelection.hasValue() && wcitService.areAllSelected(portfolioSelection, portfolioDataSource)"
                                                 [indeterminate]="portfolioSelection.hasValue() && !wcitService.areAllSelected(portfolioSelection, portfolioDataSource)"
-                                                [aria-label]="wcitService.checkboxLabel(portfolioSelection, portfolioDataSource)">
+                                                [aria-label]="wcitService.createCheckboxLabel(portfolioSelection, portfolioDataSource)">
                                 </mat-checkbox>
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 <mat-checkbox   (click)="$event.stopPropagation()"
                                                 (change)="$event ? singleTogglePortfolio(row) : null"
                                                 [checked]="portfolioSelection.isSelected(row)"
-                                                [aria-label]="wcitService.checkboxLabel(portfolioSelection, portfolioDataSource, row)">
+                                                [aria-label]="wcitService.createCheckboxLabel(portfolioSelection, portfolioDataSource, row)">
                                 </mat-checkbox>
                             </td>
                         </ng-container>
@@ -76,14 +76,14 @@
                                 <mat-checkbox   (change)="$event ? wcitService.masterToggle(tickerSelection, tickerDataSource) : null"
                                                 [checked]="tickerSelection.hasValue() && wcitService.areAllSelected(tickerSelection, tickerDataSource)"
                                                 [indeterminate]="tickerSelection.hasValue() && !wcitService.areAllSelected(tickerSelection, tickerDataSource)"
-                                                [aria-label]="wcitService.checkboxLabel(tickerSelection, tickerDataSource)">
+                                                [aria-label]="wcitService.createCheckboxLabel(tickerSelection, tickerDataSource)">
                                 </mat-checkbox>
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 <mat-checkbox   (click)="$event.stopPropagation()"
                                                 (change)="$event ? tickerSelection.toggle(row) : null"
                                                 [checked]="tickerSelection.isSelected(row)"
-                                                [aria-label]="wcitService.checkboxLabel(tickerSelection, tickerDataSource,row)">
+                                                [aria-label]="wcitService.createCheckboxLabel(tickerSelection, tickerDataSource,row)">
                                 </mat-checkbox>
                             </td>
                         </ng-container>
