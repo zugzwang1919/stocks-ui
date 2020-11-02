@@ -11,17 +11,7 @@ import { MatSort } from '@angular/material/sort';
 import { BusyService } from 'src/app/general/busy/busy.service';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 import { CookieService } from 'ngx-cookie-service';
-
-
-enum TimeFrame {
-  ALL_DATES = 'All Dates',
-  THIS_CALENDAR_YEAR = 'This Calendar Year',
-  PREVIOUS_CALENDAR_YEAR = 'Previous Calendar Year',
-  PREVIOUS_AND_THIS_CALENDAR_YEAR = 'Previous and This Calendar Year',
-  LAST_TWELVE_MONTHS = 'Last Twelve Months',
-  LAST_TWENTY_FOUR_MONTHS = 'Last Twenty-four Months',
-  CUSTOM_DATES = 'Custom Dates'
-}
+import { Timeframe, TimeframeService } from '../timeframe.service';
 
 @Component({
   selector: 'app-benchmark-calculator',
@@ -34,10 +24,8 @@ export class BenchmarkCalculatorComponent implements OnInit {
   busy = false;
   firstTimeDisplayingTickers: boolean;
 
-  selectedTimeframe: TimeFrame =  TimeFrame.ALL_DATES;
-  timeframes: string[] = [TimeFrame.ALL_DATES, TimeFrame.THIS_CALENDAR_YEAR,
-                          TimeFrame.PREVIOUS_CALENDAR_YEAR, TimeFrame.PREVIOUS_AND_THIS_CALENDAR_YEAR,
-                          TimeFrame.LAST_TWELVE_MONTHS, TimeFrame.LAST_TWENTY_FOUR_MONTHS, TimeFrame.CUSTOM_DATES];
+  selectedTimeframe: Timeframe;
+  timeframes: string[] = Object.values(Timeframe);
   selectedStartDate: Date;
   selectedEndDate: Date;
   readonly TIMEFRAME_COOKIE_NAME: string = 'wolfe-software.com_benhcmark-analysis_timeframe';
@@ -74,11 +62,8 @@ export class BenchmarkCalculatorComponent implements OnInit {
   summaryDisplayedColumns: string[] = ['totalInflows', 'totalOutflows', 'return',
                                         'benchmark', 'benchmarkInflows', 'benchmarkOutflows', 'benchmarkReturn', 'totalOutperformance'];
 
-
   analysisResults: any = null;
   analysisResultsPresent = false;
-
-
 
   constructor(
     private alertService: AlertService,
@@ -88,13 +73,14 @@ export class BenchmarkCalculatorComponent implements OnInit {
     private cookieService: CookieService,
     private portfolioService: PortfolioService,
     private tickerService: TickerService,
+    private timeframeService: TimeframeService,
     public  wcitService: WolfeCheckboxInTableService
   ) { }
 
   ngOnInit(): void {
 
-    // Popluate the timeframe based on cookie values
-    this.populateTimeframeValues();
+    // Set the selectedTimeframe to the value in the cookie; if no cookie, set to ALL_DATES
+    this.selectedTimeframe = this.timeframeService.getTimeframeFromCookie(this.TIMEFRAME_COOKIE_NAME) || Timeframe.ALL_DATES;
 
     // Populate the Portfolio and Ticker List
     this.firstTimeDisplayingTickers = true;
@@ -113,8 +99,8 @@ export class BenchmarkCalculatorComponent implements OnInit {
     this.saveAllValuesToCookies();
 
     // Perform the analysis
-    this.calculatorService.analyzeVsBenchmarks( this.getStartDate(),
-                                                this.getEndDate(),
+    this.calculatorService.analyzeVsBenchmarks( this.timeframeService.calculateStartDate(this.selectedTimeframe, this.selectedStartDate),
+                                                this.timeframeService.calculateEndDate(this.selectedTimeframe, this.selectedEndDate),
                                                 this.portfolioSelection.selected.map((p: Portfolio) => p.id),
                                                 this.tickerSelection.selected.map((t: Ticker) => t.id),
                                                 this.benchmarkSelection.selected.map((t: Ticker) => t.id),
@@ -136,16 +122,24 @@ export class BenchmarkCalculatorComponent implements OnInit {
       );
   }
 
+  /******************** Handle the setting and querying regarding the visibility of elements ********************/
+
   toggleEntryVisibility() {
     this.entryIsVisible = !this.entryIsVisible;
   }
 
-  handlePortfolioSelectionChange(row: any) {
-    // First, toggle the check box
-    this.portfolioSelection.toggle(row);
-    // Update the Ticker Section based on the porfolios selected
-    this.updateTickerListBasedOnPortfoliosSelected();
+  shouldCustomDatesBeVisible(): boolean {
+    return this.selectedTimeframe === Timeframe.CUSTOM_DATES;
   }
+
+  shouldSubmitButtonBeDisabled(): boolean {
+    return this.portfolioSelection.selected.length === 0 ||
+    this.tickerSelection.selected.length === 0 ||
+    this.benchmarkSelection.selected.length === 0 ||
+    this.busy;
+  }
+
+  /*****  Methods that handle clicks in the Porfolio Table *****/
 
   updateTickerListBasedOnPortfoliosSelected() {
 
@@ -178,6 +172,12 @@ export class BenchmarkCalculatorComponent implements OnInit {
     );
   }
 
+  handlePortfolioSelectionChange(row: any) {
+    // First, toggle the check box
+    this.portfolioSelection.toggle(row);
+    // Update the Ticker Section based on the porfolios selected
+    this.updateTickerListBasedOnPortfoliosSelected();
+  }
 
   masterTogglePortfolios() {
     // First toggle the portfolio items based on their current settings
@@ -186,26 +186,7 @@ export class BenchmarkCalculatorComponent implements OnInit {
     this.updateTickerListBasedOnPortfoliosSelected();
   }
 
-  shouldCustomDatesBeVisible(): boolean {
-    return this.selectedTimeframe === TimeFrame.CUSTOM_DATES;
-  }
-
-  shouldSubmitButtonBeDisabled(): boolean {
-    return this.portfolioSelection.selected.length === 0 ||
-    this.tickerSelection.selected.length === 0 ||
-    this.benchmarkSelection.selected.length === 0 ||
-    this.busy;
-  }
-
-
-  private populateTimeframeValues() {
-    const timeframeCookie: string = this.cookieService.get(this.TIMEFRAME_COOKIE_NAME);
-    // NOTE: This seems like a painful way to handle enums
-    if (timeframeCookie.length > 0) {
-      const tfKey: string = Object.keys(TimeFrame).find(x => TimeFrame[x] === timeframeCookie);
-      this.selectedTimeframe = TimeFrame[tfKey];
-    }
-  }
+  /******************** PRIVATE METHODS ********************/
 
   private populatePortfolioAndTickerTables() {
     this.portfolioService.retrieveAll()
@@ -239,6 +220,7 @@ export class BenchmarkCalculatorComponent implements OnInit {
         error => this.alertService.error(error)
       );
   }
+
   private populateBenchmarkTable() {
     this.tickerService.retrieveAllBenchmarks()
     .subscribe(
@@ -341,39 +323,6 @@ export class BenchmarkCalculatorComponent implements OnInit {
     // Indicate that the data in the table has changed
     this.changeDetectorRef.detectChanges();
 
-  }
-  private getStartDate(): Date {
-    const now: Date = new Date();
-    switch (this.selectedTimeframe) {
-      case TimeFrame.THIS_CALENDAR_YEAR:
-        return new Date(now.getFullYear() - 1, 11, 31);
-      case TimeFrame.PREVIOUS_CALENDAR_YEAR:
-      case TimeFrame.PREVIOUS_AND_THIS_CALENDAR_YEAR:
-        return new Date(now.getFullYear() - 2, 11, 31);
-      case TimeFrame.LAST_TWELVE_MONTHS:
-        return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-      case TimeFrame.LAST_TWENTY_FOUR_MONTHS:
-        return new Date(now.getFullYear() - 2, now.getMonth(), now.getDate());
-       case TimeFrame.CUSTOM_DATES:
-        return this.selectedStartDate;
-       case TimeFrame.ALL_DATES:
-        return undefined;
-    }
-  }
-  private getEndDate(): Date {
-    const now: Date = new Date();
-    switch (this.selectedTimeframe) {
-      case TimeFrame.PREVIOUS_CALENDAR_YEAR:
-        return new Date(now.getFullYear() - 1, 11, 31);
-      case TimeFrame.CUSTOM_DATES:
-        return this.selectedEndDate;
-      case TimeFrame.THIS_CALENDAR_YEAR:
-      case TimeFrame.PREVIOUS_AND_THIS_CALENDAR_YEAR:
-      case TimeFrame.LAST_TWELVE_MONTHS:
-      case TimeFrame.LAST_TWENTY_FOUR_MONTHS:
-      case TimeFrame.ALL_DATES:
-        return undefined;
-    }
   }
 
   private setBusyState(input: boolean) {

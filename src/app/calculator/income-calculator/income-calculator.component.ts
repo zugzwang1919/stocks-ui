@@ -12,17 +12,8 @@ import { MatSort } from '@angular/material/sort';
 import { BusyService } from 'src/app/general/busy/busy.service';
 import { CookieService } from 'ngx-cookie-service';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
+import { Timeframe, TimeframeService } from '../timeframe.service';
 
-
-enum TimeFrame {
-  ALL_DATES = 'All Dates',
-  THIS_CALENDAR_YEAR = 'This Calendar Year',
-  PREVIOUS_CALENDAR_YEAR = 'Previous Calendar Year',
-  PREVIOUS_AND_THIS_CALENDAR_YEAR = 'Previous and This Calendar Year',
-  LAST_TWELVE_MONTHS = 'Last Twelve Months',
-  LAST_TWENTY_FOUR_MONTHS = 'Last Twenty-four Months',
-  CUSTOM_DATES = 'Custom Dates'
-}
 
 @Component({
   selector: 'app-income-calculator',
@@ -36,10 +27,9 @@ export class IncomeCalculatorComponent implements OnInit {
   firstTimeDisplayingTickers: boolean;
 
 
-  selectedTimeframe: TimeFrame =  TimeFrame.ALL_DATES;
-  timeframes: string[] = [TimeFrame.ALL_DATES, TimeFrame.THIS_CALENDAR_YEAR,
-                          TimeFrame.PREVIOUS_CALENDAR_YEAR, TimeFrame.PREVIOUS_AND_THIS_CALENDAR_YEAR,
-                          TimeFrame.LAST_TWELVE_MONTHS, TimeFrame.LAST_TWENTY_FOUR_MONTHS, TimeFrame.CUSTOM_DATES];
+  selectedTimeframe: Timeframe;
+  timeframes: string[] = Object.values(Timeframe);
+
   selectedStartDate: Date;
   selectedEndDate: Date;
   readonly TIMEFRAME_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_timeframe';
@@ -83,12 +73,13 @@ export class IncomeCalculatorComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private cookieService: CookieService,
     private portfolioService: PortfolioService,
+    private timeframeService: TimeframeService,
     public  wcitService: WolfeCheckboxInTableService,
   ) { }
 
   ngOnInit(): void {
-    // Reset the timeframe based on cookie values
-    this.setTimeframeValues();
+    // Set the timeframe based on cookie values - if no cookie, set it to ALL_DATES
+    this.selectedTimeframe = this.timeframeService.getTimeframeFromCookie(this.TIMEFRAME_COOKIE_NAME) || Timeframe.ALL_DATES;
     // Indicate that this is the first time through
     this.firstTimeDisplayingTickers = true;
     // Populate the Portfolio and Ticker List
@@ -104,8 +95,8 @@ export class IncomeCalculatorComponent implements OnInit {
     // Save cookies before starting the analysis
     this.saveAllValuesToCookies();
 
-    this.calculatorService.analyzeIncome( this.getStartDate(),
-                                          this.getEndDate(),
+    this.calculatorService.analyzeIncome( this.timeframeService.calculateStartDate(this.selectedTimeframe, this.selectedStartDate),
+                                          this.timeframeService.calculateEndDate(this.selectedTimeframe, this.selectedEndDate),
                                           this.portfolioSelection.selected.map((p: Portfolio) => p.id),
                                           this.tickerSelection.selected.map((t: Ticker) => t.id),
                                           true,
@@ -133,7 +124,7 @@ export class IncomeCalculatorComponent implements OnInit {
   }
 
   shouldCustomDatesBeVisible(): boolean {
-    return this.selectedTimeframe === TimeFrame.CUSTOM_DATES;
+    return this.selectedTimeframe === Timeframe.CUSTOM_DATES;
   }
 
   shouldSubmitBeDisabled() {
@@ -143,8 +134,6 @@ export class IncomeCalculatorComponent implements OnInit {
 
 
   /***** Methods dealing with users clicking on check boxes in the portfolio table  *****/
-
-
 
   updateTickerListBasedOnPortfoliosSelected() {
 
@@ -193,19 +182,7 @@ export class IncomeCalculatorComponent implements OnInit {
   }
 
 
-
-
   /**********************************  PRIVATE METHODS *********************************/
-
-
-  private setTimeframeValues() {
-    const timeframeCookie: string = this.cookieService.get(this.TIMEFRAME_COOKIE_NAME);
-    // NOTE: This seems like a painful way to handle enums
-    if (timeframeCookie.length > 0) {
-      const tfKey: string = Object.keys(TimeFrame).find(x => TimeFrame[x] === timeframeCookie);
-      this.selectedTimeframe = TimeFrame[tfKey];
-    }
-  }
 
   private populatePortfolioAndTickerTables() {
     this.portfolioService.retrieveAll()
@@ -304,40 +281,6 @@ export class IncomeCalculatorComponent implements OnInit {
     // Save the tickers that were selected.
     const tickerIds: string =  this.tickerSelection.selected.map(t => t.id).join();
     this.cookieService.set(this.TICKER_COOKIE_NAME, tickerIds, oneYearFromToday);
-  }
-
-  private getStartDate(): Date {
-    const now: Date = new Date();
-    switch (this.selectedTimeframe) {
-      case TimeFrame.THIS_CALENDAR_YEAR:
-        return new Date(now.getFullYear() - 1, 11, 31);
-      case TimeFrame.PREVIOUS_CALENDAR_YEAR:
-      case TimeFrame.PREVIOUS_AND_THIS_CALENDAR_YEAR:
-        return new Date(now.getFullYear() - 2, 11, 31);
-      case TimeFrame.LAST_TWELVE_MONTHS:
-        return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-      case TimeFrame.LAST_TWENTY_FOUR_MONTHS:
-        return new Date(now.getFullYear() - 2, now.getMonth(), now.getDate());
-       case TimeFrame.CUSTOM_DATES:
-        return this.selectedStartDate;
-       case TimeFrame.ALL_DATES:
-        return undefined;
-    }
-  }
-  private getEndDate(): Date {
-    const now: Date = new Date();
-    switch (this.selectedTimeframe) {
-      case TimeFrame.PREVIOUS_CALENDAR_YEAR:
-        return new Date(now.getFullYear() - 1, 11, 31);
-      case TimeFrame.CUSTOM_DATES:
-        return this.selectedEndDate;
-      case TimeFrame.THIS_CALENDAR_YEAR:
-      case TimeFrame.PREVIOUS_AND_THIS_CALENDAR_YEAR:
-      case TimeFrame.LAST_TWELVE_MONTHS:
-      case TimeFrame.LAST_TWENTY_FOUR_MONTHS:
-      case TimeFrame.ALL_DATES:
-        return undefined;
-    }
   }
 
   private setBusyState(input: boolean) {
