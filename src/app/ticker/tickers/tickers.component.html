@@ -8,17 +8,17 @@
             <!-- Checkbox Column-->
             <ng-container matColumnDef="select">
                 <th mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox   (change)="$event ? masterToggle() : null"
-                                    [checked]="selection.hasValue() && isAllSelected()"
-                                    [indeterminate]="selection.hasValue() && !isAllSelected()"
-                                    [aria-label]="checkboxLabel()">
+                    <mat-checkbox   (change)="$event ? wcits.masterToggle(selection, dataSource) : null"
+                                    [checked]="selection.hasValue() && wcits.areAllSelected(selection, dataSource)"
+                                    [indeterminate]="selection.hasValue() && !wcits.areAllSelected(selection, dataSource)"
+                                    [aria-label]="wcits.createCheckboxLabel(selection, dataSource)">
                     </mat-checkbox>
                 </th>
                 <td mat-cell *matCellDef="let row">
                     <mat-checkbox   (click)="$event.stopPropagation()"
                                     (change)="$event ? selection.toggle(row) : null"
                                     [checked]="selection.isSelected(row)"
-                                    [aria-label]="checkboxLabel(row)">
+                                    [aria-label]="wcits.createCheckboxLabel(selection, dataSource, row)">
                     </mat-checkbox>
                 </td>
             </ng-container>
@@ -55,8 +55,8 @@
         </table>
     </div>
     <div>
-        <button mat-raised-button color="accent" class="submit-button" [disabled]="!isExactlyOneSelected()" (click)="editSelectedItem()">Edit</button>
-        <button mat-raised-button color="warn" class="submit-button" [disabled]="!isExactlyOneSelected()" (click)="deleteSelectedItems()">Delete</button>
+        <button mat-raised-button color="accent" class="submit-button" [disabled]="!wcits.isExactlyOneSelected(selection)" (click)="editSelectedItem()">Edit</button>
+        <button mat-raised-button color="warn" class="submit-button" [disabled]="!wcits.isExactlyOneSelected(selection)" (click)="deleteSelectedItems()">Delete</button>
         <button mat-raised-button color="accent" class="submit-button" [routerLink]="['/ticker/create']">Create New</button>
     </div>
 

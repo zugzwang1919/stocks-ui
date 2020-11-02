@@ -6,6 +6,7 @@ import { Ticker } from '../ticker';
 import { TickerService } from '../ticker.service';
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list-component';
+import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 
 
 @Component({
@@ -22,7 +23,8 @@ export class TickersComponent extends WolfeGenericListComponent<Ticker>  impleme
     router: Router,
     alertService: AlertService,
     portfolioService: TickerService,
-    changeDetectorRefs: ChangeDetectorRef
+    changeDetectorRefs: ChangeDetectorRef,
+    public wcits: WolfeCheckboxInTableService
   ) {
     super(router,
           alertService,

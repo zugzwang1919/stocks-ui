@@ -7,6 +7,7 @@ import { Option } from '../option';
 import { OptionService } from '../option.service';
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list-component';
+import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 
 @Component({
   selector: 'app-options',
@@ -22,6 +23,7 @@ export class OptionsComponent extends WolfeGenericListComponent<Option>  impleme
     alertService: AlertService,
     optionService: OptionService,
     changeDetectorRefs: ChangeDetectorRef,
+    public wcits: WolfeCheckboxInTableService,
     private currencyPipe: CurrencyPipe,
     private datePipe: DatePipe
   ) {

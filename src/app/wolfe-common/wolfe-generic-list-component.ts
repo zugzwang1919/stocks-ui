@@ -80,36 +80,6 @@ export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
         this.router.navigate([this.beginningOfPath + '/' + this.selection.selected[0].id]);
     }
 
-    /** Whether the number of selected elements matches the total number of rows. */
-    isAllSelected() {
-        const numSelected = this.selection.selected.length;
-        const numRows = this.dataSource.data.length;
-        return numSelected === numRows;
-    }
-
-    /** Selects all rows if they are not all selected; otherwise clear selection. */
-    masterToggle() {
-        this.isAllSelected() ?
-            this.selection.clear() :
-            this.dataSource.data.forEach(row => this.selection.select(row));
-    }
-
-    /** The label for the checkbox on the passed row */
-    checkboxLabel(row?: T): string {
-        if (!row) {
-            return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
-        }
-        return `${this.selection.isSelected(row) ? 'deselect' : 'select'} {{T.id}}`;
-    }
-
-    isExactlyOneSelected(): boolean {
-        return this.selection.selected.length === 1;
-    }
-
-    areAnySelected(): boolean {
-        return this.selection.selected.length !== 0;
-    }
-
     // NOTE: Many items are heirarchical in nature.  I could not figure out a way (short of writing a custom sorter)
     // NOTE: that allowed these items to be sortable once they were in a list (for example transaction.portfolio.portfolioName)
     // NOTE: The solution that I've chosen is to let the derived class flatten items if it would like to be able to sort them
