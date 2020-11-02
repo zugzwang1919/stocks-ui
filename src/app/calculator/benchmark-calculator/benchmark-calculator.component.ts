@@ -330,10 +330,10 @@ export class BenchmarkCalculatorComponent implements OnInit {
     this.busy = input;
     // Tell the BusyService whether or note we're busy
     if (input) {
-      this.busyService.busy(12);
+      this.busyService.busy(1925);
     }
     else {
-      this.busyService.finished(12);
+      this.busyService.finished(1925);
     }
   }
 
