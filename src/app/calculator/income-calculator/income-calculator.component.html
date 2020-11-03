@@ -155,89 +155,45 @@
         <div class="analysis-results-div">
             <table class="micro-table" mat-table [dataSource]="analysisResultsDataSource">
 
-                <!-- Date Column
-                <ng-container matColumnDef="date">
-                    <th mat-header-cell *matHeaderCellDef> Date </th>
-                    <td mat-cell *matCellDef="let result"> {{result.date}} </td>
-                    <td mat-footer-cell *matFooterCellDef>  TOTALS </td>
-                </ng-container>
-                -->
+
                 <!-- Ticker Name Column-->
                 <ng-container matColumnDef="ticker">
                     <th mat-header-cell *matHeaderCellDef> Ticker </th>
-                    <td mat-cell *matCellDef="let result"> {{result.ticker}} </td>
+                    <td mat-cell *matCellDef="let result" [class.notInShapshot]="!result.includedInSnapshot"> {{result.ticker}} </td>
                     <td mat-footer-cell *matFooterCellDef>   </td>
                 </ng-container>
-                <!-- Activity Column
-                <ng-container matColumnDef="activity">
-                    <th mat-header-cell *matHeaderCellDef> Activity </th>
-                    <td mat-cell *matCellDef="let result"> {{result.activity}} </td>
-                    <td mat-footer-cell *matFooterCellDef>  </td>
-                </ng-container>
-                -->
-                <!-- Size Column
-                <ng-container matColumnDef="size">
-                    <th mat-header-cell *matHeaderCellDef> Size </th>
-                    <td mat-cell *matCellDef="let result"> {{result.size}} </td>
-                    <td mat-footer-cell *matFooterCellDef>   </td>
-                </ng-container>
-                -->
+
                 <!-- Proceeds Column-->
                 <ng-container matColumnDef="proceeds">
                     <th mat-header-cell *matHeaderCellDef> Proceeds </th>
-                    <td mat-cell *matCellDef="let result"> {{result.proceeds | currency}} </td>
+                    <td mat-cell *matCellDef="let result" [class.notInShapshot]="!result.includedInSnapshot"> {{result.proceeds | currency}} </td>
                     <td mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.proceeds | currency}} </td>
                 </ng-container>
-                <!-- Dividend Shares Column
-                <ng-container matColumnDef="dividendShares">
-                    <th mat-header-cell *matHeaderCellDef> Dividend Shares </th>
-                    <td mat-cell *matCellDef="let result"> {{result.dividendShares}} </td>
-                    <td mat-footer-cell *matFooterCellDef>   </td>
-                </ng-container>
-                -->
+
                 <!-- Dividend Proceeds Column-->
                 <ng-container matColumnDef="dividendProceeds">
                     <th mat-header-cell *matHeaderCellDef> Dividend Payments </th>
-                    <td mat-cell *matCellDef="let result"> {{result.dividendPayments | currency}} </td>
+                    <td mat-cell *matCellDef="let result" [class.notInShapshot]="!result.includedInSnapshot"> {{result.dividendPayments | currency}} </td>
                     <td mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.dividendProceeds | currency}} </td>
                 </ng-container>
-                <!-- Options Activity Column
-                <ng-container matColumnDef="optionsActivity">
-                    <th mat-header-cell *matHeaderCellDef> Options Activities </th>
-                    <td mat-cell *matCellDef="let result"> {{result.optionsActivity}} </td>
-                    <td mat-footer-cell *matFooterCellDef>  </td>
-                </ng-container>
-                -->
-                <!-- Number Contracts Column
-                <ng-container matColumnDef="numberContracts">
-                    <th mat-header-cell *matHeaderCellDef> Number Contracts </th>
-                    <td mat-cell *matCellDef="let result"> {{result.numberContracts}} </td>
-                    <td mat-footer-cell *matFooterCellDef>   </td>
-                </ng-container>
-                -->
+
                 <!-- Options Proceeds Column-->
                 <ng-container matColumnDef="optionsProceeds">
                     <th mat-header-cell *matHeaderCellDef> Options Proceeds </th>
-                    <td mat-cell *matCellDef="let result"> {{result.optionsProceeds | currency}} </td>
+                    <td mat-cell *matCellDef="let result" [class.notInShapshot]="!result.includedInSnapshot"> {{result.optionsProceeds | currency}} </td>
                     <td mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.optionProceeds | currency}} </td>
                 </ng-container>
                 <!-- Total Gains Column-->
                 <ng-container matColumnDef="totalGains">
                     <th mat-header-cell *matHeaderCellDef> Total Gains </th>
-                    <td mat-cell *matCellDef="let result"> {{result.totalGains | currency}} </td>
+                    <td mat-cell *matCellDef="let result" [class.notInShapshot]="!result.includedInSnapshot"> {{result.totalGains | currency}} </td>
                     <td mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.totalGains | currency}} </td>
                 </ng-container>
-                <!-- Average Capital at Risk Column
-                <ng-container matColumnDef="averageCapitalAtRisk">
-                    <th mat-header-cell *matHeaderCellDef> Avg Cap At Risk </th>
-                    <td mat-cell *matCellDef="let result">  </td>
-                    <td mat-footer-cell *matFooterCellDef>  </td>
-                </ng-container>
-                -->
+
                 <!-- Annual Return Column-->
                 <ng-container matColumnDef="annualReturn">
                     <th mat-header-cell *matHeaderCellDef> Annual Return </th>
-                    <td mat-cell *matCellDef="let result"> {{result.annualReturn | percent:'1.2'}} </td>
+                    <td mat-cell *matCellDef="let result" [class.notInShapshot]="!result.includedInSnapshot"> {{result.annualReturn | percent:'1.2'}} </td>
                     <td mat-footer-cell *matFooterCellDef>  {{analysisResults.analysisTotals.annualReturn | percent:'1.2'}} </td>
                 </ng-container>
 

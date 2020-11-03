@@ -144,19 +144,16 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBase implements On
   private buildAnalysisSection(resultsFromService) {
     const displayableResults = new Array();
     resultsFromService.lifeCycles.forEach( lifeCycle => {
-      displayableResults.push({ data: '',
-                                ticker: lifeCycle.stock.ticker,
-                                activity: '',
-                                size: '',
+      displayableResults.push({ ticker: lifeCycle.stock.ticker,
                                 proceeds: lifeCycle.profitsFromSecurities,
-                                dividendShares: '',
                                 dividendPayments: lifeCycle.dividendsAccrued,
-                                optionsActivity: '',
-                                numberContracts: '',
                                 optionsProceeds: lifeCycle.optionProceedsAccrued,
                                 totalGains: lifeCycle.totalGains,
                                 averageCapitalAtRisk: lifeCycle.dailyAverageCapitalAtRisk,
-                                annualReturn: lifeCycle.annualizedIncomeReturnOnInvestment });
+                                annualReturn: lifeCycle.annualizedIncomeReturnOnInvestment,
+                                includedInSnapshot: lifeCycle.includedInSnapshot,
+                                });
+
     });
     this.analysisResultsDataSource.data = displayableResults;
 
