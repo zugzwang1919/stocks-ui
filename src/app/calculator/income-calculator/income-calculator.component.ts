@@ -13,40 +13,23 @@ import { BusyService } from 'src/app/general/busy/busy.service';
 import { CookieService } from 'ngx-cookie-service';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 import { Timeframe, TimeframeService } from '../timeframe.service';
+import { WolfeCalculatorBase } from '../wolfe-calculator-base';
 
+const BUSY_ID = 1926;
+const TIMEFRAME_COOKIE_NAME = 'wolfe-software.com_income-analysis_timeframe';
+const CUSTOM_START_DATE_COOKIE_NAME = 'wolfe-software.com_income-analysis_custom-start-date';
+const CUSTOM_END_DATE_COOKIE_NAME = 'wolfe-software.com_income-analysis_custom-end-date';
+const PORTFOLIO_COOKIE_NAME = 'wolfe-software.com_income-analysis_portfolios';
+const TICKER_COOKIE_NAME = 'wolfe-software.com_income-analysis_tickers';
 
 @Component({
   selector: 'app-income-calculator',
   templateUrl: './income-calculator.component.html',
   styleUrls: ['./income-calculator.component.sass']
 })
-export class IncomeCalculatorComponent implements OnInit {
+export class IncomeCalculatorComponent extends WolfeCalculatorBase implements OnInit {
 
   entryIsVisible = true;
-  busy = false;
-  firstTimeDisplayingTickers: boolean;
-
-
-  selectedTimeframe: Timeframe;
-  timeframes: string[] = Object.values(Timeframe);
-
-  selectedStartDate: Date;
-  selectedEndDate: Date;
-  readonly TIMEFRAME_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_timeframe';
-  readonly CUSTOM_START_DATE_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_custom-start-date';
-  readonly CUSTOM_END_DATE_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_custom-end-date';
-
-  portfolioInitialData: any[] = [];
-  portfolioDataSource = new MatTableDataSource(this.portfolioInitialData);
-  portfolioSelection = new SelectionModel(true, []);
-  portfolioDisplayedColumns: string[] = ['select', 'portfolioName'];
-  readonly PORTFOLIO_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_portfolios';
-
-  tickerInitialData: any[] = [];
-  tickerDataSource = new MatTableDataSource(this.tickerInitialData);
-  tickerSelection = new SelectionModel(true, []);
-  tickerDisplayedColumns: string[] = ['select', 'ticker', 'name'];
-  readonly TICKER_COOKIE_NAME: string = 'wolfe-software.com_income-analysis_tickers';
 
   analysisResultsDataSource = new MatTableDataSource();
   analysisResultsDisplayedColumns: string[] = [   'ticker', 'proceeds', 'dividendProceeds',
@@ -67,21 +50,33 @@ export class IncomeCalculatorComponent implements OnInit {
 
 
   constructor(
-    private alertService: AlertService,
-    private busyService: BusyService,
-    private calculatorService: CalculatorService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private cookieService: CookieService,
-    private portfolioService: PortfolioService,
-    private timeframeService: TimeframeService,
-    public  wcitService: WolfeCheckboxInTableService,
-  ) { }
+    protected alertService: AlertService,
+    protected busyService: BusyService,
+    private   calculatorService: CalculatorService,
+    protected changeDetectorRef: ChangeDetectorRef,
+    protected cookieService: CookieService,
+    protected portfolioService: PortfolioService,
+    protected timeframeService: TimeframeService,
+    public    wcitService: WolfeCheckboxInTableService)
+  {
+    super(portfolioService,
+      timeframeService,
+      busyService,
+      cookieService,
+      wcitService,
+      alertService,
+      changeDetectorRef,
+      BUSY_ID,
+      PORTFOLIO_COOKIE_NAME,
+      TICKER_COOKIE_NAME,
+      TIMEFRAME_COOKIE_NAME);
+  }
 
   ngOnInit(): void {
-    // Set the timeframe based on cookie values - if no cookie, set it to ALL_DATES
-    this.selectedTimeframe = this.timeframeService.getTimeframeFromCookie(this.TIMEFRAME_COOKIE_NAME) || Timeframe.ALL_DATES;
-    // Indicate that this is the first time through
-    this.firstTimeDisplayingTickers = true;
+
+    // Set the selectedTimeframe appropriately
+    this.populateTimeframe();
+
     // Populate the Portfolio and Ticker List
     this.populatePortfolioAndTickerTables();
 
@@ -93,7 +88,7 @@ export class IncomeCalculatorComponent implements OnInit {
     // indicate that we're busy to our html template and to the Busy Service
     this.setBusyState(true);
     // Save cookies before starting the analysis
-    this.saveAllValuesToCookies();
+    this.saveTimeframePortfoliosAndTickersToCookies();
 
     this.calculatorService.analyzeIncome( this.timeframeService.calculateStartDate(this.selectedTimeframe, this.selectedStartDate),
                                           this.timeframeService.calculateEndDate(this.selectedTimeframe, this.selectedEndDate),
@@ -123,97 +118,14 @@ export class IncomeCalculatorComponent implements OnInit {
     this.entryIsVisible = !this.entryIsVisible;
   }
 
-  shouldCustomDatesBeVisible(): boolean {
-    return this.selectedTimeframe === Timeframe.CUSTOM_DATES;
-  }
-
   shouldSubmitBeDisabled() {
     // If no portfolios are selected  OR  no stocks are selected, the submit button should be disabled
     return this.portfolioSelection.selected.length === 0 || this.tickerSelection.selected.length === 0 || this.busy;
   }
 
 
-  /***** Methods dealing with users clicking on check boxes in the portfolio table  *****/
-
-  updateTickerListBasedOnPortfoliosSelected() {
-
-    // Update the Ticker Section based on the porfolios selected
-    const portfolioIds: number[] = this.portfolioSelection.selected.map((p: Portfolio) => p.id);
-    this.portfolioService.retrieveSecuritiesWithTransactionsInPorfolios(portfolioIds)
-    .subscribe(
-      tickers => {
-          // Put the tickers in the DataSource
-          this.tickerDataSource.data = tickers.sort((a, b) => a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0);
-          // Indicate that the data in the table has changed
-          this.changeDetectorRef.detectChanges();
-          // If this is the first time showing the tickers, use the cookies to set up the selection
-          let selectedTickers: Ticker[] = [];
-          if (this.firstTimeDisplayingTickers) {
-            // Set the checkboxes based on cookie values
-            const tickerCookie: string = this.cookieService.get(this.TICKER_COOKIE_NAME);
-            if (tickerCookie.length > 0 ) {
-              const ids: number[] = tickerCookie.split(',').map(idAsString => +idAsString);
-              selectedTickers = ids.map(id => tickers.find(t => t.id === id));
-            }
-            this.firstTimeDisplayingTickers = false;
-          }
-          // Set the check boxes to the appropriate values
-          this.tickerSelection = new SelectionModel(true, selectedTickers);
-      },
-      error => this.alertService.error(error)
-    );
-  }
-
-
-  /*****  Methods that just help manage checkboxes imbedded in the Porfolio Table *****/
-
-  singleTogglePortfolio(portfolio: Portfolio) {
-    // First, toggle the check box
-    this.portfolioSelection.toggle(portfolio);
-    // Update the Ticker Section based on the porfolios selected
-    this.updateTickerListBasedOnPortfoliosSelected();
-  }
-
-  masterTogglePortfolios() {
-    // First toggle the portfolio items based on their current settings
-    this.wcitService.masterToggle(this.portfolioSelection, this.portfolioDataSource);
-    // Update the Ticker Section based on the porfolios selected
-    this.updateTickerListBasedOnPortfoliosSelected();
-  }
-
-
   /**********************************  PRIVATE METHODS *********************************/
 
-  private populatePortfolioAndTickerTables() {
-    this.portfolioService.retrieveAll()
-      .subscribe(
-        // If this goes well, update the list of Tickers
-        portfolios =>  {
-
-          // Put the returned portfolio data in the portfolio DataSource
-          this.portfolioDataSource.data = portfolios.sort((p1: Portfolio, p2: Portfolio) => p1.portfolioName < p2.portfolioName ? -1 : p1.portfolioName > p2.portfolioName ? 1 : 0);
-
-          // Set the checkboxes based on cookie values
-          const portfolioCookie: string = this.cookieService.get(this.PORTFOLIO_COOKIE_NAME);
-          let selectedPortfolios: Portfolio[] = [];
-          if (portfolioCookie.length > 0 ) {
-            const ids: number[] = portfolioCookie.split(',').map(idAsString => +idAsString);
-            selectedPortfolios = ids.map(id => this.portfolioDataSource.data.find(item => item.id === id));
-          }
-
-          // Create a new Selection Model
-          this.portfolioSelection = new SelectionModel<Portfolio>(true, selectedPortfolios );
-
-          // Indicate that the data in the table has changed
-          this.changeDetectorRef.detectChanges();
-
-          // Now that we have the portfolio list created, set up the tickers
-          this.updateTickerListBasedOnPortfoliosSelected();
-        },
-        // If the retrieval goes poorly, show the error
-        error => this.alertService.error(error)
-      );
-  }
 
   private updateResults(resultsFromService) {
     this.analysisResults = resultsFromService;
@@ -263,36 +175,7 @@ export class IncomeCalculatorComponent implements OnInit {
     });
     this.snapshotDataSource.data = snapshotCalculations;
     this.changeDetectorRef.detectChanges();
-
   }
 
-  private saveAllValuesToCookies(): void {
-    // Make the cookie valid for a year
-    const oneYearFromToday: Date = new Date();
-    oneYearFromToday.setFullYear(oneYearFromToday.getFullYear() + 1);
-
-    // Save the timeframe that was selected
-    this.cookieService.set(this.TIMEFRAME_COOKIE_NAME, this.selectedTimeframe, oneYearFromToday);
-
-    // Save the portfolios that were selected.
-    const portfolioIds: string =  this.portfolioSelection.selected.map(p => p.id).join();
-    this.cookieService.set(this.PORTFOLIO_COOKIE_NAME, portfolioIds, oneYearFromToday);
-
-    // Save the tickers that were selected.
-    const tickerIds: string =  this.tickerSelection.selected.map(t => t.id).join();
-    this.cookieService.set(this.TICKER_COOKIE_NAME, tickerIds, oneYearFromToday);
-  }
-
-  private setBusyState(input: boolean) {
-    // Keep track of locally whether or not we're busy
-    this.busy = input;
-    // Tell the BusyService whether or note we're busy
-    if (input) {
-      this.busyService.busy(12);
-    }
-    else {
-      this.busyService.finished(12);
-    }
-  }
 
 }

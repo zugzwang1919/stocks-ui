@@ -12,41 +12,28 @@ import { BusyService } from 'src/app/general/busy/busy.service';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Timeframe, TimeframeService } from '../timeframe.service';
+import { WolfeCalculatorBase } from '../wolfe-calculator-base';
+
+const BUSY_ID = 1925;
+const TIMEFRAME_COOKIE_NAME = 'wolfe-software.com_benhcmark-analysis_timeframe';
+const PORTFOLIO_COOKIE_NAME = 'wolfe-software.com_benchcmark-analysis_portfolios';
+const TICKER_COOKIE_NAME = 'wolfe-software.com_benchmark-analysis_tickers';
+const BENCHMARK_COOKIE_NAME = 'wolfe-software.com_benchmark-analysis_benchmarks';
 
 @Component({
   selector: 'app-benchmark-calculator',
   templateUrl: './benchmark-calculator.component.html',
   styleUrls: ['./benchmark-calculator.component.sass']
 })
-export class BenchmarkCalculatorComponent implements OnInit {
+export class BenchmarkCalculatorComponent extends WolfeCalculatorBase implements OnInit {
 
   entryIsVisible = true;
-  busy = false;
-  firstTimeDisplayingTickers: boolean;
-
-  selectedTimeframe: Timeframe;
-  timeframes: string[] = Object.values(Timeframe);
-  selectedStartDate: Date;
-  selectedEndDate: Date;
-  readonly TIMEFRAME_COOKIE_NAME: string = 'wolfe-software.com_benhcmark-analysis_timeframe';
-
-  portfolioInitialData: any[] = [];
-  portfolioDataSource = new MatTableDataSource(this.portfolioInitialData);
-  portfolioSelection = new SelectionModel(true, []);
-  portfolioDisplayedColumns: string[] = ['select', 'portfolioName'];
-  readonly PORTFOLIO_COOKIE_NAME: string = 'wolfe-software.com_benchcmark-analysis_portfolios';
-
-  tickerInitialData: any[] = [];
-  tickerDataSource = new MatTableDataSource(this.tickerInitialData);
-  tickerSelection = new SelectionModel(true, []);
-  tickerDisplayedColumns: string[] = ['select', 'ticker', 'name'];
-  readonly TICKER_COOKIE_NAME: string = 'wolfe-software.com_benchmark-analysis_tickers';
 
   benchmarkInitialData: any[] = [];
   benchmarkDataSource = new MatTableDataSource(this.benchmarkInitialData);
   benchmarkSelection = new SelectionModel(true, []);
   benchmarkDisplayedColumns: string[] = ['select', 'ticker', 'name'];
-  readonly BENCHMARK_COOKIE_NAME: string = 'wolfe-software.com_benchmark-analysis_benchmarks';
+
 
   analysisResultsDataSource = new MatTableDataSource();
   analysisResultsDisplayedColumns: string[] = [ 'ticker',
@@ -66,24 +53,35 @@ export class BenchmarkCalculatorComponent implements OnInit {
   analysisResultsPresent = false;
 
   constructor(
-    private alertService: AlertService,
-    private busyService: BusyService,
-    private calculatorService: CalculatorService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private cookieService: CookieService,
-    private portfolioService: PortfolioService,
-    private tickerService: TickerService,
-    private timeframeService: TimeframeService,
-    public  wcitService: WolfeCheckboxInTableService
-  ) { }
+    protected alertService: AlertService,
+    protected busyService: BusyService,
+    private   calculatorService: CalculatorService,
+    protected changeDetectorRef: ChangeDetectorRef,
+    protected cookieService: CookieService,
+    protected portfolioService: PortfolioService,
+    private   tickerService: TickerService,
+    protected timeframeService: TimeframeService,
+    public    wcitService: WolfeCheckboxInTableService)
+  {
+    super(portfolioService,
+          timeframeService,
+          busyService,
+          cookieService,
+          wcitService,
+          alertService,
+          changeDetectorRef,
+          BUSY_ID,
+          PORTFOLIO_COOKIE_NAME,
+          TICKER_COOKIE_NAME,
+          TIMEFRAME_COOKIE_NAME);
+  }
 
   ngOnInit(): void {
 
-    // Set the selectedTimeframe to the value in the cookie; if no cookie, set to ALL_DATES
-    this.selectedTimeframe = this.timeframeService.getTimeframeFromCookie(this.TIMEFRAME_COOKIE_NAME) || Timeframe.ALL_DATES;
+    // Set the selectedTimeframe appropriately
+    this.populateTimeframe();
 
     // Populate the Portfolio and Ticker List
-    this.firstTimeDisplayingTickers = true;
     this.populatePortfolioAndTickerTables();
 
     // Populate the Benchmark List
@@ -128,10 +126,6 @@ export class BenchmarkCalculatorComponent implements OnInit {
     this.entryIsVisible = !this.entryIsVisible;
   }
 
-  shouldCustomDatesBeVisible(): boolean {
-    return this.selectedTimeframe === Timeframe.CUSTOM_DATES;
-  }
-
   shouldSubmitButtonBeDisabled(): boolean {
     return this.portfolioSelection.selected.length === 0 ||
     this.tickerSelection.selected.length === 0 ||
@@ -139,87 +133,7 @@ export class BenchmarkCalculatorComponent implements OnInit {
     this.busy;
   }
 
-  /*****  Methods that handle clicks in the Porfolio Table *****/
 
-  updateTickerListBasedOnPortfoliosSelected() {
-
-    // Update the Ticker Section based on the porfolios selected
-    const portfolioIds: number[] = this.portfolioSelection.selected.map((p: Portfolio) => p.id);
-    this.portfolioService.retrieveSecuritiesWithTransactionsInPorfolios(portfolioIds)
-    .subscribe(
-      tickers => {
-          // Put the tickers in the DataSource
-          this.tickerDataSource.data = tickers.sort(this.tickerSortFunction);
-          // Indicate that the data in the table has changed
-          this.changeDetectorRef.detectChanges();
-          // If this is the first time showing the tickers, use the cookies to set up the selection
-          let selectedTickers: Ticker[] = [];
-          if (this.firstTimeDisplayingTickers) {
-            // Set the checkboxes based on cookie values
-            const tickerCookie: string = this.cookieService.get(this.TICKER_COOKIE_NAME);
-            if (tickerCookie.length > 0 ) {
-              const ids: number[] = tickerCookie.split(',').map(idAsString => +idAsString);
-              // It's possible that the ticker was deleted since the cookie was saved.
-              // Filter out any "undefined" results from the find() below.
-              selectedTickers = ids.map(id => tickers.find((t: Ticker) => t.id === id)).filter((t: Ticker) => t);
-            }
-            this.firstTimeDisplayingTickers = false;
-          }
-          // Set the check boxes to the appropriate values
-          this.tickerSelection = new SelectionModel(true, selectedTickers);
-      },
-      error => this.alertService.error(error)
-    );
-  }
-
-  handlePortfolioSelectionChange(row: any) {
-    // First, toggle the check box
-    this.portfolioSelection.toggle(row);
-    // Update the Ticker Section based on the porfolios selected
-    this.updateTickerListBasedOnPortfoliosSelected();
-  }
-
-  masterTogglePortfolios() {
-    // First toggle the portfolio items based on their current settings
-    this.wcitService.masterToggle(this.portfolioSelection, this.portfolioDataSource);
-    // Update the Ticker Section based on the porfolios selected
-    this.updateTickerListBasedOnPortfoliosSelected();
-  }
-
-  /******************** PRIVATE METHODS ********************/
-
-  private populatePortfolioAndTickerTables() {
-    this.portfolioService.retrieveAll()
-      .subscribe(
-        // If this goes well, update the list of Tickers
-        portfolios =>  {
-
-          // Put the returned portfolio data in the portfolio DataSource
-          this.portfolioDataSource.data = portfolios.sort((p1: Portfolio, p2: Portfolio) => p1.portfolioName < p2.portfolioName ? -1 : p1.portfolioName > p2.portfolioName ? 1 : 0);
-
-          // Set the checkboxes based on cookie values
-          const portfolioCookie: string = this.cookieService.get(this.PORTFOLIO_COOKIE_NAME);
-          let selectedPortfolios: Portfolio[] = [];
-          if (portfolioCookie.length > 0 ) {
-            const ids: number[] = portfolioCookie.split(',').map(idAsString => +idAsString);
-            // Portfolio could theoretically have been deleted since the cookie was created.
-            // Filter out an "undefined results" when we try to "find" the portfolio
-            selectedPortfolios = ids.map(id => this.portfolioDataSource.data.find((p: Portfolio) => p.id === id)).filter((p: Portfolio) => p);
-          }
-
-          // Create a new Selection Model
-          this.portfolioSelection = new SelectionModel<Portfolio>(true, selectedPortfolios );
-
-          // Indicate that the data in the table has changed
-          this.changeDetectorRef.detectChanges();
-
-          // Now that we have the portfolio list created, set up the tickers
-          this.updateTickerListBasedOnPortfoliosSelected();
-        },
-        // If the retrieval goes poorly, show the error
-        error => this.alertService.error(error)
-      );
-  }
 
   private populateBenchmarkTable() {
     this.tickerService.retrieveAllBenchmarks()
@@ -228,7 +142,7 @@ export class BenchmarkCalculatorComponent implements OnInit {
       benchmarks =>  {
         this.benchmarkDataSource.data = benchmarks.sort(this.tickerSortFunction);
         // Set the checkboxes based on cookie values
-        const benchmarkCookie: string = this.cookieService.get(this.BENCHMARK_COOKIE_NAME);
+        const benchmarkCookie: string = this.cookieService.get(BENCHMARK_COOKIE_NAME);
         let selectedBenchmarks: Ticker[] = [];
         if (benchmarkCookie.length > 0 ) {
         const ids: number[] = benchmarkCookie.split(',').map(idAsString => +idAsString);
@@ -248,24 +162,13 @@ export class BenchmarkCalculatorComponent implements OnInit {
   }
 
   private saveAllValuesToCookies(): void {
-    // Make the cookie valid for a year
-    const oneYearFromToday: Date = new Date();
-    oneYearFromToday.setFullYear(oneYearFromToday.getFullYear() + 1);
-
-    // Save the timeframe that was selected
-    this.cookieService.set(this.TIMEFRAME_COOKIE_NAME, this.selectedTimeframe, oneYearFromToday);
-
-    // Save the portfolios that were selected.
-    const portfolioIds: string =  this.portfolioSelection.selected.map(p => p.id).join();
-    this.cookieService.set(this.PORTFOLIO_COOKIE_NAME, portfolioIds, oneYearFromToday);
-
-    // Save the tickers that were selected.
-    const tickerIds: string =  this.tickerSelection.selected.map(t => t.id).join();
-    this.cookieService.set(this.TICKER_COOKIE_NAME, tickerIds, oneYearFromToday);
 
     // Save the benchmarks that were selected.
     const benchmarkIds: string =  this.benchmarkSelection.selected.map(b => b.id).join();
-    this.cookieService.set(this.BENCHMARK_COOKIE_NAME, benchmarkIds, oneYearFromToday);
+    this.cookieService.set(BENCHMARK_COOKIE_NAME, benchmarkIds, this.oneYearFromToday());
+
+    // Save the timeframe, portfolios, and tickers
+    this.saveTimeframePortfoliosAndTickersToCookies();
 
   }
 
@@ -325,22 +228,4 @@ export class BenchmarkCalculatorComponent implements OnInit {
 
   }
 
-  private setBusyState(input: boolean) {
-    // Keep track of locally whether or not we're busy
-    this.busy = input;
-    // Tell the BusyService whether or note we're busy
-    if (input) {
-      this.busyService.busy(1925);
-    }
-    else {
-      this.busyService.finished(1925);
-    }
-  }
-
-  //
-  // Function to sort Tickers by their Ticker Symbol in DESCENDING order
-  // i.e., AAPL, GOOG, MSFT, SPY
-  //
-  private tickerSortFunction: ((a: Ticker, b: Ticker) => number) = (a: Ticker, b: Ticker) =>
-                              a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0
 }
