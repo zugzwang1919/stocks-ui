@@ -8,6 +8,7 @@ import { IncomeCalculatorComponent } from './income-calculator/income-calculator
 import { MaterialModule } from '../material/material.module';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
 import { BenchmarkCalculatorComponent } from './benchmark-calculator/benchmark-calculator.component';
+import { LifecycleDialogComponent } from './lifecycle-dialog/lifecycle-dialog.component';
 
 
 
@@ -15,7 +16,8 @@ import { BenchmarkCalculatorComponent } from './benchmark-calculator/benchmark-c
 @NgModule({
   declarations: [
     IncomeCalculatorComponent,
-    BenchmarkCalculatorComponent
+    BenchmarkCalculatorComponent,
+    LifecycleDialogComponent
   ],
   imports: [
     CommonModule,

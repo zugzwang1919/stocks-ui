@@ -1,0 +1,12 @@
+@use 'src/wolfe-colors'
+@use 'src/styles'
+
+
+/* Columns in the table that need to be right justified */
+.mat-column-stockSize, .mat-column-stockProceeds, .mat-column-dividendProceeds, .mat-column-optionProceeds, .mat-column-optionNumberOfContracts
+    @extend %mat-column-right-justified
+
+
+/* Columns that needs some padding to their left */
+.mat-column-stockActivity, .mat-column-stockSize, .mat-column-stockProceeds, mat-column-dividendProceeds, matcolumn-optionActivity, .mat-column-optionNumberOfContracts, .mat-column-optionProceeds
+    padding-left: 15px

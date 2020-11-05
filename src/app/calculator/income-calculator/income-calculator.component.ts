@@ -14,6 +14,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 import { Timeframe, TimeframeService } from '../timeframe.service';
 import { WolfeCalculatorBase } from '../wolfe-calculator-base';
+import {MatDialog } from '@angular/material/dialog';
+import { LifecycleDialogComponent } from '../lifecycle-dialog/lifecycle-dialog.component';
 
 const BUSY_ID = 1926;
 const TIMEFRAME_COOKIE_NAME = 'wolfe-software.com_income-analysis_timeframe';
@@ -30,6 +32,8 @@ const TICKER_COOKIE_NAME = 'wolfe-software.com_income-analysis_tickers';
 export class IncomeCalculatorComponent extends WolfeCalculatorBase implements OnInit {
 
   entryIsVisible = true;
+
+  analysitResults: any;
 
   analysisResultsDataSource = new MatTableDataSource();
   analysisResultsDisplayedColumns: string[] = [   'ticker', 'proceeds', 'dividendProceeds',
@@ -57,7 +61,8 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBase implements On
     protected cookieService: CookieService,
     protected portfolioService: PortfolioService,
     protected timeframeService: TimeframeService,
-    public    wcitService: WolfeCheckboxInTableService)
+    public    wcitService: WolfeCheckboxInTableService,
+    public    lifecycleDialog: MatDialog)
   {
     super(portfolioService,
       timeframeService,
@@ -82,6 +87,8 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBase implements On
 
   }
 
+  /*******************  Methods that allow the template to take action **********************/
+
   performAnalysis() {
     // reset any previous alerts
     this.alertService.clear();
@@ -99,6 +106,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBase implements On
       .subscribe(
           // SUCCESS! ->  Show the results
           resultsFromService  =>  {
+            this.analysisResults = resultsFromService;
             this.updateResults(resultsFromService);
             // Notify everyone that we're no longer busy
             this.setBusyState(false);
@@ -111,6 +119,12 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBase implements On
           }
       );
   }
+
+  showLifecycle(item: any) {
+    const lifecycle: any = this.analysisResults.lifeCycles.find(lc => lc.stock.ticker === item.ticker);
+    this.lifecycleDialog.open(LifecycleDialogComponent, {data: lifecycle} );
+  }
+
 
   /***** Methods that help determine the visibility of different parts of the page ******/
 
