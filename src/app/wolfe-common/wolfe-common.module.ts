@@ -1,15 +1,18 @@
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { YesNoPipe } from './yes-no.pipe';
+import { ActivityPipe } from './activity.pipe';
 
 
 
 
 @NgModule({
   declarations: [
-    YesNoPipe
+    ActivityPipe,
+    YesNoPipe,
   ],
   exports: [
+    ActivityPipe,
     YesNoPipe
   ],
   imports: [

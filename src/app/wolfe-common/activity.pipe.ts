@@ -16,7 +16,7 @@ export class ActivityPipe implements PipeTransform {
       case 'SELL_TO_CLOSE':
         return 'Sell to Close';
       default:
-        return 'Unknown';
+        return '';
     }
   }
 

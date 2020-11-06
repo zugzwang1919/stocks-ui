@@ -1,4 +1,4 @@
-<h1>{{lifecycleTicker}}</h1>
+<h1>{{lifecycle.stock.ticker}} - {{lifecycle.stock.name}}</h1>
 
 <mat-dialog-content>
     <table class="micro-table" mat-table [dataSource]="lifecycleDataSource">
@@ -7,48 +7,56 @@
         <ng-container matColumnDef="date">
             <th mat-header-cell *matHeaderCellDef> Date </th>
             <td mat-cell *matCellDef="let event"> {{event.date | date:'mediumDate'}} </td>
+            <td mat-footer-cell *matFooterCellDef>  Totals </td>
         </ng-container>
 
         <!-- Stock Activity Column -->
         <ng-container matColumnDef="stockActivity">
             <th mat-header-cell *matHeaderCellDef> Stock Activity </th>
             <td mat-cell *matCellDef="let event"> {{event.stockActivity}} </td>
+            <td mat-footer-cell *matFooterCellDef>  </td>
         </ng-container>
 
         <!-- Stock Size Column -->
         <ng-container matColumnDef="stockSize">
             <th mat-header-cell *matHeaderCellDef> Stock Size </th>
             <td mat-cell *matCellDef="let event"> {{event.stockSize}} </td>
+            <td mat-footer-cell *matFooterCellDef>  </td>
         </ng-container>
 
         <!-- Stock Proceeds Column -->
         <ng-container matColumnDef="stockProceeds">
             <th mat-header-cell *matHeaderCellDef> Stock Proceeds </th>
             <td mat-cell *matCellDef="let event"> {{event.stockProceeds | currency}} </td>
+            <td mat-footer-cell *matFooterCellDef>  {{lifecycle.profitsFromSecurities | currency}} </td>
         </ng-container>
 
         <!-- Dividend Proceeds Column -->
         <ng-container matColumnDef="dividendProceeds">
             <th mat-header-cell *matHeaderCellDef> Dividend Proceeds </th>
             <td mat-cell *matCellDef="let event"> {{event.dividendProceeds | currency}} </td>
+            <td mat-footer-cell *matFooterCellDef>  {{lifecycle.dividendsAccrued | currency}} </td>
         </ng-container>
 
         <!-- Option Activity Column -->
         <ng-container matColumnDef="optionActivity">
             <th mat-header-cell *matHeaderCellDef> Option Activity </th>
-            <td mat-cell *matCellDef="let event"> {{event.optionActivity}} </td>
+            <td mat-cell *matCellDef="let event"> {{event.optionActivity | activity}} </td>
+            <td mat-footer-cell *matFooterCellDef>  </td>
         </ng-container>
 
         <!-- Option Number of Contracts Column -->
         <ng-container matColumnDef="optionNumberOfContracts">
             <th mat-header-cell *matHeaderCellDef> Number of Contracts </th>
             <td mat-cell *matCellDef="let event"> {{event.optionNumberOfContracts}} </td>
+            <td mat-footer-cell *matFooterCellDef>  </td>
         </ng-container>
 
         <!-- Option Proceeds Column -->
         <ng-container matColumnDef="optionProceeds">
             <th mat-header-cell *matHeaderCellDef> Option Proceeds </th>
             <td mat-cell *matCellDef="let event"> {{event.optionProceeds | currency}} </td>
+            <td mat-footer-cell *matFooterCellDef>  {{lifecycle.optionProceedsAccrued | currency}} </td>
         </ng-container>
 
         <!-- Header Row and Zebra Rows -->
@@ -57,5 +65,7 @@
                                 let even = even;
                                 columns: lifecycleDisplayedColumns;"
                     [ngClass]="{zebra: even}"></tr>
+        <tr mat-footer-row *matFooterRowDef="lifecycleDisplayedColumns sticky:true"></tr>
+
     </table>
 </mat-dialog-content>

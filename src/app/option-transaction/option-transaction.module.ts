@@ -5,13 +5,16 @@ import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
-import { ActivityPipe } from './activity.pipe';
+import { ActivityPipe } from '../wolfe-common/activity.pipe';
 import { OptionTransactionDetailsComponent } from './option-transaction-details/option-transaction-details.component';
 
 
 
 @NgModule({
-  declarations: [OptionTransactionsComponent, ActivityPipe, OptionTransactionDetailsComponent],
+  declarations: [
+    OptionTransactionsComponent,
+    OptionTransactionDetailsComponent
+  ],
   imports: [
     CommonModule,
     FormsModule,

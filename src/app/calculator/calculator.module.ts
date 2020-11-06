@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
+import { ActivityPipe } from '../wolfe-common/activity.pipe';
 import { IncomeCalculatorComponent } from './income-calculator/income-calculator.component';
 import { MaterialModule } from '../material/material.module';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';

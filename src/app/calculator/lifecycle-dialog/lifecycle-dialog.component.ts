@@ -10,16 +10,12 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class LifecycleDialogComponent {
 
-  lifecycleTicker: string;
 
   lifecycleDataSource: MatTableDataSource<any>;
   lifecycleDisplayedColumns: string[] = ['date', 'stockActivity', 'stockSize', 'stockProceeds', 'dividendProceeds',
                                           'optionActivity', 'optionNumberOfContracts', 'optionProceeds'];
 
   constructor(@Inject(MAT_DIALOG_DATA) public lifecycle: any) {
-
-    // Record the stock/ticker for this lifecycle
-    this.lifecycleTicker = lifecycle.stock.ticker;
 
     const eventsFromLifecycle = [];
 
