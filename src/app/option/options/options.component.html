@@ -55,7 +55,7 @@
     </div>
     <div>
         <button mat-raised-button color="accent" class="submit-button" [disabled]="!wcits.isExactlyOneSelected(selection)" (click)="editSelectedItem()">Edit</button>
-        <button mat-raised-button color="warn" class="submit-button" [disabled]="!wcits.isExactlyOneSelected(selection)" (click)="deleteSelectedItems()">Delete</button>
+        <button mat-raised-button color="warn" class="submit-button" [disabled]="!wcits.areAnySelected(selection)" (click)="deleteSelectedItems()">Delete</button>
         <button mat-raised-button color="accent" class="submit-button" [routerLink]="['/option/create']">Create New</button>
     </div>
 

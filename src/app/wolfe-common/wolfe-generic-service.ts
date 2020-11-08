@@ -38,10 +38,16 @@ export class WolfeGenericService<T> {
             );
     }
 
-    // Retrive a single element (Ticker, Portfolio, Transaction, etc)
-    delete(id: number): Observable<T> {
+    // Delete a single element (Ticker, Portfolio, Transaction, etc)
+    delete(id: number): Observable<any> {
         return this.wolfeHttpService.delete(this.urlPath + '/' + id);
     }
+
+    // Delete multiple elements (Ticker, Portfolio, Transaction, etc)
+    deleteList(ids: number[]): Observable<any> {
+        return this.wolfeHttpService.delete(this.urlPath, {ids});
+    }
+
 
     // By Definition, the responses that we get back from the HTTP service will have objects
     // that have nothing but numbers and strings in them.  This method provides a mechanism

@@ -47,11 +47,12 @@ export class WolfeHttpService {
     });
   }
 
-  delete(urlPath: string) {
+  delete(urlPath: string, params?: any) {
     const url: string = this.buildUrl(urlPath);
     return this.wolfeHttpExecutor(() => {
       const headers = new Headers();
       return this.httpClient.delete(url,  {
+        params,
         headers: this.createAppropriateHeaders()
       });
     });

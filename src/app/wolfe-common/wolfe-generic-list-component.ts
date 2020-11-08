@@ -61,14 +61,12 @@ export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
     deleteSelectedItems() {
         // Before we take any action, clear any error messages that have been previously displayed
         this.alertService.clear();
-        // There should be exactly one ticker selected to get here
-        const wolfeTrackedItem: T  = this.selection.selected[0];
-        // Remember the name of the item that we are about to delete for the error message
-        const itemName: string = this.itemName(wolfeTrackedItem);
-        this.wolfeTrackedItemService.delete(wolfeTrackedItem.id)
+        // Delete all of the items
+        const wolfeTrackedItems: T[]  = this.selection.selected;
+        this.wolfeTrackedItemService.deleteList(wolfeTrackedItems.map(wti => wti.id))
           .subscribe(
             success => {
-                this.alertService.success( itemName + ' was successfully deleted');
+                this.alertService.success('Item(s) were successfully deleted.');
                 this.updateWolfeTrackedItems();
             },
             error => this.alertService.error(error)
