@@ -18,11 +18,13 @@ import { LoggedInGuard } from './wolfe-common/logged-in.guard';
 import { BenchmarkCalculatorComponent } from './calculator/benchmark-calculator/benchmark-calculator.component';
 import { IncomeCalculatorComponent } from './calculator/income-calculator/income-calculator.component';
 import { AdminComponent } from './admin/admin/admin.component';
+import { AboutComponent } from './general/about/about.component';
 
 
 const routes: Routes = [
   { path: 'admin', component: AdminComponent },
   { path: 'about/todo', component: ToDoComponent },
+  { path: 'about/about', component: AboutComponent },
   { path: 'login', component: LoginComponent },
   { path: 'user/register', component: RegisterComponent },
   { path: 'welcome', component: MainPageComponent},

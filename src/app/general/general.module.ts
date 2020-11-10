@@ -12,19 +12,22 @@ import { AlertComponent } from './alert/alert.component';
 import { MenuComponent } from './menu/menu.component';
 import { ToDoComponent } from './to-do/to-do.component';
 import { BusyComponent } from './busy/busy.component';
+import { AboutComponent } from './about/about.component';
 
 
 
 
 @NgModule({
   declarations: [
+    AboutComponent,
     AlertComponent,
     BottomOfPageComponent,
     MainPageComponent,
     TopOfPageComponent,
     MenuComponent,
     ToDoComponent,
-    BusyComponent
+    BusyComponent,
+    AboutComponent
   ],
   imports: [
     CommonModule,
@@ -33,6 +36,7 @@ import { BusyComponent } from './busy/busy.component';
     UserModule
   ],
   exports: [
+    AboutComponent,
     AlertComponent,
     BottomOfPageComponent,
     MainPageComponent,
