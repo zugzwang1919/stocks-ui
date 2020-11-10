@@ -1,12 +1,20 @@
-<h1> About </h1>
+<div class="top-div">
+    <h1> About - In Search of Alpha</h1>
+    <h4>http://stocks.wolfe-software.com</h4>
+    <img src="assets/img/transparent-wolf.png" width="100px" height="100px">
+</div>
 
 <div class="group-of-stuff">
     <h2>UI</h2>
-    <p>Version: 2.0</p>
-    <p>Date: 06/12/1960</p>
+    <p>Version: {{ uiVersion}}</p>
+    <p>Build Date: {{ uiBuildDate | date:'longDate' }}</p>
+    <p>Git Commit Hash: {{ uiGitHash }}</p>
 </div>
 <div class="group-of-stuff">
     <h2>Server</h2>
-    <p>Version 2.0</p>
-    <p>Date: 06/12/1960</p>
+    <p>Version:  {{serverVersion}}</p>
+    <p>Build Date: {{ serverBuildDate | date:'longDate' }}</p>
+    <p>Git Commit Hash: {{ serverGitHash }}</p>
+    <p>Git Commit Full Hash: {{ serverGitHashFull }}</p>
+
 </div>
