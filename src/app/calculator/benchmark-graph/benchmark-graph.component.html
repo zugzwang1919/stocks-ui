@@ -1,0 +1,21 @@
+<div class="benchmark-graph-div" #divContainingGraph>
+    <!-- Some of the documentation indicates that the chart should resize to fit its container -->
+    <!-- I never found this to be true, so I explicitly had to set the size using the "view" attribute -->
+    <ngx-charts-line-chart
+      [view]="[divContainingGraph.offsetWidth, divContainingGraph.offsetHeight]"
+      [scheme]="colorScheme"
+      [legend]="legend"
+      [showXAxisLabel]="showXAxisLabel"
+      [showYAxisLabel]="showYAxisLabel"
+      [xAxis]="xAxis"
+      [yAxis]="yAxis"
+      [xAxisLabel]="xAxisLabel"
+      [yAxisLabel]="yAxisLabel"
+      [timeline]="timeline"
+      [results]="multiLineData"
+      (select)="onSelect($event)"
+      (activate)="onActivate($event)"
+      (deactivate)="onDeactivate($event)"
+  >
+  </ngx-charts-line-chart>
+</div>

@@ -1,12 +1,12 @@
 {
   "dirty": false,
-  "raw": "bbc6c05",
-  "hash": "bbc6c05",
+  "raw": "1f8e4a5",
+  "hash": "1f8e4a5",
   "distance": null,
   "tag": null,
   "semver": null,
-  "suffix": "bbc6c05",
+  "suffix": "1f8e4a5",
   "semverString": null,
-  "buildDate": "2020-11-10T23:14:09.200Z",
+  "buildDate": "2020-11-11T16:01:03.031Z",
   "version": "2.0"
 }

@@ -13,6 +13,7 @@ import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox
 import { CookieService } from 'ngx-cookie-service';
 import { Timeframe, TimeframeService } from '../timeframe.service';
 import { WolfeCalculatorBase } from '../wolfe-calculator-base';
+import { BenchmarkAnalysisResponse } from '../benchmark-analysis-response';
 
 const BUSY_ID = 1925;
 const TIMEFRAME_COOKIE_NAME = 'wolfe-software.com_benhcmark-analysis_timeframe';
@@ -28,6 +29,9 @@ const BENCHMARK_COOKIE_NAME = 'wolfe-software.com_benchmark-analysis_benchmarks'
 export class BenchmarkCalculatorComponent extends WolfeCalculatorBase implements OnInit {
 
   entryIsVisible = true;
+
+  benchmarkAnalysisResponse: BenchmarkAnalysisResponse;
+
 
   benchmarkInitialData: any[] = [];
   benchmarkDataSource = new MatTableDataSource(this.benchmarkInitialData);
@@ -106,7 +110,10 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBase implements
                                                 true)
       .subscribe(
           // SUCCESS! ->  Show the results
-          resultsFromService  =>  {
+          (resultsFromService: BenchmarkAnalysisResponse)  =>  {
+            // Keep the results around
+            this.benchmarkAnalysisResponse = resultsFromService;
+            // Update the tabular results
             this.updateResults(resultsFromService);
             // Notify everyone that we're no longer busy
             this.setBusyState(false);

@@ -10,6 +10,8 @@ import { MaterialModule } from '../material/material.module';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
 import { BenchmarkCalculatorComponent } from './benchmark-calculator/benchmark-calculator.component';
 import { LifecycleDialogComponent } from './lifecycle-dialog/lifecycle-dialog.component';
+import { BenchmarkGraphComponent } from './benchmark-graph/benchmark-graph.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 
@@ -18,12 +20,14 @@ import { LifecycleDialogComponent } from './lifecycle-dialog/lifecycle-dialog.co
   declarations: [
     IncomeCalculatorComponent,
     BenchmarkCalculatorComponent,
-    LifecycleDialogComponent
+    LifecycleDialogComponent,
+    BenchmarkGraphComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     MaterialModule,
+    NgxChartsModule,
     ReactiveFormsModule,
     RouterModule,
     WolfeCommonModule

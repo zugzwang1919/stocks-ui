@@ -191,6 +191,9 @@
                 <hr/>
             </div>
         </div> <!-- hideShowContainingDiv -->
+        <div class="results-graph-div">
+            <app-benchmark-graph [benchmarkAnalysisResponse] = "benchmarkAnalysisResponse"></app-benchmark-graph>
+        </div> <!-- The GRAPH -->
         <div class="analysis-results-div">
             <table class="micro-table" mat-table [dataSource]="analysisResultsDataSource"
             matSort matSortActive="ticker" matSortDisableClear matSortDirection="asc">

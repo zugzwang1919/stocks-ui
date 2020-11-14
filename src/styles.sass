@@ -81,6 +81,7 @@
 
 /* Used for the even rows of tables where appropriate */
 /* NOTE: This is currently set assuming a dark-theme */
+/* FIXME - This should be using some color from the palette */
 .zebra
     background-color: #383838 !important
 
@@ -89,3 +90,10 @@
 /* to provide some spacing from the component above it */
 .embedded-h4
     margin-top: 15px
+
+/* It would be nice if this didn't need to be included at this very high level */
+/* I could NOT get this to work if placed in the angular component's SASS file */
+/* FIXME - This shoud be using some color from the palette */
+.ngx-charts
+    text
+        fill: #909090 !important
