@@ -136,5 +136,8 @@
       }
     }
   },
-  "defaultProject": "stocks-ui"
+  "defaultProject": "stocks-ui",
+  "cli": {
+    "analytics": "7c2315cb-d178-439f-8e83-b9d85c837e7f"
+  }
 }
