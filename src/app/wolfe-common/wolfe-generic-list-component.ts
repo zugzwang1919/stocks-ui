@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, ViewChild, Directive } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectionModel} from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
@@ -8,6 +8,7 @@ import { AlertService } from 'src/app/general/alert/alert.service';
 import { WolfeGenericService } from './wolfe-generic-service';
 import { WolfeTrackedItem } from './wolfe-tracked-item';
 
+@Directive()
 export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
 
     initialData: any[] = [];
