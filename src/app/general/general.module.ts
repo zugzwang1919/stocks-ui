@@ -13,6 +13,7 @@ import { MenuComponent } from './menu/menu.component';
 import { ToDoComponent } from './to-do/to-do.component';
 import { BusyComponent } from './busy/busy.component';
 import { AboutComponent } from './about/about.component';
+import { RecentlyCompletedComponent } from './recently-completed/recently-completed.component';
 
 
 
@@ -27,7 +28,8 @@ import { AboutComponent } from './about/about.component';
     MenuComponent,
     ToDoComponent,
     BusyComponent,
-    AboutComponent
+    AboutComponent,
+    RecentlyCompletedComponent
   ],
   imports: [
     CommonModule,

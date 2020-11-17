@@ -24,7 +24,7 @@ export class MenuComponent implements OnInit {
         },
           // If this goes poorly, indicate that
         error => {
-          //this.alertService.error(error);
+          // this.alertService.error(error);
         }
       );
 

@@ -1,5 +1,4 @@
 <div>
-    <div class="left-div">
     <br>
     <h2 style="text-align:center">Things to do</h2>
     <p>
@@ -11,32 +10,22 @@
         <div class="child-div">
             <h4>General</h4>
             <ul>
-                <li class="completed">Implement a "Busy" indicator of some type</li>
                 <li>Color Scheme</li>
                     <ul>
                         <li>Tweak colors</li>
                         <li>Allow users to change between dark scheme and light scheme</li>
                     </ul>
-                <li>About->About etc</li>
-                <li class="completed">Page Scrolling Bugs</li>
-                    <ul>
-                        <li class="completed">Content visible when scrolling behind header and footer</li>
-                        <li class="completed">Sticky headers on tables come to front even when scrolled away</li>
-                    </ul>
                 <li>Support logging in with Google Credentials</li>
-                <li class="completed">Add Git revision numbers / build dates to the builds & show them in About</li>
-                <li class="completed">Investigate delays on Saturdays with updates</li>
                 <li>Roll JWT on each request/response</li>
-                <li class="completed">Upgrade Angular from 9 to 11 & other packages</li>
             </ul>
             <h4>CRUD</h4>
             <ul>
-                <li class="completed">Support multiple deletes on all List pages</li>
+                <li>Add Busy indicator to Create Stock</li>
+                <li>Think about renaming "ticker" to "stock"</li>
                 <li>Investigate digest cycle on assigning table items</li>
                 <li>User Profile</li>
+                <li>Be able to create a "ticker/stock" on the fly when creating a transaction</li>
                 <li>"Update" button should not be activated until something has actually changed</li>
-                <li class="completed">SERVER - Controllers - Centralize common code</li>
-                <li class="completed">SERVER - Support Multiple delete in Services and Repo layers</li>
                 <li>SERVER - Provide a better message when delete violates foreign key constraint</li>
             </ul>
         </div>
@@ -45,9 +34,8 @@
             <ul>
                 <li>Comparison vs Benchmark</li>
                     <ul>
-                        <li class="completed">Graph for intermediate results</li>
-                        <li>Tweak styling for graphs</li>
-                        <li class="completed">SERVER - Improve caching</li>
+                        <li>BUG - SERVER - Calculations incorrect on stock split date - See AAPL on 8/31/2020</li>
+                        <li>Tweak styling for ngx-graphs</li>
                         <li>SERVER - Reuse Opening Positions</li>
                     </ul>
                 <li>Income</li>
@@ -56,7 +44,6 @@
                 </ul>
                 <li>Implement a better IRR calculator (backend work required)</li>
             </ul>
-            </div>
         </div>
     </div>
 </div>
