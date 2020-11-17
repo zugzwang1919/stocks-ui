@@ -9,7 +9,7 @@ import { WolfeGenericService } from './wolfe-generic-service';
 import { WolfeTrackedItem } from './wolfe-tracked-item';
 
 @Directive()
-export class WolfeGenericListComponent<T extends WolfeTrackedItem> {
+export class WolfeGenericListDirective<T extends WolfeTrackedItem> {
 
     initialData: any[] = [];
     dataSource = new MatTableDataSource(this.initialData);

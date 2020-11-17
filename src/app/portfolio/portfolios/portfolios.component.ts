@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Portfolio } from '../portfolio';
 import { PortfolioService } from '../portfolio.service';
 import { AlertService } from 'src/app/general/alert/alert.service';
-import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list-component';
+import { WolfeGenericListDirective } from '../../wolfe-common/wolfe-generic-list-directive';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 
 @Component({
@@ -15,7 +15,7 @@ import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox
   templateUrl: './portfolios.component.html',
   styleUrls: ['./portfolios.component.sass']
 })
-export class PortfoliosComponent extends WolfeGenericListComponent<Portfolio>  implements OnInit {
+export class PortfoliosComponent extends WolfeGenericListDirective<Portfolio>  implements OnInit {
 
   displayedColumns: string[] = ['select', 'portfolioName', 'createDate', 'updateDate'];
 

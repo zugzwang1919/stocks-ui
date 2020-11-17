@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { Option } from '../option';
 import { OptionService } from '../option.service';
 import { AlertService } from 'src/app/general/alert/alert.service';
-import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list-component';
+import { WolfeGenericListDirective } from '../../wolfe-common/wolfe-generic-list-directive';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 
 @Component({
@@ -14,7 +14,7 @@ import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox
   templateUrl: './options.component.html',
   styleUrls: ['./options.component.sass']
 })
-export class OptionsComponent extends WolfeGenericListComponent<Option>  implements OnInit {
+export class OptionsComponent extends WolfeGenericListDirective<Option>  implements OnInit {
 
   displayedColumns: string[] = ['select', 'name', 'ticker', 'optionType', 'expirationDate', 'strikePrice'];
 

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { OptionTransaction } from '../option-transaction';
 import { OptionTransactionService } from '../option-transaction.service';
 import { AlertService } from 'src/app/general/alert/alert.service';
-import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list-component';
+import { WolfeGenericListDirective } from '../../wolfe-common/wolfe-generic-list-directive';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 
 @Component({
@@ -12,7 +12,7 @@ import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox
   templateUrl: './option-transactions.component.html',
   styleUrls: ['./option-transactions.component.sass']
 })
-export class OptionTransactionsComponent extends WolfeGenericListComponent<OptionTransaction> implements OnInit {
+export class OptionTransactionsComponent extends WolfeGenericListDirective<OptionTransaction> implements OnInit {
 
   displayedColumns: string[] = ['select', 'date', 'portfolioName', 'optionName', 'activity', 'numberOfContracts', 'amount'];
 

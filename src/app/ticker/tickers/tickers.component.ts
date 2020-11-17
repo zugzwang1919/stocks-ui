@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { Ticker } from '../ticker';
 import { TickerService } from '../ticker.service';
 import { AlertService } from 'src/app/general/alert/alert.service';
-import { WolfeGenericListComponent } from '../../wolfe-common/wolfe-generic-list-component';
+import { WolfeGenericListDirective } from '../../wolfe-common/wolfe-generic-list-directive';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 
 
@@ -15,7 +15,7 @@ import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox
   styleUrls: ['./tickers.component.sass']
 })
 
-export class TickersComponent extends WolfeGenericListComponent<Ticker>  implements OnInit {
+export class TickersComponent extends WolfeGenericListDirective<Ticker>  implements OnInit {
 
   displayedColumns: string[] = ['select', 'ticker', 'name', 'benchmark', 'createDate', 'updateDate'];
 
