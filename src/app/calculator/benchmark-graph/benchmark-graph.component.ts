@@ -39,6 +39,8 @@ export class BenchmarkGraphComponent  {
     domain: ['#31708e', '#47683e', '#698561', '#a7b8a2', '#4e7045', '#839b7d']
   };
 
+  public yAxisTickFormattingFn = (value): string  => value + '%';
+
 
   /************  Methods that we COULD hook into provided by ngx-charts  ***********/
 
@@ -55,6 +57,7 @@ export class BenchmarkGraphComponent  {
   }
 
 
+
   private insertBenchmarkResultsIntoMulti() {
     const graphData: any[] = this._benchmarkAnalysisResponse.resultsOverTime.map( (rot: ResultOverTime) => {
         return {
@@ -69,6 +72,8 @@ export class BenchmarkGraphComponent  {
       });
     this.multiLineData = graphData;
   }
+
+
 
 
 }
