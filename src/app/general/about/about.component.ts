@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AlertService } from '../alert/alert.service';
 import { ServerInfoResponse } from '../server-info-response';
 import { VersionService } from '../version.service';
-import { versionInfo } from 'version-info';
 
 @Component({
   selector: 'app-about',
@@ -11,9 +10,9 @@ import { versionInfo } from 'version-info';
 })
 export class AboutComponent implements OnInit {
 
-  uiVersion = versionInfo.version;
-  uiBuildDate = versionInfo.buildDate;
-  uiGitHash = versionInfo.hash;
+  uiVersion: string;
+  uiBuildDate: Date;
+  uiGitHash: string;
 
   serverVersion: string;
   serverBuildDate: Date;
@@ -27,6 +26,13 @@ export class AboutComponent implements OnInit {
 
   ngOnInit(): void {
 
+    // UI
+    const uiInfo: any = this.versionService.getUiInfo();
+    this.uiVersion = uiInfo.version;
+    this.uiBuildDate = uiInfo.buildDate;
+    this.uiGitHash = uiInfo.hash;
+
+    // Server
     this.versionService.getServerInfo()
       .subscribe(
         (response: ServerInfoResponse) => {
