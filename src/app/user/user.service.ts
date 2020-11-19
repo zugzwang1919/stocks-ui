@@ -25,6 +25,10 @@ export class UserService {
       return  this.wolfeHttp.post('/authenticate', {userName, password}, null);
     }
 
+    quickLogin(): Observable<LoginResponse> {
+      return this.wolfeHttp.post('/quickauthenticate', null, null);
+    }
+
     register(userName: string, password: string, emailAddress: string): Observable<User> {
       const body = {
         username: userName,

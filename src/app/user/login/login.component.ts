@@ -78,6 +78,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       );
   }
 
+
   getErrorUserName(): string {
     return this.loginGroup.get('userName').hasError('required') ? 'You must provide a user name.' : '';
   }
