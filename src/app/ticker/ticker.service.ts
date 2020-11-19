@@ -37,7 +37,8 @@ export class TickerService extends WolfeGenericService<Ticker> {
 
   // Override so that we can provide a fully functional Ticker object
   buildFullyFuctionalModel(shallowTicker: any): Ticker {
-    return new Ticker(shallowTicker);
+    const t: Ticker = new Ticker(shallowTicker);
+    return t;
   }
 
 }

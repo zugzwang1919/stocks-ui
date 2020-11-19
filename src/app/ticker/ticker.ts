@@ -9,6 +9,9 @@ export class Ticker extends WolfeTrackedItem {
         super(obj);
         this.ticker = (obj && obj.ticker) || undefined;
         this.name = (obj && obj.name) || undefined;
-        this.benchmark = (obj && obj.benchmark) || undefined;
+        // Have to be careful here not to use the pattern above.
+        // If obj.benchmark comes back false, benchmark would be undefined.
+        this.benchmark = obj ? obj.benchmark : undefined;
+
     }
 }

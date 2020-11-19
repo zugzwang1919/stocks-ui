@@ -4,9 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { AlertService } from '../../general/alert/alert.service';
-import { CurrentUserService} from '../../user/current-user/current-user.service';
 import { TickerService } from '../ticker.service';
 import { Ticker } from '../ticker';
+import { BusyService } from 'src/app/general/busy/busy.service';
 
 
 @Component({
@@ -22,11 +22,11 @@ export class TickerDetailsComponent implements OnInit {
 
   ticker: Ticker;
   attemptingToCreate: boolean;
-  busy: boolean;
+  busy = false;
 
   constructor(
     private alertService: AlertService,
-    private currentUserService: CurrentUserService,
+    private busyService: BusyService,
     private tickerService: TickerService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
@@ -80,7 +80,7 @@ export class TickerDetailsComponent implements OnInit {
     this.alertService.clear();
 
     // indicate that we're busy
-    this.busy = true;
+    this.setBusyStatus(true);
 
     // Try to create the new security/stock/etf/mutual fund/ticker
     if (this.attemptingToCreate) {
@@ -92,14 +92,14 @@ export class TickerDetailsComponent implements OnInit {
           success  =>  {
             // If this goes well...
             // Indicate that we're not waiting any more
-            this.busy = false;
+            this.setBusyStatus(false);
             // navigate to the appropriate page
             this.router.navigate(['/ticker']);
           },
           error => {
             // If this goes poorly...
             // Indicate that we're not waiting any more
-            this.busy = false;
+            this.setBusyStatus(false);
             // Display the error
             this.alertService.error(error);
           }
@@ -113,7 +113,7 @@ export class TickerDetailsComponent implements OnInit {
           ticker  =>  {
             // If this goes well...
             // Indicate that we're not waiting any more
-            this.busy = false;
+            this.setBusyStatus(false);
             // Update our version of the ticker with whatever the server returned
             this.ticker = ticker;
             // Display a success message
@@ -122,7 +122,7 @@ export class TickerDetailsComponent implements OnInit {
           error => {
             // If this goes poorly...
             // Indicate that we're not waiting any more
-            this.busy = false;
+            this.setBusyStatus(false);
             // Display the error
             this.alertService.error(error);
           }
@@ -139,4 +139,13 @@ export class TickerDetailsComponent implements OnInit {
     return this.tickerDetailsGroup.get('name').hasError('required') ? 'You must provide a name.' : '';
   }
 
+  private setBusyStatus(requestedSetting: boolean) {
+    this.busy = requestedSetting;
+    if (requestedSetting) {
+      this.busyService.busy(2929);
+    }
+    else {
+      this.busyService.finished(2929);
+    }
+  }
 }
