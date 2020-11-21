@@ -13,7 +13,7 @@
                 <li>Allow users to change between dark scheme and light scheme</li>
                 <li class="completed">Quick login to anonymous / group account</li>
                 <li>Support logging in with Google Credentials</li>
-                <li>Roll JWT on each request/response</li>
+                <li>Support JWT refresh token and handle expiration of token</li>
             </ul>
             <h4>CRUD</h4>
             <ul>
@@ -23,7 +23,7 @@
                 <li>User Profile</li>
                 <li>Be able to create a "ticker/stock" on the fly when creating a transaction</li>
                 <li>"Update" button should not be activated until something has actually changed</li>
-                <li>SERVER - Provide a better message when delete violates foreign key constraint</li>
+                <li>SERVER - Provide a better message when DELETE violates foreign key constraint</li>
             </ul>
         </div>
         <div class="child-div">
@@ -31,15 +31,16 @@
             <ul>
                 <li>Comparison vs Benchmark</li>
                     <ul>
-                        <li>BUG - SERVER - Calculations incorrect on stock split date - See AAPL on 8/31/2020</li>
+                        <li class="completed">BUG - SERVER - Calculations incorrect on stock split date - See AAPL on 8/31/2020</li>
                         <li class="completed">Tweak styling for ngx-graphs</li>
+                        <li>Handle selection of stocks as users toggle around portfolios</li>
                         <li>SERVER - Reuse Opening Positions</li>
                     </ul>
                 <li>Income</li>
                 <ul>
                     <li>Support drill down into price per share on transactions</li>
                 </ul>
-                <li>Implement a better IRR calculator (backend work required)</li>
+                <li>SERVER - Implement a better IRR calculator</li>
             </ul>
         </div>
     </div>
