@@ -5,6 +5,8 @@ import { LoginResponse } from './login-response';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { CurrentUserService } from '../current-user/current-user.service';
+import { SocialAuthService, SocialUser } from 'angularx-social-login';
+import { GoogleLoginProvider, FacebookLoginProvider, AmazonLoginProvider } from 'angularx-social-login';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +15,7 @@ import { CurrentUserService } from '../current-user/current-user.service';
 })
 export class LoginComponent implements OnInit, AfterViewInit {
 
+  socialUser: SocialUser;
   loginGroup: FormGroup;
   futureUrl: string;
   hidePassword = true;
@@ -23,6 +26,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   constructor(
     private alertService: AlertService,
+    private socialAuthService: SocialAuthService,
     private changeDetectorRef: ChangeDetectorRef,
     private currentUserService: CurrentUserService,
     private formBuilder: FormBuilder,
@@ -39,6 +43,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
     // Remember where the user wanted to go.  If nowhere send him to the
     // main page ('/') when the login is successful.
     this.futureUrl = this.route.snapshot.queryParams.redirectUrl || '/';
+    // Hook into Social logins
+    this.socialAuthService.authState.subscribe((socialUser) => {
+      this.socialUser = socialUser;
+    });
   }
 
   ngAfterViewInit() {
@@ -53,7 +61,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
     // errors from showing up in the console.
     this.changeDetectorRef.detectChanges();
   }
+  // Social Logins
+  signInWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(x => console.log(x));
+  }
 
+  signInWithFB(): void {
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(x => console.log(x));
+  }
+
+  signInWithAmazon(): void {
+    this.socialAuthService.signIn(AmazonLoginProvider.PROVIDER_ID).then(x => console.log(x));
+  }
 
   onSubmit() {
     // reset any previous alerts
