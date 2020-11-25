@@ -17,7 +17,7 @@ export class LoggedInGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       // NOTE the double equals (rather than triple) to take care of null and undefined
-      if (this.currentUserService.userName == null) {
+      if (!this.currentUserService.isUserCurrentlyLoggedIn()) {
         this.router.navigate(['login'], {queryParams: {redirectUrl: state.url}});
         return false;
       }

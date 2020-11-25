@@ -2,36 +2,48 @@
     <div class="social-login-div">
         <div *ngIf="!socialUser" class="card text-center">
             <mat-card class="mat-elevation-z4">
-                <h4>Not Signed In</h4>
-                <h4>Sign in with</h4>
+                <h4>Use Social Accounts</h4>
                 <div class="div-for-login-buttons">
-                    <button mat-raised-button color="accent" (click)="signInWithGoogle()">Login with Google</button>
-                    <button mat-raised-button color="accent" (click)="signInWithFB()">Login with Facebook</button>
-                    <button mat-raised-button color="accent" (click)="signInWithAmazon()">Login with Amazon</button>
+                    <button mat-raised-button class="social-login-button" (click)="signInWithGoogle()">
+                        <img src="assets/img/btn_google_signin_dark_normal_web.png">
+                    </button>
                 </div>
             </mat-card>
+        </div>
+        <div *ngIf="socialUser" class="card text-center">
+            <mat-card class="mat-elevation-z4">
+                <h4>Currently Logged in as:</h4>
+                <img src="{{ socialUser.photoUrl }}">
+                <h4>{{socialUser.name}}</h4>
+                <h4>{{socialUser.email}}</h4>
+            </mat-card>
+        </div>
     </div>
-    <h2> Enter Your Credentials:</h2>
-    <form class="vertical-div" [formGroup]="loginGroup" (ngSubmit)="onSubmit()">
-        <mat-form-field class="standard-control-width" floatLabel="always">
-            <mat-label>User Name</mat-label>
-            <input matInput placeholder="User Name" formControlName="userName" #userNameInput>
-            <mat-error *ngIf="!loginGroup.controls['userName'].valid &&  loginGroup.controls['userName'].touched">
-              {{ getErrorUserName() }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="standard-control-width">
-            <input matInput placeholder="Password" [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="on">
-            <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-            <mat-error *ngIf="!loginGroup.controls['password'].valid && loginGroup.controls['password'].touched">
-              {{ getErrorPassword() }}
-            </mat-error>
-        </mat-form-field>
-        <div>
-            <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="!loginGroup.valid">Login</button>
-        </div>
-        <div class="register-div">
-            <span>Or <a href="/user/register"> REGISTER </a> here!!!</span>
-        </div>
-    </form>
+    <div class="local-login-div">
+        <mat-card class="mat-elevation-z4">
+            <h4> Or Enter Id / Password Credentials:</h4>
+            <form class="vertical-div" [formGroup]="loginGroup" (ngSubmit)="onSubmit()">
+                <mat-form-field class="standard-control-width" floatLabel="always">
+                    <mat-label>User Name</mat-label>
+                    <input matInput placeholder="User Name" formControlName="userName" #userNameInput>
+                    <mat-error *ngIf="!loginGroup.controls['userName'].valid &&  loginGroup.controls['userName'].touched">
+                    {{ getErrorUserName() }}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="standard-control-width">
+                    <input matInput placeholder="Password" [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="on">
+                    <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    <mat-error *ngIf="!loginGroup.controls['password'].valid && loginGroup.controls['password'].touched">
+                    {{ getErrorPassword() }}
+                    </mat-error>
+                </mat-form-field>
+                <div>
+                    <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="!loginGroup.valid">Login</button>
+                </div>
+                <div class="register-div">
+                    <span>Or <a href="/user/register"> REGISTER </a> here!!!</span>
+                </div>
+            </form>
+        </mat-card>
+    </div>
 </div>

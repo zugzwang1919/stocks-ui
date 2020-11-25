@@ -17,7 +17,7 @@ export class UserService {
 
   constructor(
     private wolfeHttp: WolfeHttpService,
-    private currentUser: CurrentUserService,
+    private currentUserService: CurrentUserService,
     private util: UtilService
   ) { }
 
@@ -38,8 +38,12 @@ export class UserService {
       return this.wolfeHttp.post('/user', null, body);
     }
 
+    loginWithGoogle(token: string): Observable<LoginResponse> {
+      return this.wolfeHttp.post('/authenticatewithgoogle', {token}, null);
+    }
+
     logout(): void {
       // Simply clear the current user
-      this.currentUser.clean();
+      this.currentUserService.clean();
     }
 }

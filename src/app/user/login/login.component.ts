@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup,  Validators } from '@angular/forms';
 import { UserService } from '../user.service';
 import { LoginResponse } from './login-response';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,7 +13,7 @@ import { GoogleLoginProvider, FacebookLoginProvider, AmazonLoginProvider } from 
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.sass']
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit {
 
   socialUser: SocialUser;
   loginGroup: FormGroup;
@@ -43,36 +43,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
     // Remember where the user wanted to go.  If nowhere send him to the
     // main page ('/') when the login is successful.
     this.futureUrl = this.route.snapshot.queryParams.redirectUrl || '/';
-    // Hook into Social logins
-    this.socialAuthService.authState.subscribe((socialUser) => {
-      this.socialUser = socialUser;
-    });
+
+
   }
 
-  ngAfterViewInit() {
-    // NOTE: This seems to be overkill, but I could not get "autofocus" and "cdkInitialFocus" to work other
-    // NOTE: than on the very first time the component is displayed.  The use of a ViewChild and explicitly
-    // NOTE: setting the focus will work.  Seems ridiculous that I cannot either handle this all in the
-    // NOTE: html template OR just be able to get to the native element through the FormGroup.  Sigh.
 
-    // Set the focus to the User Name input
-    this.userNameInputField.nativeElement.focus();
-    // Indicate to the angular that we've changed something to prevent
-    // errors from showing up in the console.
-    this.changeDetectorRef.detectChanges();
-  }
-  // Social Logins
-  signInWithGoogle(): void {
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(x => console.log(x));
-  }
 
-  signInWithFB(): void {
-    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(x => console.log(x));
-  }
-
-  signInWithAmazon(): void {
-    this.socialAuthService.signIn(AmazonLoginProvider.PROVIDER_ID).then(x => console.log(x));
-  }
+  // "Normal" Login with User / Password maintained by our server
 
   onSubmit() {
     // reset any previous alerts
@@ -86,7 +63,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         lr  =>  {
           // If this goes well...
           // Set the current user
-          this.currentUserService.setCurrentUser(userName, lr.token, lr.admin);
+          this.currentUserService.setCurrentUser(userName, '', lr.token, lr.admin);
           // and navigate to the appropriate page
           this.router.navigate([this.futureUrl]);
         },
@@ -97,6 +74,31 @@ export class LoginComponent implements OnInit, AfterViewInit {
       );
   }
 
+  // OAuth2 logins with Google, Facebook, Amazon
+
+  signInWithGoogle(): void {
+    // NOTE:  We login in here and are notified above in the callback setup in ngOnInit()
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then((socialUser: SocialUser) => {
+        this.socialUser = socialUser;
+        // If the user is logging in
+        this.userService.loginWithGoogle(socialUser.idToken)
+          .subscribe((loginResponse: LoginResponse) => {
+            this.currentUserService.setCurrentUser(undefined, socialUser.photoUrl, loginResponse.token, loginResponse.admin);
+          });
+      });
+  }
+
+  signInWithFB(): void {
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(x => console.log(x));
+  }
+
+  signInWithAmazon(): void {
+    this.socialAuthService.signIn(AmazonLoginProvider.PROVIDER_ID).then(x => console.log(x));
+  }
+
+
+  // Methods used by the html template
 
   getErrorUserName(): string {
     return this.loginGroup.get('userName').hasError('required') ? 'You must provide a user name.' : '';

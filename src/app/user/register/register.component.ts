@@ -61,7 +61,7 @@ export class RegisterComponent implements OnInit {
             .subscribe(
               (lr: LoginResponse) => {
                 // Set the current user
-                this.currentUserService.setCurrentUser(userName, lr.token, lr.admin);
+                this.currentUserService.setCurrentUser(userName, '', lr.token, lr.admin);
                 // Navigate to the welcome page
                 this.router.navigate(['/welcome']);
               },

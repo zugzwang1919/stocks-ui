@@ -13,8 +13,9 @@ import { UserService } from '../user.service';
 export class CurrentUserComponent implements OnInit {
 
   currentUserName: string;
+  currentUserImageUrl: string;
   currentUserSubscription: Subscription;
-
+  currentUserImageUrlSubscription: Subscription;
   constructor(
     private currentUserService: CurrentUserService,
     private router: Router,
@@ -23,7 +24,13 @@ export class CurrentUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentUserSubscription = this.currentUserService.userNameSubject
-      .subscribe((value) => this.currentUserName = value);
+      .subscribe((value) => {
+        this.currentUserName = value;
+      });
+    this.currentUserImageUrlSubscription = this.currentUserService.userImageUrlSubject
+      .subscribe((value) => {
+        this.currentUserImageUrl = value;
+      });
   }
 
   handleLogout() {
