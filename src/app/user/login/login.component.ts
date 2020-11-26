@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
           // if they weren't headed anywhere, just send them back to the main page ('/')
           this.router.navigate([this.futureUrl || '/']);
         },
-          // If this goes poorly, indicate that
+        // If this goes poorly, show the error
         error => {
           this.alertService.error(error);
         }
@@ -74,15 +74,21 @@ export class LoginComponent implements OnInit {
   // OAuth2 logins with Google, Facebook, Amazon
 
   signInWithGoogle(): void {
-    // NOTE:  We login in here and are notified above in the callback setup in ngOnInit()
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
       .then((socialUser: SocialUser) => {
-        this.socialUser = socialUser;
         // If the user is logging in
         this.userService.loginWithGoogle(socialUser.idToken)
-          .subscribe((loginResponse: LoginResponse) => {
-            this.currentUserService.setCurrentUser(undefined, socialUser.photoUrl, loginResponse.token, loginResponse.admin);
-          });
+          .subscribe(
+            (loginResponse: LoginResponse) => {
+              // Only update this page (socialUser) and the CurrentUserComponent if the server accepts the request
+              this.socialUser = socialUser;
+              this.currentUserService.setCurrentUser(undefined, socialUser.photoUrl, loginResponse.token, loginResponse.admin);
+            },
+            // If this goes poorly, show the error
+            error => {
+              this.alertService.error(error);
+            }
+          );
       });
   }
 

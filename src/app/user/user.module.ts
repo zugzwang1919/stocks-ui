@@ -9,6 +9,8 @@ import { RegisterComponent } from './register/register.component';
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
 
+import { environment } from '../..//environments/environment';
+
 
 @NgModule({
   declarations: [
@@ -36,7 +38,7 @@ import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-logi
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider('173419237297-cpt0q9mevdfq6el6r3rge968iaft7l79.apps.googleusercontent.com')
+            provider: new GoogleLoginProvider(environment.googleClientId)
           },
           {
             id: FacebookLoginProvider.PROVIDER_ID,
