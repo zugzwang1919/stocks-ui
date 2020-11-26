@@ -10,15 +10,16 @@
         and what still needs to be finished on the <a [routerLink]="['/about/todo']">To Do Page</a>.
     </p>
     <p> To play around on this site, you can either... </p>
-    <h4>Create Your Own Account </h4>
-    <p class="second-level">
-        If you want to create your own account,  <a href="/user/register">CLICK HERE</a>.
-    </p>
-    <h4> Or... Use a Shared Account </h4>
-    <p class="second-level">
-        If you just want to mess around in the shared account, feel free to <span class="quick-login" (click)="quickLogin()">CLICK HERE</span><br>
-    </p>
+
+    <p class="styled-like-anchor" [routerLink]="['/about/recent']">Create Your Own Account</p>
+
+    <p> ...or... </p>
+
+    <p class="styled-like-anchor" (click)="quickLogin()">Use a Shared Account</p>
+
+
     <h4> Ready to Give it a Try? </h4>
+
     <p class="second-level">
         After logging in, you can create the securities that you plan to buy and sell using the "Stocks Being Tracked" pages.
     </p>
