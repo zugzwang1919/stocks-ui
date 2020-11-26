@@ -21,13 +21,10 @@ export class LoginComponent implements OnInit {
   hidePassword = true;
 
 
-  // See the comment below in ngAfterViewInit()
-  @ViewChild('userNameInput') userNameInputField: ElementRef;
 
   constructor(
     private alertService: AlertService,
     private socialAuthService: SocialAuthService,
-    private changeDetectorRef: ChangeDetectorRef,
     private currentUserService: CurrentUserService,
     private formBuilder: FormBuilder,
     private userService: UserService,
@@ -42,8 +39,7 @@ export class LoginComponent implements OnInit {
     });
     // Remember where the user wanted to go.  If nowhere send him to the
     // main page ('/') when the login is successful.
-    this.futureUrl = this.route.snapshot.queryParams.redirectUrl || '/';
-
+    this.futureUrl = this.route.snapshot.queryParams.redirectUrl;
 
   }
 
@@ -60,12 +56,13 @@ export class LoginComponent implements OnInit {
     this.userService.login(userName, this.loginGroup.get('password').value)
       .subscribe(
 
-        lr  =>  {
+        (loginResponse: LoginResponse)  =>  {
           // If this goes well...
           // Set the current user
-          this.currentUserService.setCurrentUser(userName, '', lr.token, lr.admin);
-          // and navigate to the appropriate page
-          this.router.navigate([this.futureUrl]);
+          this.currentUserService.setCurrentUser(userName, '', loginResponse.token, loginResponse.admin);
+          // and navigate to the next page if the user was heading somewhere.
+          // if they weren't headed anywhere, just send them back to the main page ('/')
+          this.router.navigate([this.futureUrl || '/']);
         },
           // If this goes poorly, indicate that
         error => {

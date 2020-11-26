@@ -77,7 +77,9 @@ export class WolfeHttpService {
   // server.  Should the server ever change the way that it provides the UI an error, this
   // should be the only place that will need to change.
   private handleWolfeError(errorResponse: HttpErrorResponse): Observable<never> {
-    return throwError(errorResponse.error.message);
+    // If our backend created the response, there should be something in errorResponse.error.message
+    // If not, there will hopefully be something in errorResponse.message
+    return throwError(errorResponse.error.message || errorResponse.message);
   }
 
   // This method creates the headers that are required to talk to our serve
