@@ -12,7 +12,7 @@ import { BusyService } from 'src/app/general/busy/busy.service';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Timeframe, TimeframeService } from '../timeframe.service';
-import { WolfeCalculatorBase } from '../wolfe-calculator-base';
+import { WolfeCalculatorBaseDirective } from '../wolfe-calculator-base-directive';
 import { BenchmarkAnalysisResponse } from '../benchmark-analysis-response';
 
 const BUSY_ID = 1925;
@@ -26,7 +26,7 @@ const BENCHMARK_COOKIE_NAME = 'wolfe-software.com_benchmark-analysis_benchmarks'
   templateUrl: './benchmark-calculator.component.html',
   styleUrls: ['./benchmark-calculator.component.sass']
 })
-export class BenchmarkCalculatorComponent extends WolfeCalculatorBase implements OnInit {
+export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective implements OnInit {
 
   entryIsVisible = true;
 
@@ -73,7 +73,6 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBase implements
           cookieService,
           wcitService,
           alertService,
-          changeDetectorRef,
           BUSY_ID,
           PORTFOLIO_COOKIE_NAME,
           TICKER_COOKIE_NAME,

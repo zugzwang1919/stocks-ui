@@ -28,7 +28,7 @@ export class WolfeGenericListDirective<T extends WolfeTrackedItem> {
 
     // tslint:disable-next-line:use-lifecycle-interface
     ngOnInit(): void {
-        // Asynchronously populate the DataSource
+        // Asynchronously start the population of  the DataSource
         this.updateWolfeTrackedItems();
     }
 
@@ -45,7 +45,6 @@ export class WolfeGenericListDirective<T extends WolfeTrackedItem> {
           .subscribe(
             // If this goes well, update the list of Items (WolfeTrackedItems to be specific)
             items =>  {
-
               // Flatten the data that was returned by the service so that it can be sorted
               // and then associate it with the DataSource
               this.dataSource.data = items.map(this.flattenItemIfNecessary);

@@ -12,8 +12,8 @@ import { MatSort } from '@angular/material/sort';
 import { BusyService } from 'src/app/general/busy/busy.service';
 import { CookieService } from 'ngx-cookie-service';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
-import { Timeframe, TimeframeService } from '../timeframe.service';
-import { WolfeCalculatorBase } from '../wolfe-calculator-base';
+import { TimeframeService } from '../timeframe.service';
+import { WolfeCalculatorBaseDirective } from '../wolfe-calculator-base-directive';
 import {MatDialog } from '@angular/material/dialog';
 import { LifecycleDialogComponent } from '../lifecycle-dialog/lifecycle-dialog.component';
 
@@ -29,7 +29,7 @@ const TICKER_COOKIE_NAME = 'wolfe-software.com_income-analysis_tickers';
   templateUrl: './income-calculator.component.html',
   styleUrls: ['./income-calculator.component.sass']
 })
-export class IncomeCalculatorComponent extends WolfeCalculatorBase implements OnInit {
+export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective implements OnInit {
 
   entryIsVisible = true;
 
@@ -70,7 +70,6 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBase implements On
       cookieService,
       wcitService,
       alertService,
-      changeDetectorRef,
       BUSY_ID,
       PORTFOLIO_COOKIE_NAME,
       TICKER_COOKIE_NAME,

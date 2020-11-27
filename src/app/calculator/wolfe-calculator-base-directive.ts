@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { ChangeDetectorRef } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { Directive, ViewChild } from '@angular/core';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { CookieService } from 'ngx-cookie-service';
 import { AlertService } from '../general/alert/alert.service';
 import { BusyService } from '../general/busy/busy.service';
@@ -10,7 +10,8 @@ import { Ticker } from '../ticker/ticker';
 import { WolfeCheckboxInTableService } from '../wolfe-common/wolfe-checkbox-in-table.service';
 import { Timeframe, TimeframeService } from './timeframe.service';
 
-export class WolfeCalculatorBase {
+@Directive()
+export class WolfeCalculatorBaseDirective {
     protected busy = false;
     private firstTimeDisplayingTickers = true;
 
@@ -19,12 +20,14 @@ export class WolfeCalculatorBase {
     public  selectedStartDate: Date;
     public  selectedEndDate: Date;
 
-    private portfolioInitialData: any[] = [];
+    @ViewChild(MatTable) portfolioTable: MatTable<Portfolio>;
+    private portfolioInitialData: Portfolio[] = [];
     public  portfolioDataSource = new MatTableDataSource(this.portfolioInitialData);
     public  portfolioSelection = new SelectionModel(true, []);
     public  portfolioDisplayedColumns: string[] = ['select', 'portfolioName'];
 
-    private tickerInitialData: any[] = [];
+    @ViewChild(MatTable) tickerTable: MatTable<Ticker>;
+    private tickerInitialData: Ticker[] = [];
     public  tickerDataSource = new MatTableDataSource(this.tickerInitialData);
     public  tickerSelection = new SelectionModel(true, []);
     public  tickerDisplayedColumns: string[] = ['select', 'ticker', 'name'];
@@ -36,7 +39,6 @@ export class WolfeCalculatorBase {
         protected cookieService: CookieService,
         public    wcitService: WolfeCheckboxInTableService,
         protected alertService: AlertService,
-        protected changeDetectorRef: ChangeDetectorRef,
         protected busyId: number,
         protected portfolioCookieName: string,
         protected tickerCookieName: string,
@@ -75,8 +77,8 @@ export class WolfeCalculatorBase {
           tickers => {
               // Put the tickers in the DataSource
               this.tickerDataSource.data = tickers.sort(this.tickerSortFunction);
-              // Indicate that the data in the table has changed
-              this.changeDetectorRef.detectChanges();
+              // Since we've changed the data in the table, ask for the rows to be re-rendered
+              this.tickerTable.renderRows();
               // If this is the first time showing the tickers, use the cookies to set up the selection
               let selectedTickers: Ticker[] = [];
               if (this.firstTimeDisplayingTickers) {
@@ -128,8 +130,8 @@ export class WolfeCalculatorBase {
             // Create a new Selection Model
             this.portfolioSelection = new SelectionModel<Portfolio>(true, selectedPortfolios );
 
-            // Indicate that the data in the table has changed
-            this.changeDetectorRef.detectChanges();
+            // Since the list of portfolios has now been populated, ask for the table to be re-rendered
+            this.portfolioTable.renderRows();
 
             // Now that we have the portfolio list created, set up the tickers
             this.updateTickerListBasedOnPortfoliosSelected();
