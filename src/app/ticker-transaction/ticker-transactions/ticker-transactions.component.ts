@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { TickerTransaction } from '../ticker-transaction';
@@ -20,15 +20,12 @@ export class TickerTransactionsComponent extends WolfeGenericListDirective<Ticke
     router: Router,
     alertService: AlertService,
     tickerTransactionService: TickerTransactionService,
-    changeDetectorRefs: ChangeDetectorRef,
     public wcits: WolfeCheckboxInTableService
   ) {
     super(router,
           alertService,
           tickerTransactionService,
-          changeDetectorRefs,
-          '/ticker-transaction',
-          (tt: TickerTransaction): string => 'The selected transaction was deleted');
+          '/ticker-transaction');
   }
 
   flattenItemIfNecessary(tt: TickerTransaction): any {

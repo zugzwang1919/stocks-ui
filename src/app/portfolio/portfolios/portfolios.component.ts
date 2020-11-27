@@ -1,8 +1,5 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SelectionModel} from '@angular/cdk/collections';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
 
 import { Portfolio } from '../portfolio';
 import { PortfolioService } from '../portfolio.service';
@@ -23,14 +20,11 @@ export class PortfoliosComponent extends WolfeGenericListDirective<Portfolio>  i
     router: Router,
     alertService: AlertService,
     portfolioService: PortfolioService,
-    changeDetectorRefs: ChangeDetectorRef,
     public wcits: WolfeCheckboxInTableService
   ) {
     super(router,
           alertService,
           portfolioService,
-          changeDetectorRefs,
-          '/portfolio',
-          (p: Portfolio): string => p.portfolioName);
+          '/portfolio');
   }
 }

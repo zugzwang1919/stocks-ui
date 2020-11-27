@@ -2,7 +2,7 @@ import { ChangeDetectorRef, ViewChild, Directive } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectionModel} from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { WolfeGenericService } from './wolfe-generic-service';
@@ -16,13 +16,13 @@ export class WolfeGenericListDirective<T extends WolfeTrackedItem> {
     selection = new SelectionModel(true, []);
 
     @ViewChild(MatSort) sort: MatSort;
+    @ViewChild(MatTable) table: MatTable<T>;
+
     constructor(
         protected router: Router,
         protected alertService: AlertService,
         protected wolfeTrackedItemService: WolfeGenericService<T>,
-        protected changeDetectorRef: ChangeDetectorRef,
-        private   beginningOfPath: string,
-        private   itemName: ((t: T) => string)
+        private   prefixOfEditPath: string,
       ) { }
 
 
@@ -43,14 +43,14 @@ export class WolfeGenericListDirective<T extends WolfeTrackedItem> {
     updateWolfeTrackedItems() {
         this.wolfeTrackedItemService.retrieveAll()
           .subscribe(
-            // If this goes well, update the list of Ites (WolfeTrackedItems to be specific)
+            // If this goes well, update the list of Items (WolfeTrackedItems to be specific)
             items =>  {
 
               // Flatten the data that was returned by the service so that it can be sorted
               // and then associate it with the DataSource
               this.dataSource.data = items.map(this.flattenItemIfNecessary);
-              // Indicate that the data in the table has changed
-              this.changeDetectorRef.detectChanges();
+              // Since the data in the table has changed, re-render the table
+              this.table.renderRows();
               // Reset the check boxes
               this.selection = new SelectionModel(true, []);
             },
@@ -76,7 +76,7 @@ export class WolfeGenericListDirective<T extends WolfeTrackedItem> {
 
     editSelectedItem() {
         // navigate to the appropriate page
-        this.router.navigate([this.beginningOfPath + '/' + this.selection.selected[0].id]);
+        this.router.navigate([this.prefixOfEditPath + '/' + this.selection.selected[0].id]);
     }
 
     // NOTE: Many items are heirarchical in nature.  I could not figure out a way (short of writing a custom sorter)

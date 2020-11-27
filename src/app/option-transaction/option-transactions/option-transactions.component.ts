@@ -20,15 +20,12 @@ export class OptionTransactionsComponent extends WolfeGenericListDirective<Optio
     router: Router,
     alertService: AlertService,
     optionTransactionService: OptionTransactionService,
-    changeDetectorRefs: ChangeDetectorRef,
     public wcits: WolfeCheckboxInTableService
   ) {
     super(router,
           alertService,
           optionTransactionService,
-          changeDetectorRefs,
-          '/option-transaction',
-          (ot: OptionTransaction): string => 'The selected option transaction was deleted');
+          '/option-transaction');
   }
 
 

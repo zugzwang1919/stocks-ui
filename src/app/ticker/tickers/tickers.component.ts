@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 
@@ -23,14 +23,11 @@ export class TickersComponent extends WolfeGenericListDirective<Ticker>  impleme
     router: Router,
     alertService: AlertService,
     portfolioService: TickerService,
-    changeDetectorRefs: ChangeDetectorRef,
     public wcits: WolfeCheckboxInTableService
   ) {
     super(router,
           alertService,
           portfolioService,
-          changeDetectorRefs,
-          '/ticker',
-          (t: Ticker): string => t.ticker);
+          '/ticker');
   }
 }

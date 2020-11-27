@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { CurrencyPipe, DatePipe} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 
@@ -22,17 +21,12 @@ export class OptionsComponent extends WolfeGenericListDirective<Option>  impleme
     router: Router,
     alertService: AlertService,
     optionService: OptionService,
-    changeDetectorRefs: ChangeDetectorRef,
     public wcits: WolfeCheckboxInTableService,
-    private currencyPipe: CurrencyPipe,
-    private datePipe: DatePipe
   ) {
     super(router,
           alertService,
           optionService,
-          changeDetectorRefs,
-          '/option',
-          (o: Option): string => 'The selected option');
+          '/option');
   }
 
   flattenItemIfNecessary(o: Option): any {
