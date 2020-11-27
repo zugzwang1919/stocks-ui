@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { OptionTransactionsComponent } from './option-transactions/option-transactions.component';
-import { MaterialModule } from '../material/material.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
-import { ActivityPipe } from '../wolfe-common/activity.pipe';
 import { OptionTransactionDetailsComponent } from './option-transaction-details/option-transaction-details.component';
+import { WolfeAngularModule } from '../wolfe-angular/wolfe-angular.module';
+import { WolfeMaterialModule } from '../wolfe-material/wolfe-material.module';
 
 
 
@@ -16,16 +13,14 @@ import { OptionTransactionDetailsComponent } from './option-transaction-details/
     OptionTransactionDetailsComponent
   ],
   imports: [
-    CommonModule,
-    FormsModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    RouterModule,
-    WolfeCommonModule
+    // The Angular Modules that we tend to use
+    WolfeAngularModule,
+    // The Material Modules that we tend to use
+    WolfeMaterialModule,
+    // Common Services, Pipes, Directives, and Classes that we've authored
+    WolfeCommonModule,
   ],
   providers: [
-    CurrencyPipe,
-    DatePipe
   ],
   exports: [
     OptionTransactionsComponent

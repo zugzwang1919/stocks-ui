@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { MaterialModule } from '../material/material.module';
 import { CurrentUserComponent } from './current-user/current-user.component';
 import { RegisterComponent } from './register/register.component';
 import { SocialLoginModule, SocialAuthServiceConfig } from 'angularx-social-login';
 import { GoogleLoginProvider, FacebookLoginProvider } from 'angularx-social-login';
 
 import { environment } from '../..//environments/environment';
+import { WolfeAngularModule } from '../wolfe-angular/wolfe-angular.module';
+import { WolfeMaterialModule } from '../wolfe-material/wolfe-material.module';
+import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
 
 
 @NgModule({
@@ -18,11 +17,13 @@ import { environment } from '../..//environments/environment';
     CurrentUserComponent,
     RegisterComponent],
   imports: [
-    CommonModule,
-    FormsModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    RouterModule,
+    // The Angular Modules that we tend to use
+    WolfeAngularModule,
+    // The Material Modules that we tend to use
+    WolfeMaterialModule,
+    // Common Services, Pipes, Directives, and Classes that we've authored
+    WolfeCommonModule,
+    // Third party modules that this module uses
     SocialLoginModule
   ],
   exports: [

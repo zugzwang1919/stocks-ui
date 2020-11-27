@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PortfolioDetailsComponent } from './portfolio-details/portfolio-details.component';
 import { PortfoliosComponent } from './portfolios/portfolios.component';
-import { MaterialModule } from '../material/material.module';
-import { RouterModule } from '@angular/router';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
+import { WolfeAngularModule } from '../wolfe-angular/wolfe-angular.module';
+import { WolfeMaterialModule } from '../wolfe-material/wolfe-material.module';
 
 
 
@@ -15,12 +13,12 @@ import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
     PortfoliosComponent
   ],
   imports: [
-    CommonModule,
-    FormsModule,
-    MaterialModule,
-    ReactiveFormsModule,
-    RouterModule,
-    WolfeCommonModule
+    // The Angular Modules that we tend to use
+    WolfeAngularModule,
+    // The Material Modules that we tend to use
+    WolfeMaterialModule,
+    // Common Services, Pipes, Directives, and Classes that we've authored
+    WolfeCommonModule,
   ],
   exports: [
     PortfoliosComponent,

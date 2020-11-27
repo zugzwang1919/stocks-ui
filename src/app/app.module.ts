@@ -28,13 +28,13 @@ import { AdminModule } from './admin/admin.module';
     AppComponent
   ],
   imports: [
+    // Angular Modules used at the application level
     BrowserModule,
-    FormsModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
+    AppRoutingModule,
     RouterModule,
-    MaterialModule,
-    WolfeCommonModule,
+
+    // Feature Modules
     GeneralModule,
     UserModule,
     TickerModule,
