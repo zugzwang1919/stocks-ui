@@ -1,12 +1,12 @@
 {
-  "dirty": true,
-  "raw": "cc54152-dirty",
-  "hash": "cc54152",
+  "dirty": false,
+  "raw": "d93febb",
+  "hash": "d93febb",
   "distance": null,
   "tag": null,
   "semver": null,
-  "suffix": "cc54152-dirty",
+  "suffix": "d93febb",
   "semverString": null,
-  "buildDate": "2020-11-28T22:32:50.007Z",
+  "buildDate": "2020-11-28T22:36:04.414Z",
   "version": "2.0"
 }
