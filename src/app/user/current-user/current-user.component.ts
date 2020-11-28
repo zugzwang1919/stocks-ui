@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { CurrentUserService } from './current-user.service';
 import { UserService } from '../user.service';
+import { SocialUser } from 'angularx-social-login';
 
 @Component({
   selector: 'app-current-user',
@@ -27,9 +28,9 @@ export class CurrentUserComponent implements OnInit {
       .subscribe((value) => {
         this.currentUserName = value;
       });
-    this.currentUserImageUrlSubscription = this.currentUserService.userImageUrlSubject
-      .subscribe((value) => {
-        this.currentUserImageUrl = value;
+    this.currentUserImageUrlSubscription = this.currentUserService.socialUserSubject
+      .subscribe((socialUser: SocialUser) => {
+        this.currentUserImageUrl = socialUser.photoUrl;
       });
   }
 

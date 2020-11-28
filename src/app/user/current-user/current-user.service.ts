@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { SocialUser } from 'angularx-social-login';
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -9,36 +10,31 @@ export class CurrentUserService {
   constructor() { }
 
   private _userName: string;
-  private _userImageUrl: string;
+  private _socialUser: SocialUser;
   private _token: string;
   private _isAdmin: boolean;
   userNameSubject: Subject<string> = new Subject();
-  userImageUrlSubject: Subject<string> = new Subject();
+  socialUserSubject: Subject<SocialUser> = new Subject();
 
   get token(): string { return this._token; }
   get userName(): string { return this._userName; }
   get isAdmin(): boolean { return this._isAdmin; }
 
   isUserCurrentlyLoggedIn(): boolean {
-    return (this._userName != null ) || (this._userImageUrl != null);
+    return (this._userName != null ) || (this._socialUser != null);
   }
 
   clean() {
-    this._userName = undefined;
-    this._userImageUrl = undefined;
-    this._token = undefined;
-    this._isAdmin = undefined;
-    this.userNameSubject.next(this._userName);
-    this.userImageUrlSubject.next(this._userImageUrl);
+    this.setCurrentUser(undefined, undefined, undefined, undefined);
   }
 
-  setCurrentUser(userName: string, userImageUrl: string, token: string, isAdmin: boolean) {
+  setCurrentUser(userName: string, socialUser: SocialUser, token: string, isAdmin: boolean) {
     this._userName = userName;
-    this._userImageUrl = userImageUrl;
+    this._socialUser = socialUser;
     this._token = token;
     this._isAdmin = isAdmin;
     this.userNameSubject.next(this._userName);
-    this.userImageUrlSubject.next(this._userImageUrl);
+    this.socialUserSubject.next(this._socialUser);
   }
 
 }

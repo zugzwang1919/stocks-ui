@@ -11,16 +11,11 @@
             <h4>General</h4>
             <ul>
                 <li>Allow users to change between dark scheme and light scheme</li>
-                <li class="completed">Quick login to anonymous / group account</li>
-                <li class="completed">Support logging in with Google Credentials</li>
-                <li>Use entire SocialUser not just image in Current User</li>
                 <li>Support JWT refresh token and handle expiration of token</li>
             </ul>
             <h4>CRUD</h4>
             <ul>
-                <li class="completed">Add Busy indicator to Create Stock</li>
                 <li>Think about renaming "ticker" to "stock"</li>
-                <li class="completed">Investigate change detection on assigning table items</li>
                 <li>Filter for Transactions</li>
                 <li>User Profile</li>
                 <li>Be able to create a "ticker/stock" on the fly when creating a transaction</li>
@@ -33,13 +28,14 @@
             <ul>
                 <li>Comparison vs Benchmark</li>
                     <ul>
-                        <li class="completed">BUG - SERVER - Calculations incorrect on stock split date - See AAPL on 8/31/2020</li>
-                        <li class="completed">Tweak styling for ngx-graphs</li>
                         <li>Handle selection of stocks as users toggle around portfolios</li>
                         <li>SERVER - Reuse Opening Positions</li>
                     </ul>
                 <li>Income</li>
                 <ul>
+                    <li>Bug - Get positive and negative symbols correct when showing details</li>
+                    <li>Show whether or not opening position is from a buy</li>
+                    <li>Show whether or not the closing position is from a sell</li>
                     <li>Support drill down into price per share on transactions</li>
                 </ul>
                 <li>SERVER - Implement a better IRR calculator</li>

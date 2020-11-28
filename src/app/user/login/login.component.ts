@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
         (loginResponse: LoginResponse)  =>  {
           // If this goes well...
           // Set the current user
-          this.currentUserService.setCurrentUser(userName, '', loginResponse.token, loginResponse.admin);
+          this.currentUserService.setCurrentUser(userName, undefined, loginResponse.token, loginResponse.admin);
           // and navigate to the next page if the user was heading somewhere.
           // if they weren't headed anywhere, just send them back to the main page ('/')
           this.router.navigate([this.futureUrl || '/']);
@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
             (loginResponse: LoginResponse) => {
               // Only update this page (socialUser) and the CurrentUserComponent if the server accepts the request
               this.socialUser = socialUser;
-              this.currentUserService.setCurrentUser(undefined, socialUser.photoUrl, loginResponse.token, loginResponse.admin);
+              this.currentUserService.setCurrentUser(undefined, socialUser, loginResponse.token, loginResponse.admin);
             },
             // If this goes poorly, show the error
             error => {

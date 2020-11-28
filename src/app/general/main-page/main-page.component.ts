@@ -30,7 +30,7 @@ export class MainPageComponent implements OnInit {
         lr  =>  {
           // If this goes well...
           // Set the current user
-          this.currentUserService.setCurrentUser(lr.username, '', lr.token, lr.admin);
+          this.currentUserService.setCurrentUser(lr.username, undefined, lr.token, lr.admin);
         },
           // If this goes poorly, indicate that
         error => {
