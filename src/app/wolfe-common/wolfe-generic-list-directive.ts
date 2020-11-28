@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, ViewChild, Directive } from '@angular/core';
+import { ViewChild, Directive } from '@angular/core';
 import { Router } from '@angular/router';
 import { SelectionModel} from '@angular/cdk/collections';
 import { MatSort } from '@angular/material/sort';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { WolfeGenericService } from './wolfe-generic-service';
@@ -16,7 +16,7 @@ export class WolfeGenericListDirective<T extends WolfeTrackedItem> {
     selection = new SelectionModel(true, []);
 
     @ViewChild(MatSort) sort: MatSort;
-    @ViewChild(MatTable) table: MatTable<T>;
+
 
     constructor(
         protected router: Router,
@@ -48,8 +48,7 @@ export class WolfeGenericListDirective<T extends WolfeTrackedItem> {
               // Flatten the data that was returned by the service so that it can be sorted
               // and then associate it with the DataSource
               this.dataSource.data = items.map(this.flattenItemIfNecessary);
-              // Since the data in the table has changed, re-render the table
-              this.table.renderRows();
+
               // Reset the check boxes
               this.selection = new SelectionModel(true, []);
             },

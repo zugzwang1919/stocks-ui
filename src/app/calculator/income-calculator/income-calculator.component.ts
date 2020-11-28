@@ -1,8 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { TickerService } from 'src/app/ticker/ticker.service';
-import { WolfeTrackedItem } from 'src/app/wolfe-common/wolfe-tracked-item';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { Ticker } from 'src/app/ticker/ticker';
 import { Portfolio } from 'src/app/portfolio/portfolio';
@@ -14,13 +11,11 @@ import { CookieService } from 'ngx-cookie-service';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 import { TimeframeService } from '../timeframe.service';
 import { WolfeCalculatorBaseDirective } from '../wolfe-calculator-base-directive';
-import {MatDialog } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { LifecycleDialogComponent } from '../lifecycle-dialog/lifecycle-dialog.component';
 
 const BUSY_ID = 1926;
 const TIMEFRAME_COOKIE_NAME = 'wolfe-software.com_income-analysis_timeframe';
-const CUSTOM_START_DATE_COOKIE_NAME = 'wolfe-software.com_income-analysis_custom-start-date';
-const CUSTOM_END_DATE_COOKIE_NAME = 'wolfe-software.com_income-analysis_custom-end-date';
 const PORTFOLIO_COOKIE_NAME = 'wolfe-software.com_income-analysis_portfolios';
 const TICKER_COOKIE_NAME = 'wolfe-software.com_income-analysis_tickers';
 
@@ -32,8 +27,6 @@ const TICKER_COOKIE_NAME = 'wolfe-software.com_income-analysis_tickers';
 export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective implements OnInit {
 
   entryIsVisible = true;
-
-  analysitResults: any;
 
   analysisResultsDataSource = new MatTableDataSource();
   analysisResultsDisplayedColumns: string[] = [   'ticker', 'proceeds', 'dividendProceeds',
@@ -57,7 +50,6 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
     protected alertService: AlertService,
     protected busyService: BusyService,
     private   calculatorService: CalculatorService,
-    protected changeDetectorRef: ChangeDetectorRef,
     protected cookieService: CookieService,
     protected portfolioService: PortfolioService,
     protected timeframeService: TimeframeService,
@@ -184,7 +176,6 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
                                         };
     });
     this.snapshotDataSource.data = snapshotCalculations;
-    this.changeDetectorRef.detectChanges();
   }
 
 

@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Directive, ViewChild } from '@angular/core';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { Directive} from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { CookieService } from 'ngx-cookie-service';
 import { AlertService } from '../general/alert/alert.service';
 import { BusyService } from '../general/busy/busy.service';
@@ -20,13 +20,11 @@ export class WolfeCalculatorBaseDirective {
     public  selectedStartDate: Date;
     public  selectedEndDate: Date;
 
-    @ViewChild(MatTable) portfolioTable: MatTable<Portfolio>;
     private portfolioInitialData: Portfolio[] = [];
     public  portfolioDataSource = new MatTableDataSource(this.portfolioInitialData);
     public  portfolioSelection = new SelectionModel(true, []);
     public  portfolioDisplayedColumns: string[] = ['select', 'portfolioName'];
 
-    @ViewChild(MatTable) tickerTable: MatTable<Ticker>;
     private tickerInitialData: Ticker[] = [];
     public  tickerDataSource = new MatTableDataSource(this.tickerInitialData);
     public  tickerSelection = new SelectionModel(true, []);
@@ -77,8 +75,7 @@ export class WolfeCalculatorBaseDirective {
           tickers => {
               // Put the tickers in the DataSource
               this.tickerDataSource.data = tickers.sort(this.tickerSortFunction);
-              // Since we've changed the data in the table, ask for the rows to be re-rendered
-              this.tickerTable.renderRows();
+
               // If this is the first time showing the tickers, use the cookies to set up the selection
               let selectedTickers: Ticker[] = [];
               if (this.firstTimeDisplayingTickers) {
@@ -129,9 +126,6 @@ export class WolfeCalculatorBaseDirective {
 
             // Create a new Selection Model
             this.portfolioSelection = new SelectionModel<Portfolio>(true, selectedPortfolios );
-
-            // Since the list of portfolios has now been populated, ask for the table to be re-rendered
-            this.portfolioTable.renderRows();
 
             // Now that we have the portfolio list created, set up the tickers
             this.updateTickerListBasedOnPortfoliosSelected();

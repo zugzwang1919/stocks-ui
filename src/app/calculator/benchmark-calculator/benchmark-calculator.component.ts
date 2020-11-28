@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TickerService } from 'src/app/ticker/ticker.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -11,7 +11,7 @@ import { MatSort } from '@angular/material/sort';
 import { BusyService } from 'src/app/general/busy/busy.service';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 import { CookieService } from 'ngx-cookie-service';
-import { Timeframe, TimeframeService } from '../timeframe.service';
+import { TimeframeService } from '../timeframe.service';
 import { WolfeCalculatorBaseDirective } from '../wolfe-calculator-base-directive';
 import { BenchmarkAnalysisResponse } from '../benchmark-analysis-response';
 
@@ -48,6 +48,7 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
     this.analysisResultsDataSource.sort = analysisResultsSort;
   }
 
+
   summaryInitialData: any[] = [];
   summaryDataSource = new MatTableDataSource(this.summaryInitialData);
   summaryDisplayedColumns: string[] = ['totalInflows', 'totalOutflows', 'return',
@@ -60,7 +61,6 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
     protected alertService: AlertService,
     protected busyService: BusyService,
     private   calculatorService: CalculatorService,
-    protected changeDetectorRef: ChangeDetectorRef,
     protected cookieService: CookieService,
     protected portfolioService: PortfolioService,
     private   tickerService: TickerService,
@@ -158,8 +158,6 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
         }
         // Reset the check boxes
         this.benchmarkSelection = new SelectionModel(true, selectedBenchmarks);
-        // Indicate that the data in the table has changed
-        this.changeDetectorRef.detectChanges();
 
       },
       // If the retrieval goes poorly, show the error
@@ -209,8 +207,6 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
                                 outperformance: singleSecurityResult.outperformances[0] });
     });
     this.analysisResultsDataSource.data = displayableResults;
-    // Indicate that the data in the table has changed
-    this.changeDetectorRef.detectChanges();
 
   }
 
@@ -229,8 +225,6 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
                                         };
     });
     this.summaryDataSource.data = summaryResults;
-    // Indicate that the data in the table has changed
-    this.changeDetectorRef.detectChanges();
 
   }
 
