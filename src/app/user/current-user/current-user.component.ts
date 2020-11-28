@@ -30,7 +30,7 @@ export class CurrentUserComponent implements OnInit {
       });
     this.currentUserImageUrlSubscription = this.currentUserService.socialUserSubject
       .subscribe((socialUser: SocialUser) => {
-        this.currentUserImageUrl = socialUser.photoUrl;
+        this.currentUserImageUrl = socialUser && socialUser.photoUrl || undefined;
       });
   }
 
