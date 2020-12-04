@@ -11,6 +11,7 @@ import { Ticker } from 'src/app/ticker/ticker';
 import { MatSelectChange } from '@angular/material/select';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { TickerService } from 'src/app/ticker/ticker.service';
+import { WolfeGenericFilteredListDirective } from 'src/app/wolfe-common/wolfe-generic-filtered-list.directive';
 
 
 @Component({
@@ -18,55 +19,29 @@ import { TickerService } from 'src/app/ticker/ticker.service';
   templateUrl: './ticker-transactions.component.html',
   styleUrls: ['./ticker-transactions.component.sass']
 })
-export class TickerTransactionsComponent extends WolfeGenericListDirective<TickerTransaction>  implements OnInit {
+export class TickerTransactionsComponent extends WolfeGenericFilteredListDirective<TickerTransaction>  implements OnInit {
 
   displayedColumns: string[] = ['select', 'date', 'portfolioName', 'ticker', 'activity', 'tradeSize', 'amount'];
 
-  ALL_PORTFOLIO: Portfolio = {id: -1, portfolioName: 'ALL'};
-  portfolios: Portfolio[] = [this.ALL_PORTFOLIO];
-  selectedPortfolio = -1;
-
-  ALL_TICKERS: Ticker = {id: -1, ticker: 'ALL', name: '', benchmark: false};
-  tickers: Ticker[] = [this.ALL_TICKERS];
-  selectedTicker = -1;
 
   constructor(
     router: Router,
     alertService: AlertService,
-    private portfolioService: PortfolioService,
-    private tickerService: TickerService,
+    portfolioService: PortfolioService,
+    tickerService: TickerService,
     tickerTransactionService: TickerTransactionService,
     public wcits: WolfeCheckboxInTableService
   ) {
     super(router,
           alertService,
           tickerTransactionService,
-          '/ticker-transaction');
+          '/ticker-transaction',
+          portfolioService,
+          tickerService);
   }
 
 
-  ngOnInit() {
-    // First let the super class init
-    super.ngOnInit();
-    // Add the portfolios to the Filter drop down
-    this.portfolioService.retrieveAll()
-    .subscribe(
-      foundPortfolios => foundPortfolios.forEach(fp => this.portfolios.push(fp)),
-      error => this.alertService.error(error)
-    );
-    // Add the tickers to the Filter drop down
-    this.tickerService.retrieveAll()
-    .subscribe(
-      foundTickers => foundTickers.forEach(ft => this.tickers.push(ft)),
-      error => this.alertService.error(error)
-    );
-  }
 
-  onFilterChange(ev: MatSelectChange) {
-    console.log('inside onFilterChange()');
-    this.performFilter(this.filterFunction.bind(this));
-    console.log('leaving onFilterChange()');
-  }
 
 
   filterFunction(flattenedTickerTransaction: any): boolean {
