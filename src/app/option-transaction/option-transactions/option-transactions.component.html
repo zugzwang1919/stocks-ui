@@ -1,5 +1,30 @@
 <div class="option-transactions-div">
     <h2> Your Option Transactions</h2>
+
+
+    <div class="filter-div">
+
+        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+            <mat-label>Filter Portfolio: </mat-label>
+            <mat-select  [(value)]="selectedPortfolio" (selectionChange)="onFilterChange($event)">
+                <mat-option *ngFor="let portfolio of portfolios" [value]="portfolio.id">
+                    {{portfolio.portfolioName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+            <mat-label>Filter Stock: </mat-label>
+            <mat-select  [(value)]="selectedTicker" (selectionChange)="onFilterChange($event)">
+                <mat-option *ngFor="let ticker of tickers" [value]="ticker.id">
+                    {{ticker.ticker}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+    </div>
+
+
     <div class="full-page-scrollable-div-for-table mat-elevation-z6">
         <table class="standard-table" mat-table [dataSource]="dataSource"
                 matSort matSortActive="date" matSortDisableClear matSortDirection="desc">
