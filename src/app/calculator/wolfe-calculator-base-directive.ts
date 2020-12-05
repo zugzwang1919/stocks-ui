@@ -73,11 +73,14 @@ export class WolfeCalculatorBaseDirective {
         this.portfolioService.retrieveSecuritiesWithTransactionsInPorfolios(portfolioIds)
         .subscribe(
           tickers => {
-              // Put the tickers in the DataSource
+              // Sort the tickers
+              const sortedTickers: Ticker[] = tickers.sort(this.tickerSortFunction);
+              // Stick them in the datasource
               this.tickerDataSource.data = tickers.sort(this.tickerSortFunction);
+              // Start off by assuming that all tickers will be selected
+              let selectedTickers: Ticker[] = sortedTickers;
 
               // If this is the first time showing the tickers, use the cookies to set up the selection
-              let selectedTickers: Ticker[] = [];
               if (this.firstTimeDisplayingTickers) {
                 // Set the checkboxes based on cookie values
                 const tickerCookie: string = this.cookieService.get(this.tickerCookieName);
@@ -89,7 +92,7 @@ export class WolfeCalculatorBaseDirective {
                 }
                 this.firstTimeDisplayingTickers = false;
               }
-              // Set the check boxes to the appropriate values
+              // Create a new set of check boxes (they will be updated with selected values as set above)
               this.tickerSelection = new SelectionModel(true, selectedTickers);
           },
           error => this.alertService.error(error)
