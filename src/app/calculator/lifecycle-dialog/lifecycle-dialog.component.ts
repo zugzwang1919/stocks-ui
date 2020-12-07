@@ -79,7 +79,7 @@ export class LifecycleDialogComponent {
         date: t.date,
         stockActivity: t.activity,
         stockSize: t.tradeSize,
-        stockProceeds: t.amount,
+        stockProceeds: t.amount * (t.activity === 'BUY' ? -1 : 1),
         dividendProceeds: '',
         optionActivity: '',
         optionNumberOfContracts: '',
@@ -98,7 +98,7 @@ export class LifecycleDialogComponent {
         dividendProceeds: '',
         optionActivity: t.activity,
         optionNumberOfContracts: t.numberOfContracts,
-        optionProceeds: t.amount
+        optionProceeds: t.amount * (t.activity.substring(0, 3) === 'BUY' ? -1 : 1)  // Handles 'BUY_TO_OPEN' and 'BUY_TO_CLOSE'
       };
     });
   }
