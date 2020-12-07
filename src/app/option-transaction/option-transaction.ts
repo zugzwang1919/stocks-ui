@@ -1,7 +1,7 @@
 import { Option } from '../option/option';
 import { WolfeTrackedItem } from '../wolfe-common/wolfe-tracked-item';
 import { Portfolio } from '../portfolio/portfolio';
-import { Ticker } from '../ticker/ticker';
+import { Stock } from '../stock/stock';
 
 export class OptionTransaction extends WolfeTrackedItem {
     activity: string;

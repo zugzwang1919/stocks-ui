@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { AlertService } from 'src/app/general/alert/alert.service';
-import { Ticker } from 'src/app/ticker/ticker';
+import { Stock } from 'src/app/stock/stock';
 import { Portfolio } from 'src/app/portfolio/portfolio';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { CalculatorService } from '../calculator.service';
@@ -17,7 +17,7 @@ import { LifecycleDialogComponent } from '../lifecycle-dialog/lifecycle-dialog.c
 const BUSY_ID = 1926;
 const TIMEFRAME_COOKIE_NAME = 'wolfe-software.com_income-analysis_timeframe';
 const PORTFOLIO_COOKIE_NAME = 'wolfe-software.com_income-analysis_portfolios';
-const TICKER_COOKIE_NAME = 'wolfe-software.com_income-analysis_tickers';
+const STOCK_COOKIE_NAME = 'wolfe-software.com_income-analysis_stocks';
 
 @Component({
   selector: 'app-income-calculator',
@@ -64,7 +64,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
       alertService,
       BUSY_ID,
       PORTFOLIO_COOKIE_NAME,
-      TICKER_COOKIE_NAME,
+      STOCK_COOKIE_NAME,
       TIMEFRAME_COOKIE_NAME);
   }
 
@@ -73,8 +73,8 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
     // Set the selectedTimeframe appropriately
     this.populateTimeframe();
 
-    // Populate the Portfolio and Ticker List
-    this.populatePortfolioAndTickerTables();
+    // Populate the Portfolio and Stock List
+    this.populatePortfolioAndStockTables();
 
   }
 
@@ -86,12 +86,12 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
     // indicate that we're busy to our html template and to the Busy Service
     this.setBusyState(true);
     // Save cookies before starting the analysis
-    this.saveTimeframePortfoliosAndTickersToCookies();
+    this.saveTimeframePortfoliosAndStocksToCookies();
 
     this.calculatorService.analyzeIncome( this.timeframeService.calculateStartDate(this.selectedTimeframe, this.selectedStartDate),
                                           this.timeframeService.calculateEndDate(this.selectedTimeframe, this.selectedEndDate),
                                           this.portfolioSelection.selected.map((p: Portfolio) => p.id),
-                                          this.tickerSelection.selected.map((t: Ticker) => t.id),
+                                          this.stockSelection.selected.map((t: Stock) => t.id),
                                           true,
                                           true)
       .subscribe(
@@ -125,7 +125,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
 
   shouldSubmitBeDisabled() {
     // If no portfolios are selected  OR  no stocks are selected, the submit button should be disabled
-    return this.portfolioSelection.selected.length === 0 || this.tickerSelection.selected.length === 0 || this.busy;
+    return this.portfolioSelection.selected.length === 0 || this.stockSelection.selected.length === 0 || this.busy;
   }
 
 

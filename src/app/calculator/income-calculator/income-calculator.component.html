@@ -67,42 +67,42 @@
                 </div>
             </div>
             <div class="flex-child">
-                <h4> Tickers to be Included </h4>
-                <div class="ticker-scrollable-div">
-                    <table class="compact-table" mat-table [dataSource]="tickerDataSource">
+                <h4> Stocks to be Included </h4>
+                <div class="stock-scrollable-div">
+                    <table class="compact-table" mat-table [dataSource]="stockDataSource">
                         <!-- Checkbox Column-->
                         <ng-container matColumnDef="select">
                             <th mat-header-cell *matHeaderCellDef>
-                                <mat-checkbox   (change)="$event ? wcitService.masterToggle(tickerSelection, tickerDataSource) : null"
-                                                [checked]="tickerSelection.hasValue() && wcitService.areAllSelected(tickerSelection, tickerDataSource)"
-                                                [indeterminate]="tickerSelection.hasValue() && !wcitService.areAllSelected(tickerSelection, tickerDataSource)"
-                                                [aria-label]="wcitService.createCheckboxLabel(tickerSelection, tickerDataSource)">
+                                <mat-checkbox   (change)="$event ? wcitService.masterToggle(stockSelection, stockDataSource) : null"
+                                                [checked]="stockSelection.hasValue() && wcitService.areAllSelected(stockSelection, stockDataSource)"
+                                                [indeterminate]="stockSelection.hasValue() && !wcitService.areAllSelected(stockSelection, stockDataSource)"
+                                                [aria-label]="wcitService.createCheckboxLabel(stockSelection, stockDataSource)">
                                 </mat-checkbox>
                             </th>
                             <td mat-cell *matCellDef="let row">
                                 <mat-checkbox   (click)="$event.stopPropagation()"
-                                                (change)="$event ? tickerSelection.toggle(row) : null"
-                                                [checked]="tickerSelection.isSelected(row)"
-                                                [aria-label]="wcitService.createCheckboxLabel(tickerSelection, tickerDataSource,row)">
+                                                (change)="$event ? stockSelection.toggle(row) : null"
+                                                [checked]="stockSelection.isSelected(row)"
+                                                [aria-label]="wcitService.createCheckboxLabel(stockSelection, stockDataSource,row)">
                                 </mat-checkbox>
                             </td>
                         </ng-container>
                         <!-- Ticker Name Column-->
                         <ng-container matColumnDef="ticker">
                             <th mat-header-cell *matHeaderCellDef> Ticker </th>
-                            <td mat-cell *matCellDef="let ticker"> {{ticker.ticker}} </td>
+                            <td mat-cell *matCellDef="let stock"> {{stock.ticker}} </td>
                         </ng-container>
                         <!-- Company Name Column-->
                         <ng-container matColumnDef="name">
                             <th mat-header-cell *matHeaderCellDef> Company Name </th>
-                            <td mat-cell *matCellDef="let ticker"> {{ticker.name}} </td>
+                            <td mat-cell *matCellDef="let stock"> {{stock.name}} </td>
                         </ng-container>
 
 
-                        <tr mat-header-row *matHeaderRowDef="tickerDisplayedColumns sticky: true" ></tr>
+                        <tr mat-header-row *matHeaderRowDef="stockDisplayedColumns sticky: true" ></tr>
                         <tr mat-row *matRowDef="let row;
                                                 let even = even;
-                                                columns: tickerDisplayedColumns;"
+                                                columns: stockDisplayedColumns;"
                                     [ngClass]="{zebra: even}"></tr>
                     </table>
                 </div>

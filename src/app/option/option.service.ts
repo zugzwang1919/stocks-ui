@@ -43,7 +43,7 @@ export class OptionService extends WolfeGenericService<Option> {
     return params;
   }
 
-  // Override so that we can provide a fully functional Ticker object
+  // Override so that we can provide a fully functional Stock object
   buildFullyFuctionalModel(thinOption: any): Option {
     return new Option(thinOption);
   }

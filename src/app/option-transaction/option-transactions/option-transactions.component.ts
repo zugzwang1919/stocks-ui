@@ -7,7 +7,7 @@ import { AlertService } from 'src/app/general/alert/alert.service';
 import { WolfeGenericListDirective } from '../../wolfe-common/wolfe-generic-list-directive';
 import { WolfeCheckboxInTableService } from 'src/app/wolfe-common/wolfe-checkbox-in-table.service';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
-import { TickerService } from 'src/app/ticker/ticker.service';
+import { StockService } from 'src/app/stock/stock.service';
 import { WolfeGenericFilteredListDirective } from 'src/app/wolfe-common/wolfe-generic-filtered-list.directive';
 
 @Component({
@@ -25,35 +25,35 @@ export class OptionTransactionsComponent extends WolfeGenericFilteredListDirecti
     optionTransactionService: OptionTransactionService,
     public wcits: WolfeCheckboxInTableService,
     portfolioService: PortfolioService,
-    tickerService: TickerService
+    stockService: StockService
   ) {
     super(router,
           alertService,
           optionTransactionService,
           '/option-transaction',
           portfolioService,
-          tickerService
+          stockService
           );
   }
 
 
   filterFunction(flattenedOptionTransaction: any): boolean {
 
-    if (this.selectedPortfolio === -1 && this.selectedTicker === -1 ) {
+    if (this.selectedPortfolio === -1 && this.selectedStock === -1 ) {
       return true;
     }
-    if (this.selectedPortfolio !== -1 && this.selectedTicker !== -1) {
+    if (this.selectedPortfolio !== -1 && this.selectedStock !== -1) {
       return  flattenedOptionTransaction.portfolioId === this.selectedPortfolio &&
-              flattenedOptionTransaction.optionTickerId === this.selectedTicker;
+              flattenedOptionTransaction.optionStockId === this.selectedStock;
     }
     if (this.selectedPortfolio !== -1) {
       return flattenedOptionTransaction.portfolioId === this.selectedPortfolio;
     }
-    if (this.selectedTicker !== -1 ) {
-      return flattenedOptionTransaction.optionTickerId === this.selectedTicker;
+    if (this.selectedStock !== -1 ) {
+      return flattenedOptionTransaction.optionStockId === this.selectedStock;
     }
 
-    throw Error('Impossible state encountered in filterFunction of ticker-transaction component.');
+    throw Error('Impossible state encountered in filterFunction of stock-transaction component.');
 
   }
 
@@ -67,7 +67,7 @@ export class OptionTransactionsComponent extends WolfeGenericFilteredListDirecti
     flatItem.date = ot.date;
     flatItem.activity = ot.activity;
     flatItem.optionName = ot.option.getName();
-    flatItem.optionTickerId = ot.option.stock.id;
+    flatItem.optionStockId = ot.option.stock.id;
     flatItem.numberOfContracts = ot.numberOfContracts;
     flatItem.amount = ot.amount;
     return flatItem;

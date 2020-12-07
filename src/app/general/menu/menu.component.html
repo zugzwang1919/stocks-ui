@@ -15,7 +15,7 @@
         <mat-icon>folder_open</mat-icon>
         <span>Portfolios</span>
     </button>
-    <button mat-menu-item [matMenuTriggerFor]="tickers">
+    <button mat-menu-item [matMenuTriggerFor]=" stocks">
         <mat-icon>trending_up</mat-icon>
         <span>Stocks Being Tracked</span>
     </button>
@@ -50,12 +50,12 @@
         <span>About</span>
     </button>
 </mat-menu>
-<mat-menu #tickers="matMenu">
-    <button routerLink='/ticker' mat-menu-item>
+<mat-menu #stocks="matMenu">
+    <button routerLink='/stock' mat-menu-item>
         <mat-icon>list_alt</mat-icon>
         <span>List</span>
     </button>
-    <button routerLink='/ticker/create' mat-menu-item>
+    <button routerLink='/stock/create' mat-menu-item>
         <mat-icon>create</mat-icon>
         <span>Create</span>
     </button>
@@ -81,7 +81,7 @@
     </button>
 </mat-menu>
 <mat-menu #transactions="matMenu">
-    <button mat-menu-item [matMenuTriggerFor]="tickerTransactions">
+    <button mat-menu-item [matMenuTriggerFor]="stockTransactions">
         <mat-icon>trending_up</mat-icon>
         <span>Stock Transactions</span>
     </button>
@@ -90,12 +90,12 @@
         <span>Option Transactions</span>
     </button>
 </mat-menu>
-<mat-menu #tickerTransactions="matMenu">
-    <button routerLink='/ticker-transaction' mat-menu-item>
+<mat-menu #stockTransactions="matMenu">
+    <button routerLink='/stock-transaction' mat-menu-item>
         <mat-icon>list_alt</mat-icon>
         <span>List</span>
     </button>
-    <button routerLink='/ticker-transaction/create' mat-menu-item>
+    <button routerLink='/stock-transaction/create' mat-menu-item>
         <mat-icon>create</mat-icon>
         <span>Create</span>
     </button>

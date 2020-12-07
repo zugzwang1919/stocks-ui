@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import { AlertService } from '../general/alert/alert.service';
 import { Portfolio } from '../portfolio/portfolio';
 import { PortfolioService } from '../portfolio/portfolio.service';
-import { Ticker } from '../ticker/ticker';
-import { TickerService } from '../ticker/ticker.service';
+import { Stock } from '../stock/stock';
+import { StockService } from '../stock/stock.service';
 import { WolfeMaterialModule } from '../wolfe-material/wolfe-material.module';
 import { WolfeGenericListDirective } from './wolfe-generic-list-directive';
 import { WolfeGenericService } from './wolfe-generic-service';
@@ -18,9 +18,9 @@ export class WolfeGenericFilteredListDirective<T extends WolfeTrackedItem> exten
   portfolios: Portfolio[] = [this.ALL_PORTFOLIO];
   selectedPortfolio = -1;
 
-  ALL_TICKERS: Ticker = {id: -1, ticker: 'ALL', name: '', benchmark: false};
-  tickers: Ticker[] = [this.ALL_TICKERS];
-  selectedTicker = -1;
+  ALL_STOCKS: Stock = {id: -1, ticker: 'ALL', name: '', benchmark: false};
+  stocks: Stock[] = [this.ALL_STOCKS];
+  selectedStock = -1;
 
   constructor(
     protected router: Router,
@@ -28,7 +28,7 @@ export class WolfeGenericFilteredListDirective<T extends WolfeTrackedItem> exten
     protected wolfeTrackedItemService: WolfeGenericService<T>,
     protected prefixOfEditPath: string,
     private   portfolioService: PortfolioService,
-    private   tickerService: TickerService
+    private   stockService: StockService
     ) {
     super(router,
       alertService,
@@ -45,10 +45,10 @@ export class WolfeGenericFilteredListDirective<T extends WolfeTrackedItem> exten
       foundPortfolios => foundPortfolios.forEach(fp => this.portfolios.push(fp)),
       error => this.alertService.error(error)
     );
-    // Add the tickers to the Filter drop down
-    this.tickerService.retrieveAll()
+    // Add the stocks to the Filter drop down
+    this.stockService.retrieveAll()
     .subscribe(
-      foundTickers => foundTickers.forEach(ft => this.tickers.push(ft)),
+      foundStocks => foundStocks.forEach(ft => this.stocks.push(ft)),
       error => this.alertService.error(error)
     );
   }

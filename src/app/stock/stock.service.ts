@@ -3,14 +3,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { UtilService } from '../wolfe-common/util.service';
-import { Ticker } from './ticker';
+import { Stock } from './stock';
 import { WolfeGenericService } from '../wolfe-common/wolfe-generic-service';
 import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TickerService extends WolfeGenericService<Ticker> {
+export class StockService extends WolfeGenericService<Stock> {
 
   constructor(
     wolfeHttpService: WolfeHttpService
@@ -25,19 +25,19 @@ export class TickerService extends WolfeGenericService<Ticker> {
     return this.wolfeHttpService.get('/stock/benchmarks');
   }
 
-  create(tickerSymbol: string, name: string, isBenchmark: boolean): Observable<Ticker> {
+  create(tickerSymbol: string, name: string, isBenchmark: boolean): Observable<Stock> {
     const params = { ticker: tickerSymbol, name, benchmark: isBenchmark };
     return this.wolfeHttpService.post('/stock', params, null);
   }
 
-  update(id: number, name: string, isBenchmark: boolean): Observable<Ticker> {
+  update(id: number, name: string, isBenchmark: boolean): Observable<Stock> {
     const params = { name, benchmark: isBenchmark };
     return this.wolfeHttpService.post('/stock/' + id, params, null);
   }
 
-  // Override so that we can provide a fully functional Ticker object
-  buildFullyFuctionalModel(shallowTicker: any): Ticker {
-    const t: Ticker = new Ticker(shallowTicker);
+  // Override so that we can provide a fully functional Stock object
+  buildFullyFuctionalModel(shallowStock: any): Stock {
+    const t: Stock = new Stock(shallowStock);
     return t;
   }
 

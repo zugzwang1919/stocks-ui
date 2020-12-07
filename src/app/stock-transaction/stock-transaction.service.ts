@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { TickerTransaction } from './ticker-transaction';
+import { StockTransaction } from './stock-transaction';
 import { WolfeGenericService } from '../wolfe-common/wolfe-generic-service';
 import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
 
@@ -10,7 +10,7 @@ import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
 @Injectable({
   providedIn: 'root'
 })
-export class TickerTransactionService extends WolfeGenericService<TickerTransaction> {
+export class StockTransactionService extends WolfeGenericService<StockTransaction> {
 
   constructor(
     private datePipe: DatePipe,
@@ -22,14 +22,14 @@ export class TickerTransactionService extends WolfeGenericService<TickerTransact
   // NOTE: retrieve(), retrieveAll(), and delete() are picked up
   //       from the base class
 
-  create(date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number): Observable<TickerTransaction> {
+  create(date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number): Observable<StockTransaction> {
     // Build the parameters
     const params = this.buildParams(date, portfolioId, stockId, activity, tradeSize, amount);
     // Post the request
     return this.wolfeHttpService.post('/stock-transaction', params, null);
   }
 
-  update(id: number, date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number): Observable<TickerTransaction> {
+  update(id: number, date: Date, portfolioId: number, stockId: number, activity: string, tradeSize: string | number, amount: string | number): Observable<StockTransaction> {
     // Build the parameters
     const params = this.buildParams(date, portfolioId, stockId, activity, tradeSize, amount);
     // Post the request
@@ -47,9 +47,9 @@ export class TickerTransactionService extends WolfeGenericService<TickerTransact
     return params;
   }
 
-  // Override so that we can provide a fully functional Ticker object
-  buildFullyFuctionalModel(shallowTickerTransaction: any): TickerTransaction {
-    return new TickerTransaction(shallowTickerTransaction);
+  // Override so that we can provide a fully functional Stock Transaction object
+  buildFullyFuctionalModel(shallowStockTransaction: any): StockTransaction {
+    return new StockTransaction(shallowStockTransaction);
   }
 
 }

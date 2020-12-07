@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
 
 import { MaterialModule } from '../material/material.module';
 
-import { TickersComponent } from './tickers/tickers.component';
-import { TickerDetailsComponent } from './ticker-details/ticker-details.component';
+import { StocksComponent } from './stocks/stocks.component';
+import { StockDetailsComponent } from './stock-details/stock-details.component';
 
 import { UserModule } from '../user/user.module';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
@@ -15,8 +15,8 @@ import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
 
 @NgModule({
   declarations: [
-    TickersComponent,
-    TickerDetailsComponent
+    StocksComponent,
+    StockDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -28,8 +28,8 @@ import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
     WolfeCommonModule
   ],
   exports: [
-    TickersComponent,
-    TickerDetailsComponent
+    StocksComponent,
+    StockDetailsComponent
   ]
 })
-export class TickerModule { }
+export class StockModule { }

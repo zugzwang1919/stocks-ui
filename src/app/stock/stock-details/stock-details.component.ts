@@ -4,30 +4,30 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { AlertService } from '../../general/alert/alert.service';
-import { TickerService } from '../ticker.service';
-import { Ticker } from '../ticker';
+import { StockService } from '../stock.service';
+import { Stock } from '../stock';
 import { BusyService } from 'src/app/general/busy/busy.service';
 
 
 @Component({
-  selector: 'app-ticker-details',
-  templateUrl: './ticker-details.component.html',
-  styleUrls: ['./ticker-details.component.sass']
+  selector: 'app-stock-details',
+  templateUrl: './stock-details.component.html',
+  styleUrls: ['./stock-details.component.sass']
 })
-export class TickerDetailsComponent implements OnInit {
+export class StockDetailsComponent implements OnInit {
 
 
-  tickerDetailsGroup: FormGroup;
+  stockDetailsGroup: FormGroup;
   benchmark: FormControl;
 
-  ticker: Ticker;
+  stock: Stock;
   attemptingToCreate: boolean;
   busy = false;
 
   constructor(
     private alertService: AlertService,
     private busyService: BusyService,
-    private tickerService: TickerService,
+    private stockService: StockService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router
@@ -35,7 +35,7 @@ export class TickerDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.attemptingToCreate = this.route.snapshot.url[1].toString() === 'create';
-    this.tickerDetailsGroup = this.formBuilder.group({
+    this.stockDetailsGroup = this.formBuilder.group({
       ticker: [{ value: '', disabled: !this.attemptingToCreate}, [Validators.required ]],
       name: ['', [Validators.required ]]
     });
@@ -46,27 +46,27 @@ export class TickerDetailsComponent implements OnInit {
     this.benchmark = new FormControl(false);
 
     // Set things up so that any ticker will be converted to upper case
-    this.tickerDetailsGroup.get('ticker').valueChanges
+    this.stockDetailsGroup.get('ticker').valueChanges
       .pipe(
         distinctUntilChanged()  // NOTE: avoids infinite loop as patchValue below will emit changes
       )
       .subscribe((value: string) => {
-        this.tickerDetailsGroup.get('ticker').patchValue(value.toUpperCase());
+        this.stockDetailsGroup.get('ticker').patchValue(value.toUpperCase());
       });
 
     // If we've received an edit request (i.e., a non-create request)
     if (!this.attemptingToCreate) {
-      // Retrieve the requested ticker & drop it into our "ticker variable"
+      // Retrieve the requested stock & drop it into our "stock variable"
       const id: number = +(this.route.snapshot.url[1].toString());
-      this.tickerService.retrieve(id)
+      this.stockService.retrieve(id)
       .subscribe(
-        // If this goes well, update the list of Tickers
-        foundTicker =>  {
-          this.ticker = foundTicker;
+        // If this goes well, update the list of Stocks
+        foundStock =>  {
+          this.stock = foundStock;
           // Set the data in the table to be the data that was returned from the service
-          this.tickerDetailsGroup.get('ticker').setValue(foundTicker.ticker);
-          this.tickerDetailsGroup.get('name').setValue(foundTicker.name);
-          this.benchmark.setValue(foundTicker.benchmark);
+          this.stockDetailsGroup.get('ticker').setValue(foundStock.ticker);
+          this.stockDetailsGroup.get('name').setValue(foundStock.name);
+          this.benchmark.setValue(foundStock.benchmark);
         },
         // If the retrieval goes poorly, show the error
         error => this.alertService.error(error)
@@ -82,10 +82,10 @@ export class TickerDetailsComponent implements OnInit {
     // indicate that we're busy
     this.setBusyStatus(true);
 
-    // Try to create the new security/stock/etf/mutual fund/ticker
+    // Try to create the new security/stock/etf/mutual fund
     if (this.attemptingToCreate) {
-      this.tickerService.create( this.tickerDetailsGroup.get('ticker').value,
-                                  this.tickerDetailsGroup.get('name').value,
+      this.stockService.create( this.stockDetailsGroup.get('ticker').value,
+                                  this.stockDetailsGroup.get('name').value,
                                   this.benchmark.value)
 
         .subscribe(
@@ -94,7 +94,7 @@ export class TickerDetailsComponent implements OnInit {
             // Indicate that we're not waiting any more
             this.setBusyStatus(false);
             // navigate to the appropriate page
-            this.router.navigate(['/ticker']);
+            this.router.navigate(['/stock']);
           },
           error => {
             // If this goes poorly...
@@ -105,19 +105,19 @@ export class TickerDetailsComponent implements OnInit {
           }
         );
     } else {
-      this.tickerService.update(  this.ticker.id,
-                                  this.tickerDetailsGroup.get('name').value,
+      this.stockService.update(  this.stock.id,
+                                  this.stockDetailsGroup.get('name').value,
                                   this.benchmark.value)
 
         .subscribe(
-          ticker  =>  {
+          stock  =>  {
             // If this goes well...
             // Indicate that we're not waiting any more
             this.setBusyStatus(false);
-            // Update our version of the ticker with whatever the server returned
-            this.ticker = ticker;
+            // Update our version of the stock with whatever the server returned
+            this.stock = stock;
             // Display a success message
-            this.alertService.success(ticker.ticker + ' was successfully updated.');
+            this.alertService.success(stock.ticker + ' was successfully updated.');
           },
           error => {
             // If this goes poorly...
@@ -132,11 +132,11 @@ export class TickerDetailsComponent implements OnInit {
   }
 
   getErrorTicker(): string {
-    return this.tickerDetailsGroup.get('ticker').hasError('required') ? 'You must provide a ticker symbol.' : '';
+    return this.stockDetailsGroup.get('ticker').hasError('required') ? 'You must provide a ticker symbol.' : '';
   }
 
   getErrorName(): string {
-    return this.tickerDetailsGroup.get('name').hasError('required') ? 'You must provide a name.' : '';
+    return this.stockDetailsGroup.get('name').hasError('required') ? 'You must provide a name.' : '';
   }
 
   private setBusyStatus(requestedSetting: boolean) {

@@ -23,7 +23,7 @@ export class WolfeGenericListDirective<T extends WolfeTrackedItem> {
         protected router: Router,
         protected alertService: AlertService,
         protected wolfeTrackedItemService: WolfeGenericService<T>,
-        protected   prefixOfEditPath: string,
+        protected prefixOfEditPath: string,
       ) { }
 
 

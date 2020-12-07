@@ -15,7 +15,7 @@ export class WolfeGenericService<T> {
         private urlPath: string
       ) { }
 
-    // Retrieve all of a specific type of element (Ticker, Portfolio, Transaction, etc)
+    // Retrieve all of a specific type of element (Stock, Portfolio, Transaction, etc)
     retrieveAll(): Observable<T[]> {
         return  this.wolfeHttpService.get(this.urlPath)
             .pipe(
@@ -28,7 +28,7 @@ export class WolfeGenericService<T> {
             );
     }
 
-    // Retrive a single element (Ticker, Portfolio, Transaction, etc)
+    // Retrive a single element (Stock, Portfolio, Transaction, etc)
     retrieve(id: number): Observable<T> {
         return  this.wolfeHttpService.get(this.urlPath + '/' + id)
             .pipe(
@@ -38,12 +38,12 @@ export class WolfeGenericService<T> {
             );
     }
 
-    // Delete a single element (Ticker, Portfolio, Transaction, etc)
+    // Delete a single element (Stock, Portfolio, Transaction, etc)
     delete(id: number): Observable<any> {
         return this.wolfeHttpService.delete(this.urlPath + '/' + id);
     }
 
-    // Delete multiple elements (Ticker, Portfolio, Transaction, etc)
+    // Delete multiple elements (Stock, Portfolio, Transaction, etc)
     deleteList(ids: number[]): Observable<any> {
         return this.wolfeHttpService.delete(this.urlPath, {ids});
     }

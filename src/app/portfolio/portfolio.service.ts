@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 
 
 import { Portfolio } from './portfolio';
-import { Ticker } from '../ticker/ticker';
+import { Stock } from '../stock/stock';
 import { WolfeGenericService } from '../wolfe-common/wolfe-generic-service';
 import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
 import { throwIfEmpty } from 'rxjs/operators';
@@ -36,7 +36,7 @@ export class PortfolioService extends WolfeGenericService<Portfolio> {
     return new Portfolio(thinPortfolio);
   }
 
-  retrieveSecuritiesWithTransactionsInPorfolios(portfolioIds: number[]): Observable<Ticker[]> {
+  retrieveSecuritiesWithTransactionsInPorfolios(portfolioIds: number[]): Observable<Stock[]> {
     return this.wolfeHttpService.get('/portfolio/tickers', { portfolioIds} );
   }
 }

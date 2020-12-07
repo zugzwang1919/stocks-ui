@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { TickerService } from 'src/app/ticker/ticker.service';
+import { StockService } from 'src/app/stock/stock.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AlertService } from 'src/app/general/alert/alert.service';
-import { Ticker } from 'src/app/ticker/ticker';
+import { Stock } from 'src/app/stock/stock';
 import { Portfolio } from 'src/app/portfolio/portfolio';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { CalculatorService } from '../calculator.service';
@@ -18,7 +18,7 @@ import { BenchmarkAnalysisResponse } from '../benchmark-analysis-response';
 const BUSY_ID = 1925;
 const TIMEFRAME_COOKIE_NAME = 'wolfe-software.com_benhcmark-analysis_timeframe';
 const PORTFOLIO_COOKIE_NAME = 'wolfe-software.com_benchcmark-analysis_portfolios';
-const TICKER_COOKIE_NAME = 'wolfe-software.com_benchmark-analysis_tickers';
+const STOCK_COOKIE_NAME = 'wolfe-software.com_benchmark-analysis_stocks';
 const BENCHMARK_COOKIE_NAME = 'wolfe-software.com_benchmark-analysis_benchmarks';
 
 @Component({
@@ -63,7 +63,7 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
     private   calculatorService: CalculatorService,
     protected cookieService: CookieService,
     protected portfolioService: PortfolioService,
-    private   tickerService: TickerService,
+    private   stockService: StockService,
     protected timeframeService: TimeframeService,
     public    wcitService: WolfeCheckboxInTableService)
   {
@@ -75,7 +75,7 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
           alertService,
           BUSY_ID,
           PORTFOLIO_COOKIE_NAME,
-          TICKER_COOKIE_NAME,
+          STOCK_COOKIE_NAME,
           TIMEFRAME_COOKIE_NAME);
   }
 
@@ -84,8 +84,8 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
     // Set the selectedTimeframe appropriately
     this.populateTimeframe();
 
-    // Populate the Portfolio and Ticker List
-    this.populatePortfolioAndTickerTables();
+    // Populate the Portfolio and Stock List
+    this.populatePortfolioAndStockTables();
 
     // Populate the Benchmark List
     this.populateBenchmarkTable();
@@ -103,8 +103,8 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
     this.calculatorService.analyzeVsBenchmarks( this.timeframeService.calculateStartDate(this.selectedTimeframe, this.selectedStartDate),
                                                 this.timeframeService.calculateEndDate(this.selectedTimeframe, this.selectedEndDate),
                                                 this.portfolioSelection.selected.map((p: Portfolio) => p.id),
-                                                this.tickerSelection.selected.map((t: Ticker) => t.id),
-                                                this.benchmarkSelection.selected.map((t: Ticker) => t.id),
+                                                this.stockSelection.selected.map((t: Stock) => t.id),
+                                                this.benchmarkSelection.selected.map((t: Stock) => t.id),
                                                 true,
                                                 true)
       .subscribe(
@@ -134,7 +134,7 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
 
   shouldSubmitButtonBeDisabled(): boolean {
     return this.portfolioSelection.selected.length === 0 ||
-    this.tickerSelection.selected.length === 0 ||
+    this.stockSelection.selected.length === 0 ||
     this.benchmarkSelection.selected.length === 0 ||
     this.busy;
   }
@@ -142,19 +142,19 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
 
 
   private populateBenchmarkTable() {
-    this.tickerService.retrieveAllBenchmarks()
+    this.stockService.retrieveAllBenchmarks()
     .subscribe(
       // If this goes well, update the list of Benchmarks
       benchmarks =>  {
-        this.benchmarkDataSource.data = benchmarks.sort(this.tickerSortFunction);
+        this.benchmarkDataSource.data = benchmarks.sort(this.stockSortFunction);
         // Set the checkboxes based on cookie values
         const benchmarkCookie: string = this.cookieService.get(BENCHMARK_COOKIE_NAME);
-        let selectedBenchmarks: Ticker[] = [];
+        let selectedBenchmarks: Stock[] = [];
         if (benchmarkCookie.length > 0 ) {
         const ids: number[] = benchmarkCookie.split(',').map(idAsString => +idAsString);
         // The benchmark could theoretically have been deleted since the cookie was created.
         // Filter out any "undefined results" when we try to "find" the portfolio
-        selectedBenchmarks = ids.map(id => this.benchmarkDataSource.data.find((t: Ticker) => t.id === id)).filter((t: Ticker) => t);
+        selectedBenchmarks = ids.map(id => this.benchmarkDataSource.data.find((t: Stock) => t.id === id)).filter((t: Stock) => t);
         }
         // Reset the check boxes
         this.benchmarkSelection = new SelectionModel(true, selectedBenchmarks);
@@ -171,8 +171,8 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
     const benchmarkIds: string =  this.benchmarkSelection.selected.map(b => b.id).join();
     this.cookieService.set(BENCHMARK_COOKIE_NAME, benchmarkIds, this.oneYearFromToday());
 
-    // Save the timeframe, portfolios, and tickers
-    this.saveTimeframePortfoliosAndTickersToCookies();
+    // Save the timeframe, portfolios, and stocks
+    this.saveTimeframePortfoliosAndStocksToCookies();
 
   }
 
@@ -193,16 +193,16 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
   private buildAnalysisSection(resultsFromService) {
     const displayableResults = new Array();
     resultsFromService.calculatorResults.listOfSingleSecurityResults.forEach( singleSecurityResult => {
-      const tickerLifeCycle = singleSecurityResult.baseLifeCycle;
+      const stockLifeCycle = singleSecurityResult.baseLifeCycle;
       const benchmarkLifeCycle = singleSecurityResult.benchmarkLifeCycles[0];
-      displayableResults.push({ ticker: tickerLifeCycle.stock.ticker,
-                                startDate: tickerLifeCycle.openingPosition.date,
-                                startSize: tickerLifeCycle.openingPosition.size,
-                                startValue: tickerLifeCycle.openingPosition.value,
-                                endDate: tickerLifeCycle.closingPosition.date,
-                                endSize: tickerLifeCycle.closingPosition.size,
-                                endValue: tickerLifeCycle.closingPosition.value,
-                                return: tickerLifeCycle.simpleReturn,
+      displayableResults.push({ ticker: stockLifeCycle.stock.ticker,
+                                startDate: stockLifeCycle.openingPosition.date,
+                                startSize: stockLifeCycle.openingPosition.size,
+                                startValue: stockLifeCycle.openingPosition.value,
+                                endDate: stockLifeCycle.closingPosition.date,
+                                endSize: stockLifeCycle.closingPosition.size,
+                                endValue: stockLifeCycle.closingPosition.value,
+                                return: stockLifeCycle.simpleReturn,
                                 benchmarkReturn: benchmarkLifeCycle.simpleReturn,
                                 outperformance: singleSecurityResult.outperformances[0] });
     });

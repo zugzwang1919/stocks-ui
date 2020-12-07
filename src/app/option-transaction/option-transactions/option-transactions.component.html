@@ -15,9 +15,9 @@
 
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">
             <mat-label>Filter Stock: </mat-label>
-            <mat-select  [(value)]="selectedTicker" (selectionChange)="onFilterChange($event)">
-                <mat-option *ngFor="let ticker of tickers" [value]="ticker.id">
-                    {{ticker.ticker}}
+            <mat-select  [(value)]="selectedStock" (selectionChange)="onFilterChange($event)">
+                <mat-option *ngFor="let stock of stocks" [value]="stock.id">
+                    {{stock.ticker}}
                 </mat-option>
             </mat-select>
         </mat-form-field>

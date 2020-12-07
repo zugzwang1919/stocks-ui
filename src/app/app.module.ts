@@ -11,9 +11,9 @@ import { MaterialModule } from './material/material.module';
 import { WolfeCommonModule } from './wolfe-common/wolfe-common.module';
 import { GeneralModule } from './general/general.module';
 import { UserModule } from './user/user.module';
-import { TickerModule } from './ticker/ticker.module';
+import { StockModule } from './stock/stock.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
-import { TickerTransactionModule } from './ticker-transaction/ticker-transaction.module';
+import { StockTransactionModule } from './stock-transaction/stock-transaction.module';
 import { OptionModule } from './option/option.module';
 import { OptionTransactionModule } from './option-transaction/option-transaction.module';
 import { CalculatorModule } from './calculator/calculator.module';
@@ -37,9 +37,9 @@ import { AdminModule } from './admin/admin.module';
     // Feature Modules
     GeneralModule,
     UserModule,
-    TickerModule,
+    StockModule,
     PortfolioModule,
-    TickerTransactionModule,
+    StockTransactionModule,
     OptionModule,
     OptionTransactionModule,
     CalculatorModule,

@@ -5,13 +5,13 @@
             Modify a Stock, ETF, or Mutual Fund Transaction
         </ng-template>
     </h2>
-    <form class="vertical-div" [formGroup]="tickerTransactionDetailsGroup" (ngSubmit)="onSubmit()">
+    <form class="vertical-div" [formGroup]="stockTransactionDetailsGroup" (ngSubmit)="onSubmit()">
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">
             <mat-label>Transaction Date</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="date">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['date'].valid &&  tickerTransactionDetailsGroup.controls['date'].touched">
+            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['date'].valid &&  stockTransactionDetailsGroup.controls['date'].touched">
                 {{ getErrorDate() }}
             </mat-error>
         </mat-form-field>
@@ -22,19 +22,19 @@
                     {{portfolio.portfolioName}}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['portfolio'].valid &&  tickerTransactionDetailsGroup.controls['portfolio'].touched">
+            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['portfolio'].valid &&  stockTransactionDetailsGroup.controls['portfolio'].touched">
                 {{ getErrorPortfolio() }}
             </mat-error>
         </mat-form-field>
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Ticker Symbol</mat-label>
-            <mat-select  formControlName="ticker">
-                <mat-option *ngFor="let ticker of tickers" [value]="ticker.id">
-                    {{ticker.ticker}}
+            <mat-label>Stock Symbol</mat-label>
+            <mat-select  formControlName="stock">
+                <mat-option *ngFor="let stock of stocks" [value]="stock.id">
+                    {{stock.ticker}}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['ticker'].valid &&  tickerTransactionDetailsGroup.controls['ticker'].touched">
-                {{ getErrorTicker() }}
+            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['stock'].valid &&  stockTransactionDetailsGroup.controls['stock'].touched">
+                {{ getErrorStock() }}
             </mat-error>
         </mat-form-field>
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">
@@ -44,25 +44,25 @@
                     {{activity}}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['activity'].valid &&  tickerTransactionDetailsGroup.controls['activity'].touched">
+            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['activity'].valid &&  stockTransactionDetailsGroup.controls['activity'].touched">
                 {{ getErrorActivity() }}
             </mat-error>
           </mat-form-field>
         <mat-form-field class="standard-control-width" >
             <mat-label>Number of Shares</mat-label>
             <input matInput placeholder="Trade Size" formControlName="tradeSize" />
-            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['tradeSize'].valid &&  tickerTransactionDetailsGroup.controls['tradeSize'].touched">
+            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['tradeSize'].valid &&  stockTransactionDetailsGroup.controls['tradeSize'].touched">
               {{ getErrorTradeSize() }}
             </mat-error>
         </mat-form-field>
         <mat-form-field class="standard-control-width" >
-            <input matInput placeholder="Total Amount in Dollars" formControlName="amount" [value]="tickerTransactionDetailsGroup.controls['amount'].value"/>
-            <mat-error *ngIf="!tickerTransactionDetailsGroup.controls['amount'].valid &&  tickerTransactionDetailsGroup.controls['amount'].touched">
+            <input matInput placeholder="Total Amount in Dollars" formControlName="amount" [value]="stockTransactionDetailsGroup.controls['amount'].value"/>
+            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['amount'].valid &&  stockTransactionDetailsGroup.controls['amount'].touched">
                 {{ getErrorAmount() }}
             </mat-error>
         </mat-form-field>
         <div>
-            <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="busy || !tickerTransactionDetailsGroup.valid">
+            <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="busy || !stockTransactionDetailsGroup.valid">
                 <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
                 <ng-template #updateButtonText>
                     Update

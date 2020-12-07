@@ -5,8 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AlertService } from '../../general/alert/alert.service';
 import { OptionService } from '../option.service';
-import { Ticker } from '../../ticker/ticker';
-import { TickerService } from 'src/app/ticker/ticker.service';
+import { Stock } from '../../stock/stock';
+import { StockService } from 'src/app/stock/stock.service';
 
 @Component({
   selector: 'app-option-details',
@@ -22,7 +22,7 @@ export class OptionDetailsComponent implements OnInit {
   busy: boolean;
 
   optionTypes = [ 'CALL', 'PUT' ];
-  tickers: Ticker[] = [];
+  stocks: Stock[] = [];
 
   constructor(
     private alertService: AlertService,
@@ -31,19 +31,19 @@ export class OptionDetailsComponent implements OnInit {
     private optionService: OptionService,
     private route: ActivatedRoute,
     private router: Router,
-    private tickerService: TickerService,
+    private stockService: StockService,
   ) { }
 
   ngOnInit(): void {
     this.attemptingToCreate = this.route.snapshot.url[1].toString() === 'create';
     this.optionDetailsGroup = this.formBuilder.group({
       optionType: ['', [Validators.required ]],
-      ticker: ['', [Validators.required]],
+      stock: ['', [Validators.required]],
       expirationDate: ['', [Validators.required]],
       strikePrice: ['', [Validators.required ]]
     });
     this.busy = false;
-    this.populateTickerDropDown();
+    this.populateStockDropDown();
 
     // If we've received an edit request (i.e., a non-create request)
     if (!this.attemptingToCreate) {
@@ -56,7 +56,7 @@ export class OptionDetailsComponent implements OnInit {
           this.retrievedOptionId = foundOption.id;
           // Set the data in the form to be the data that was returned from the service
           this.optionDetailsGroup.get('optionType').setValue(foundOption.optionType);
-          this.optionDetailsGroup.get('ticker').setValue(foundOption.stock.id);
+          this.optionDetailsGroup.get('stock').setValue(foundOption.stock.id);
           this.optionDetailsGroup.get('expirationDate').setValue(foundOption.expirationDate);
           this.optionDetailsGroup.get('strikePrice').setValue(this.currencyPipe.transform(foundOption.strikePrice));
         },
@@ -76,7 +76,7 @@ export class OptionDetailsComponent implements OnInit {
     // Try to create the new option
     if (this.attemptingToCreate) {
       this.optionService.create(this.optionDetailsGroup.get('optionType').value,
-                                this.optionDetailsGroup.get('ticker').value, // NOTE: The value in the ticker is the ticker's id
+                                this.optionDetailsGroup.get('stock').value, // NOTE: The value in stock is the stock's id
                                 this.optionDetailsGroup.get('strikePrice').value,
                                 this.optionDetailsGroup.get('expirationDate').value)
         .subscribe(
@@ -98,11 +98,11 @@ export class OptionDetailsComponent implements OnInit {
     } else {
       this.optionService.update(this.retrievedOptionId,
                                 this.optionDetailsGroup.get('optionType').value,
-                                this.optionDetailsGroup.get('ticker').value, // NOTE: The value in the ticker is the ticker's id
+                                this.optionDetailsGroup.get('stock').value, // NOTE: The value in the stock is the stock's id
                                 this.optionDetailsGroup.get('strikePrice').value,
                                 this.optionDetailsGroup.get('expirationDate').value)
         .subscribe(
-          tickerTransaction  =>  {
+          option  =>  {
             // If this goes well...
             // Indicate that we're not waiting any more
             this.busy = false;
@@ -119,10 +119,10 @@ export class OptionDetailsComponent implements OnInit {
         );
       }
   }
-  private populateTickerDropDown() {
-    this.tickerService.retrieveAll()
+  private populateStockDropDown() {
+    this.stockService.retrieveAll()
       .subscribe(
-        tickers => this.tickers = tickers,
+        stocks => this.stocks = stocks,
         error => this.alertService.error(error)
       );
   }
@@ -130,8 +130,8 @@ export class OptionDetailsComponent implements OnInit {
   getErrorOptionType(): string {
     return this.optionDetailsGroup.get('optionType').hasError('required') ? 'Please select PUT or CALL' : '';
   }
-  getErrorTicker(): string {
-    return this.optionDetailsGroup.get('ticker').hasError('required') ? 'Please select a ticker symbol' : '';
+  getErrorStock(): string {
+    return this.optionDetailsGroup.get('stock').hasError('required') ? 'Please select a stock symbol' : '';
   }
   getErrorExpirationDate(): string {
     return this.optionDetailsGroup.get('expirationDate').hasError('required') ? 'Please select the option\'s expiration date' : '';

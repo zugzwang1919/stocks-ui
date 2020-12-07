@@ -18,14 +18,14 @@
             </mat-error>
         </mat-form-field>
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Ticker Symbol</mat-label>
-            <mat-select  formControlName="ticker">
-                <mat-option *ngFor="let ticker of tickers" [value]="ticker.id">
-                    {{ticker.ticker}}
+            <mat-label>Stock Symbol</mat-label>
+            <mat-select  formControlName="stock">
+                <mat-option *ngFor="let stock of stocks" [value]="stock.id">
+                    {{stock.ticker}}
                 </mat-option>
             </mat-select>
-            <mat-error *ngIf="!optionDetailsGroup.controls['ticker'].valid &&  optionDetailsGroup.controls['ticker'].touched">
-                {{ getErrorTicker() }}
+            <mat-error *ngIf="!optionDetailsGroup.controls['stock'].valid &&  optionDetailsGroup.controls['stock'].touched">
+                {{ getErrorStock() }}
             </mat-error>
         </mat-form-field>
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">

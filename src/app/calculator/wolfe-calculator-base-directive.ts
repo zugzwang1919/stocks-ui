@@ -6,14 +6,14 @@ import { AlertService } from '../general/alert/alert.service';
 import { BusyService } from '../general/busy/busy.service';
 import { Portfolio } from '../portfolio/portfolio';
 import { PortfolioService } from '../portfolio/portfolio.service';
-import { Ticker } from '../ticker/ticker';
+import { Stock } from '../stock/stock';
 import { WolfeCheckboxInTableService } from '../wolfe-common/wolfe-checkbox-in-table.service';
 import { Timeframe, TimeframeService } from './timeframe.service';
 
 @Directive()
 export class WolfeCalculatorBaseDirective {
     protected busy = false;
-    private firstTimeDisplayingTickers = true;
+    private firstTimeDisplayingStocks = true;
 
     public  selectedTimeframe: Timeframe;
     public  timeframes: string[] = Object.values(Timeframe);
@@ -25,10 +25,10 @@ export class WolfeCalculatorBaseDirective {
     public  portfolioSelection = new SelectionModel(true, []);
     public  portfolioDisplayedColumns: string[] = ['select', 'portfolioName'];
 
-    private tickerInitialData: Ticker[] = [];
-    public  tickerDataSource = new MatTableDataSource(this.tickerInitialData);
-    public  tickerSelection = new SelectionModel(true, []);
-    public  tickerDisplayedColumns: string[] = ['select', 'ticker', 'name'];
+    private stockInitialData: Stock[] = [];
+    public  stockDataSource = new MatTableDataSource(this.stockInitialData);
+    public  stockSelection = new SelectionModel(true, []);
+    public  stockDisplayedColumns: string[] = ['select', 'ticker', 'name'];
 
     constructor(
         protected portfolioService: PortfolioService,
@@ -39,7 +39,7 @@ export class WolfeCalculatorBaseDirective {
         protected alertService: AlertService,
         protected busyId: number,
         protected portfolioCookieName: string,
-        protected tickerCookieName: string,
+        protected stockCookieName: string,
         protected timeframeCookieName: string
     )
     {}
@@ -53,47 +53,47 @@ export class WolfeCalculatorBaseDirective {
     singleTogglePortfolioRow(row: any) {
         // First, toggle the check box
         this.portfolioSelection.toggle(row);
-        // Update the Ticker Section based on the porfolios selected
-        this.updateTickerListBasedOnPortfoliosSelected();
+        // Update the Stock Section based on the porfolios selected
+        this.updateStockListBasedOnPortfoliosSelected();
     }
 
     masterTogglePortfolios() {
         // First toggle the portfolio items based on their current settings
         this.wcitService.masterToggle(this.portfolioSelection, this.portfolioDataSource);
-        // Update the Ticker Section based on the porfolios selected
-        this.updateTickerListBasedOnPortfoliosSelected();
+        // Update the Stock Section based on the porfolios selected
+        this.updateStockListBasedOnPortfoliosSelected();
     }
 
     /********************  Methods used by template and these methods ********************/
 
-    updateTickerListBasedOnPortfoliosSelected() {
+    updateStockListBasedOnPortfoliosSelected() {
 
-        // Update the Ticker Section based on the porfolios selected
+        // Update the Stock Section based on the porfolios selected
         const portfolioIds: number[] = this.portfolioSelection.selected.map((p: Portfolio) => p.id);
         this.portfolioService.retrieveSecuritiesWithTransactionsInPorfolios(portfolioIds)
         .subscribe(
-          tickers => {
-              // Sort the tickers
-              const sortedTickers: Ticker[] = tickers.sort(this.tickerSortFunction);
+          stocks => {
+              // Sort the stocks
+              const sortedStocks: Stock[] = stocks.sort(this.stockSortFunction);
               // Stick them in the datasource
-              this.tickerDataSource.data = tickers.sort(this.tickerSortFunction);
-              // Start off by assuming that all tickers will be selected
-              let selectedTickers: Ticker[] = sortedTickers;
+              this.stockDataSource.data = stocks.sort(this.stockSortFunction);
+              // Start off by assuming that all stocks will be selected
+              let selectedStocks: Stock[] = sortedStocks;
 
-              // If this is the first time showing the tickers, use the cookies to set up the selection
-              if (this.firstTimeDisplayingTickers) {
+              // If this is the first time showing the stocks, use the cookies to set up the selection
+              if (this.firstTimeDisplayingStocks) {
                 // Set the checkboxes based on cookie values
-                const tickerCookie: string = this.cookieService.get(this.tickerCookieName);
-                if (tickerCookie.length > 0 ) {
-                  const ids: number[] = tickerCookie.split(',').map(idAsString => +idAsString);
-                  // It's possible that the ticker was deleted since the cookie was saved.
+                const stockCookie: string = this.cookieService.get(this.stockCookieName);
+                if (stockCookie.length > 0 ) {
+                  const ids: number[] = stockCookie.split(',').map(idAsString => +idAsString);
+                  // It's possible that the stock was deleted since the cookie was saved.
                   // Filter out any "undefined" results from the find() below.
-                  selectedTickers = ids.map(id => tickers.find((t: Ticker) => t.id === id)).filter((t: Ticker) => t);
+                  selectedStocks = ids.map(id => stocks.find((t: Stock) => t.id === id)).filter((t: Stock) => t);
                 }
-                this.firstTimeDisplayingTickers = false;
+                this.firstTimeDisplayingStocks = false;
               }
               // Create a new set of check boxes (they will be updated with selected values as set above)
-              this.tickerSelection = new SelectionModel(true, selectedTickers);
+              this.stockSelection = new SelectionModel(true, selectedStocks);
           },
           error => this.alertService.error(error)
         );
@@ -108,10 +108,10 @@ export class WolfeCalculatorBaseDirective {
         this.selectedTimeframe = this.timeframeService.getTimeframeFromCookie(this.timeframeCookieName) || Timeframe.ALL_DATES;
     }
 
-    protected populatePortfolioAndTickerTables() {
+    protected populatePortfolioAndStockTables() {
         this.portfolioService.retrieveAll()
         .subscribe(
-            // If this goes well, update the list of Tickers
+            // If this goes well, update the list of Stocks
             portfolios =>  {
 
             // Put the returned portfolio data in the portfolio DataSource
@@ -130,8 +130,8 @@ export class WolfeCalculatorBaseDirective {
             // Create a new Selection Model
             this.portfolioSelection = new SelectionModel<Portfolio>(true, selectedPortfolios );
 
-            // Now that we have the portfolio list created, set up the tickers
-            this.updateTickerListBasedOnPortfoliosSelected();
+            // Now that we have the portfolio list created, set up the stocks
+            this.updateStockListBasedOnPortfoliosSelected();
             },
             // If the retrieval goes poorly, show the error
             error => this.alertService.error(error)
@@ -150,7 +150,7 @@ export class WolfeCalculatorBaseDirective {
         }
     }
 
-    protected saveTimeframePortfoliosAndTickersToCookies(): void {
+    protected saveTimeframePortfoliosAndStocksToCookies(): void {
         // Make the cookie valid for a year
         const oneYearFromToday: Date = this.oneYearFromToday();
 
@@ -161,9 +161,9 @@ export class WolfeCalculatorBaseDirective {
         const portfolioIds: string =  this.portfolioSelection.selected.map(p => p.id).join();
         this.cookieService.set(this.portfolioCookieName, portfolioIds, oneYearFromToday);
 
-        // Save the tickers that were selected.
-        const tickerIds: string =  this.tickerSelection.selected.map(t => t.id).join();
-        this.cookieService.set(this.tickerCookieName, tickerIds, oneYearFromToday);
+        // Save the stocks that were selected.
+        const stockIds: string =  this.stockSelection.selected.map(t => t.id).join();
+        this.cookieService.set(this.stockCookieName, stockIds, oneYearFromToday);
     }
 
     protected oneYearFromToday(): Date {
@@ -173,10 +173,10 @@ export class WolfeCalculatorBaseDirective {
     }
 
     //
-    // Function to sort Tickers by their Ticker Symbol in DESCENDING order
+    // Function to sort Stocks by their Stock Symbol in DESCENDING order
     // i.e., AAPL, GOOG, MSFT, SPY
     //
-    protected tickerSortFunction: ((a: Ticker, b: Ticker) => number) = (a: Ticker, b: Ticker) =>
-                                    a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0
+    protected stockSortFunction: ((a: Stock, b: Stock) => number) = (a: Stock, b: Stock) =>
+                                   a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0
 
 }

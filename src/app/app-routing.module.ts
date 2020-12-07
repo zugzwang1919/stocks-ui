@@ -9,10 +9,10 @@ import { OptionTransactionDetailsComponent } from './option-transaction/option-t
 import { PortfoliosComponent } from './portfolio/portfolios/portfolios.component';
 import { PortfolioDetailsComponent } from './portfolio/portfolio-details/portfolio-details.component';
 import { RegisterComponent } from './user/register/register.component';
-import { TickersComponent } from './ticker/tickers/tickers.component';
-import { TickerDetailsComponent } from './ticker/ticker-details/ticker-details.component';
-import { TickerTransactionDetailsComponent } from './ticker-transaction/ticker-transaction-details/ticker-transaction-details.component';
-import { TickerTransactionsComponent } from './ticker-transaction/ticker-transactions/ticker-transactions.component';
+import { StocksComponent } from './stock/stocks/stocks.component';
+import { StockDetailsComponent } from './stock/stock-details/stock-details.component';
+import { StockTransactionDetailsComponent } from './stock-transaction/stock-transaction-details/stock-transaction-details.component';
+import { StockTransactionsComponent } from './stock-transaction/stock-transactions/stock-transactions.component';
 import { ToDoComponent} from './general/to-do/to-do.component';
 import { LoggedInGuard } from './wolfe-common/logged-in.guard';
 import { BenchmarkCalculatorComponent } from './calculator/benchmark-calculator/benchmark-calculator.component';
@@ -40,12 +40,12 @@ const routes: Routes = [
   { path: 'option-transaction/:id', component: OptionTransactionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'portfolio', component: PortfoliosComponent, canActivate: [LoggedInGuard]},
   { path: 'portfolio/:id', component: PortfolioDetailsComponent, canActivate: [LoggedInGuard]},
-  { path: 'ticker', component: TickersComponent, canActivate: [LoggedInGuard]},
-  { path: 'ticker/create', component: TickerDetailsComponent, canActivate: [LoggedInGuard]},
-  { path: 'ticker/:id', component: TickerDetailsComponent, canActivate: [LoggedInGuard]},
-  { path: 'ticker-transaction', component: TickerTransactionsComponent, canActivate: [LoggedInGuard]},
-  { path: 'ticker-transaction/create', component: TickerTransactionDetailsComponent, canActivate: [LoggedInGuard]},
-  { path: 'ticker-transaction/:id', component: TickerTransactionDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'stock', component: StocksComponent, canActivate: [LoggedInGuard]},
+  { path: 'stock/create', component: StockDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'stock/:id', component: StockDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'stock-transaction', component: StockTransactionsComponent, canActivate: [LoggedInGuard]},
+  { path: 'stock-transaction/create', component: StockTransactionDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'stock-transaction/:id', component: StockTransactionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: '',   redirectTo: '/welcome', pathMatch: 'full' }
 ];
 

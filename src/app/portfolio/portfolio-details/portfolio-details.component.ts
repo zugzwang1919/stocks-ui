@@ -54,7 +54,7 @@ export class PortfolioDetailsComponent implements OnInit {
     this.alertService.clear();
 
 
-    // Try to create the new security/stock/etf/mutual fund/ticker
+    // Try to create the new security/stock/etf/mutual fund
     if (this.attemptingToCreate) {
       this.portfolioService.create( this.portfolioDetailsGroup.get('portfolioName').value )
         .subscribe(

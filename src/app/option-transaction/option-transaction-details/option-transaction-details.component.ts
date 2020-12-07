@@ -85,7 +85,7 @@ export class OptionTransactionDetailsComponent implements OnInit {
     // indicate that we're busy
     this.busy = true;
 
-    // Try to create the new security/stock/etf/mutual fund/ticker
+    // Try to create the new security/stock/etf/mutual fund
     if (this.attemptingToCreate) {
       this.optionTransactionService.create( this.optionTransactionDetailsGroup.get('date').value,
                                             this.optionTransactionDetailsGroup.get('portfolio').value,
