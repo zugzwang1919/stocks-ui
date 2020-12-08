@@ -1,12 +1,12 @@
 {
-  "dirty": true,
-  "raw": "6d20fcb-dirty",
-  "hash": "6d20fcb",
+  "dirty": false,
+  "raw": "a277c40",
+  "hash": "a277c40",
   "distance": null,
   "tag": null,
   "semver": null,
-  "suffix": "6d20fcb-dirty",
+  "suffix": "a277c40",
   "semverString": null,
-  "buildDate": "2020-12-07T18:58:45.983Z",
+  "buildDate": "2020-12-07T21:45:01.629Z",
   "version": "2.0"
 }

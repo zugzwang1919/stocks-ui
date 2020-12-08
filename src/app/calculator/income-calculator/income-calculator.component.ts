@@ -35,7 +35,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
 
   snapshotInitialData: any[] = [];
   snapshotDataSource = new MatTableDataSource(this.snapshotInitialData);
-  snapshotDisplayedColumns: string[] = ['ticker', 'shares', 'stockValue', 'putExposure', 'totalLongExposure', 'callExposure'];
+  snapshotDisplayedColumns: string[] = ['snapshotTicker', 'shares', 'stockValue', 'putExposure', 'totalLongExposure', 'callExposure'];
 
 
   analysisResults: any = null;

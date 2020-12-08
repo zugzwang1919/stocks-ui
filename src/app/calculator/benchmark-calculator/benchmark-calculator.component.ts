@@ -14,6 +14,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { TimeframeService } from '../timeframe.service';
 import { WolfeCalculatorBaseDirective } from '../wolfe-calculator-base-directive';
 import { BenchmarkAnalysisResponse } from '../benchmark-analysis-response';
+import { MatDialog } from '@angular/material/dialog';
+import { LifecycleDialogComponent } from '../lifecycle-dialog/lifecycle-dialog.component';
 
 const BUSY_ID = 1925;
 const TIMEFRAME_COOKIE_NAME = 'wolfe-software.com_benhcmark-analysis_timeframe';
@@ -65,7 +67,8 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
     protected portfolioService: PortfolioService,
     private   stockService: StockService,
     protected timeframeService: TimeframeService,
-    public    wcitService: WolfeCheckboxInTableService)
+    public    wcitService: WolfeCheckboxInTableService,
+    public    lifecycleDialog: MatDialog)
   {
     super(portfolioService,
           timeframeService,
@@ -124,6 +127,11 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
             this.setBusyState(false);
           }
       );
+  }
+
+  showLifecycle(item: any) {
+    const lifecycle: any = item.startToEndLifecycle;
+    this.lifecycleDialog.open(LifecycleDialogComponent, {data: lifecycle} );
   }
 
   /******************** Handle the setting and querying regarding the visibility of elements ********************/
@@ -195,7 +203,8 @@ export class BenchmarkCalculatorComponent extends WolfeCalculatorBaseDirective i
     resultsFromService.calculatorResults.listOfSingleSecurityResults.forEach( singleSecurityResult => {
       const stockLifeCycle = singleSecurityResult.baseLifeCycle;
       const benchmarkLifeCycle = singleSecurityResult.benchmarkLifeCycles[0];
-      displayableResults.push({ ticker: stockLifeCycle.stock.ticker,
+      displayableResults.push({ startToEndLifecycle: singleSecurityResult.baseLifeCycle,
+                                ticker: stockLifeCycle.stock.ticker,
                                 startDate: stockLifeCycle.openingPosition.date,
                                 startSize: stockLifeCycle.openingPosition.size,
                                 startValue: stockLifeCycle.openingPosition.value,
