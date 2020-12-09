@@ -12,6 +12,7 @@ import { BenchmarkGraphComponent } from './benchmark-graph/benchmark-graph.compo
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { WolfeMaterialModule } from '../wolfe-material/wolfe-material.module';
 import { WolfeAngularModule } from '../wolfe-angular/wolfe-angular.module';
+import { DetailedPriceDialogComponent } from './detailed-price-dialog/detailed-price-dialog.component';
 
 
 
@@ -21,7 +22,8 @@ import { WolfeAngularModule } from '../wolfe-angular/wolfe-angular.module';
     IncomeCalculatorComponent,
     BenchmarkCalculatorComponent,
     LifecycleDialogComponent,
-    BenchmarkGraphComponent
+    BenchmarkGraphComponent,
+    DetailedPriceDialogComponent
   ],
   imports: [
     // The Angular Modules that we tend to use

@@ -1,7 +1,10 @@
 import { DataSource } from '@angular/cdk/table';
+import { CurrencyPipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { DetailedPriceDialogComponent } from '../detailed-price-dialog/detailed-price-dialog.component';
+
 
 @Component({
   selector: 'app-lifecycle-dialog',
@@ -11,11 +14,14 @@ import { MatTableDataSource } from '@angular/material/table';
 export class LifecycleDialogComponent {
 
 
+
   lifecycleDataSource: MatTableDataSource<any>;
   lifecycleDisplayedColumns: string[] = ['date', 'stockActivity', 'stockSize', 'stockProceeds', 'dividendProceeds',
                                           'optionActivity', 'optionNumberOfContracts', 'optionProceeds'];
 
-  constructor(@Inject(MAT_DIALOG_DATA) public lifecycle: any) {
+  constructor(@Inject(MAT_DIALOG_DATA)  public lifecycle: any,
+              public eventDialog: MatDialog,
+              private currencyPipe: CurrencyPipe) {
 
     const eventsFromLifecycle = [];
 
@@ -43,6 +49,21 @@ export class LifecycleDialogComponent {
 
     const sortedEventsFromLifecycle = eventsFromLifecycle.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
     this.lifecycleDataSource = new MatTableDataSource(sortedEventsFromLifecycle);
+  }
+
+  examineEvent(event: any) {
+    let s: string;
+
+    if (event.stockProceeds) {
+      s = event.stockSize + ' shares at ' + this.currencyPipe.transform(Math.abs(event.stockProceeds / event.stockSize)) + ' per share.';
+    }
+    else if (event.dividendProceeds) {
+      s = event.stockSize + ' shares at ' + this.currencyPipe.transform(event.dividendProceeds / event.stockSize) + ' per share.';
+    }
+    else if (event.optionProceeds) {
+      s = event.optionNumberOfContracts + ' contracts at ' + this.currencyPipe.transform(Math.abs(event.optionProceeds / event.optionNumberOfContracts / 100)) + ' per contract.';
+    }
+    this.eventDialog.open(DetailedPriceDialogComponent, {data: s} );
   }
 
   private buildEventFromOpeningPosition(openingPosition: any) {
