@@ -5,6 +5,7 @@
             Modify an Existing Option Transaction
         </ng-template>
     </h2>
+    <mat-card class="mat-elevation-z4">
     <form class="vertical-div" [formGroup]="optionTransactionDetailsGroup" (ngSubmit)="onSubmit()">
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">
             <mat-label>Option Transaction Date</mat-label>
@@ -26,17 +27,65 @@
                 {{ getErrorPortfolio() }}
             </mat-error>
         </mat-form-field>
-        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Option Symbol</mat-label>
-            <mat-select  formControlName="option">
-                <mat-option *ngFor="let option of options" [value]="option.id">
-                    {{option.getName()}}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="!optionTransactionDetailsGroup.controls['option'].valid &&  optionTransactionDetailsGroup.controls['option'].touched">
-                {{ getErrorOption() }}
-            </mat-error>
-        </mat-form-field>
+        <mat-card class="mat-elevation-z4">
+            <div class="option-selection-div">
+                <mat-radio-group formControlName="existingOrNew">
+                    <div class="either-or-div">
+                        <div class="vertical-centered-div">
+                            <mat-card class="mat-elevation-z4 child-card">
+                                <mat-radio-button value="1" >Existing Option</mat-radio-button>
+                                <div class="vertical-centered-div">
+                                <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                                    <mat-label>Option</mat-label>
+                                    <mat-select  formControlName="option">
+                                        <mat-option *ngFor="let option of options" [value]="option.id">
+                                            {{option.getName()}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="!optionTransactionDetailsGroup.controls['option'].valid &&  optionTransactionDetailsGroup.controls['option'].touched">
+                                        {{ getErrorOption() }}
+                                    </mat-error>
+                                </mat-form-field>
+                                </div>
+                            </mat-card>
+                        </div>
+
+                        <div class="vertical-centered-div">
+                            <mat-card class="mat-elevation-z4 child-card">
+                                <mat-radio-button value="2" >New Option</mat-radio-button>
+                                <div class="vertical-centered-div">
+                                    <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                                        <mat-label>Call or Put</mat-label>
+                                        <mat-select  formControlName="optionType">
+                                            <mat-option *ngFor="let optionType of optionTypes" [value]="optionType">
+                                                {{optionType}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                                        <mat-label>Stock Symbol</mat-label>
+                                        <mat-select  formControlName="stock">
+                                            <mat-option *ngFor="let stock of stocks" [value]="stock.id">
+                                                {{stock.ticker}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                                        <mat-label>Expiration Date</mat-label>
+                                        <input matInput [matDatepicker]="picker2" formControlName="expirationDate">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
+                                    </mat-form-field>
+                                    <mat-form-field class="standard-control-width" >
+                                        <input matInput placeholder="Strike Price" formControlName="strikePrice" [value]="optionTransactionDetailsGroup.controls['strikePrice'].value"/>
+                                    </mat-form-field>
+                                </div>
+                            </mat-card>
+                        </div>
+                    </div> <!-- either-or-div -->
+                </mat-radio-group>
+            </div>
+        </mat-card>
         <mat-form-field class="standard-control-width" color="accent" appearance="standard">
             <mat-label>Buy or Sell</mat-label>
             <mat-select  formControlName="activity">
@@ -70,4 +119,5 @@
             </button>
         </div>
     </form>
+    </mat-card>
 </div>

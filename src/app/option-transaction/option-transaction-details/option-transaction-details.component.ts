@@ -9,6 +9,8 @@ import { OptionService } from 'src/app/option/option.service';
 import { OptionTransactionService } from '../option-transaction.service';
 import { Portfolio } from '../../portfolio/portfolio';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
+import { StockService } from 'src/app/stock/stock.service';
+import { Stock } from 'src/app/stock/stock';
 
 @Component({
   selector: 'app-option-transaction-details',
@@ -24,8 +26,11 @@ export class OptionTransactionDetailsComponent implements OnInit {
   busy: boolean;
 
   activities = [ 'BUY_TO_OPEN', 'BUY_TO_CLOSE', 'SELL_TO_OPEN', 'SELL_TO_CLOSE' ];
+  optionTypes = [ 'CALL', 'PUT' ];
+
   portfolios: Portfolio[] = [];
   options: Option[] = [];
+  stocks: Stock[] = [];
 
 
   constructor(
@@ -35,6 +40,7 @@ export class OptionTransactionDetailsComponent implements OnInit {
     private optionService: OptionService,
     private optionTransactionService: OptionTransactionService,
     private portfolioService: PortfolioService,
+    private stockService: StockService,
     private route: ActivatedRoute,
     private router: Router,
     ) { }
@@ -45,15 +51,23 @@ export class OptionTransactionDetailsComponent implements OnInit {
     this.optionTransactionDetailsGroup = this.formBuilder.group({
       date: ['', [Validators.required ]],
       portfolio: ['', [Validators.required]],
-      option: ['', [Validators.required]],
+      existingOrNew: ['1', []],
+      option: ['', []],
+      optionType: [{value: '', disabled: true}, []],
+      stock: [{value: '', disabled: true}, []],
+      expirationDate: [{value: '', disabled: true}, []],
+      strikePrice: [{value: '', disabled: true}, []],
       activity: ['', [Validators.required]],
       numberOfContracts: ['', [Validators.required ]],
       amount: ['', [Validators.required ]]
     });
+
     this.busy = false;
 
     this.populateOptionDropDown();
     this.populatePortfolioDropDown();
+    this.populateStockDropDown();
+    this.subscribeToRadioButtonChanges();
 
     // If we've received an edit request (i.e., a non-create request)
     if (!this.attemptingToCreate) {
@@ -85,57 +99,84 @@ export class OptionTransactionDetailsComponent implements OnInit {
     // indicate that we're busy
     this.busy = true;
 
-    // Try to create the new security/stock/etf/mutual fund
-    if (this.attemptingToCreate) {
-      this.optionTransactionService.create( this.optionTransactionDetailsGroup.get('date').value,
-                                            this.optionTransactionDetailsGroup.get('portfolio').value,
-                                            this.optionTransactionDetailsGroup.get('option').value,
-                                            this.optionTransactionDetailsGroup.get('activity').value,
-                                            this.optionTransactionDetailsGroup.get('numberOfContracts').value,
-                                            this.optionTransactionDetailsGroup.get('amount').value)
+    // If the user has asked for a new option to be created
+    if (this.optionTransactionDetailsGroup.get('existingOrNew').value === '2') {
+      // First create the new option
+      this.optionService.create(  this.optionTransactionDetailsGroup.get('optionType').value,
+                                  this.optionTransactionDetailsGroup.get('stock').value,
+                                  this.optionTransactionDetailsGroup.get('strikePrice').value,
+                                  this.optionTransactionDetailsGroup.get('expirationDate').value)
         .subscribe(
-          success  =>  {
+          newOption => {
+            // Then create/update the option transaction
+            this.createOrUpdateOptionTransaction(newOption.id);
+          },
+          error => this.handleBusyAndError(error)
+        );
+    }
+    // Else, the user is using an existing option.  If this is the case, we can simply
+    // call createOrUpdateOptionTransaction()
+    else {
+      this.createOrUpdateOptionTransaction();
+    }
+  }
+
+  private createOrUpdateOptionTransaction(newOptionId?: number) {
+    if (this.attemptingToCreate) {
+      this.optionTransactionService.create(this.optionTransactionDetailsGroup.get('date').value,
+        this.optionTransactionDetailsGroup.get('portfolio').value,
+        newOptionId || this.optionTransactionDetailsGroup.get('option').value,
+        this.optionTransactionDetailsGroup.get('activity').value,
+        this.optionTransactionDetailsGroup.get('numberOfContracts').value,
+        this.optionTransactionDetailsGroup.get('amount').value)
+        .subscribe(
+          success => {
             // If this goes well...
             // Indicate that we're not waiting any more
             this.busy = false;
             // navigate to the list of Option Transaction page
             this.router.navigate(['/option-transaction']);
           },
-          error => {
-            // If this goes poorly...
-            // Indicate that we're not waiting any more
-            this.busy = false;
-            // Display the error
-            this.alertService.error(error);
-          }
+          error => this.handleBusyAndError(error)
         );
     } else {
-      this.optionTransactionService.update( this.retrievedOptionTransactionId,
-                                            this.optionTransactionDetailsGroup.get('date').value,
-                                            this.optionTransactionDetailsGroup.get('portfolio').value,
-                                            this.optionTransactionDetailsGroup.get('option').value,
-                                            this.optionTransactionDetailsGroup.get('activity').value,
-                                            this.optionTransactionDetailsGroup.get('numberOfContracts').value,
-                                            this.optionTransactionDetailsGroup.get('amount').value)
+      this.optionTransactionService.update(this.retrievedOptionTransactionId,
+        this.optionTransactionDetailsGroup.get('date').value,
+        this.optionTransactionDetailsGroup.get('portfolio').value,
+        newOptionId || this.optionTransactionDetailsGroup.get('option').value,
+        this.optionTransactionDetailsGroup.get('activity').value,
+        this.optionTransactionDetailsGroup.get('numberOfContracts').value,
+        this.optionTransactionDetailsGroup.get('amount').value)
         .subscribe(
-          optionTransaction  =>  {
+          optionTransaction => {
             // If this goes well...
             // Indicate that we're not waiting any more
             this.busy = false;
+            // In the event that we created a new option earlier...
+            if (newOptionId) {
+              // Repopulate the option drop down so that it includes the recently created option
+              this.populateOptionDropDown();
+              // Show that we're now using an 'existing' option
+              this.optionTransactionDetailsGroup.get('existingOrNew').setValue('1');
+              // Set the value of the option to be the one that we created
+              this.optionTransactionDetailsGroup.get('option').setValue(newOptionId);
+            }
             // Display a success message
             this.alertService.success('This trasaction was successfully updated.');
           },
-          error => {
-            // If this goes poorly...
-            // Indicate that we're not waiting any more
-            this.busy = false;
-            // Display the error
-            this.alertService.error(error);
-          }
+          error => this.handleBusyAndError(error)
         );
-      }
+    }
   }
 
+  private populateStockDropDown() {
+    this.stockService.retrieveAll()
+      .subscribe(
+        // When the stocks are returned, sort them alphabetically by ticker
+        stocks => this.stocks = stocks.sort((a, b) => a.ticker < b.ticker ? -1 : a.ticker > b.ticker ? 1 : 0),
+        error => this.alertService.error(error)
+      );
+  }
 
   private populatePortfolioDropDown() {
     this.portfolioService.retrieveAll()
@@ -154,6 +195,30 @@ export class OptionTransactionDetailsComponent implements OnInit {
         options => this.options = options.sort((a, b) => a.expirationDate > b.expirationDate ? -1 : a.expirationDate < b.expirationDate ? 1 : a.stock.ticker < b.stock.ticker ? -1 : 1),
         error => this.alertService.error(error)
       );
+  }
+
+  private subscribeToRadioButtonChanges() {
+    this.optionTransactionDetailsGroup.get('existingOrNew').valueChanges.subscribe(newValue => {
+      if (newValue === '1') {
+        this.optionTransactionDetailsGroup.get('option').enable();
+        this.optionTransactionDetailsGroup.get('optionType').disable();
+        this.optionTransactionDetailsGroup.get('stock').disable();
+        this.optionTransactionDetailsGroup.get('expirationDate').disable();
+        this.optionTransactionDetailsGroup.get('strikePrice').disable();
+      }
+      else {
+        this.optionTransactionDetailsGroup.get('option').disable();
+        this.optionTransactionDetailsGroup.get('optionType').enable();
+        this.optionTransactionDetailsGroup.get('stock').enable();
+        this.optionTransactionDetailsGroup.get('expirationDate').enable();
+        this.optionTransactionDetailsGroup.get('strikePrice').enable();
+      }
+    });
+  }
+
+  private handleBusyAndError(errorString) {
+    this.busy = false;
+    this.alertService.error(errorString);
   }
 
   getErrorDate(): string {
