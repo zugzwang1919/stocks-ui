@@ -4,15 +4,15 @@
     <img src="assets/img/transparent-wolf.png" width="100px" height="100px">
 </div>
 
-<div class="ui-or-server">
+<mat-card class="mat-elevation-z4 ui-or-server">
     <h2>UI</h2>
     <div class="build-details">
         <p>Version: {{ uiVersion}}</p>
         <p>Build Date: {{ uiBuildDate | date:'longDate' }}</p>
         <p>Git Commit Hash: {{ uiGitHash }}</p>
     </div>
-</div>
-<div class="ui-or-server">
+</mat-card>
+<mat-card class="mat-elevation-z4 ui-or-server">
     <h2>Server</h2>
     <div class="build-details">
         <p>Version:  {{serverVersion}}</p>
@@ -20,4 +20,4 @@
         <p>Git Commit Hash: {{ serverGitHash }}</p>
     </div>
 
-</div>
+</mat-card>
