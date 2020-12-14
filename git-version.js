@@ -7,7 +7,7 @@ const { writeFileSync } = require('fs');
 const gitInfo = gitDescribeSync();
 const buildDate = new Date();
 gitInfo['buildDate'] = buildDate;
-gitInfo['version'] = '2.0';
+gitInfo['version'] = '20.12';
 const versionInfoJson = JSON.stringify(gitInfo, null, 2);
 
 writeFileSync('git-version.json', versionInfoJson);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { FormBuilder, FormGroup,  Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup,  ValidatorFn,  Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AlertService } from '../../general/alert/alert.service';
@@ -11,6 +11,7 @@ import { Portfolio } from '../../portfolio/portfolio';
 import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { StockService } from 'src/app/stock/stock.service';
 import { Stock } from 'src/app/stock/stock';
+import { OptionDetailsComponent } from 'src/app/option/option-details/option-details.component';
 
 @Component({
   selector: 'app-option-transaction-details',
@@ -49,14 +50,14 @@ export class OptionTransactionDetailsComponent implements OnInit {
 
     this.attemptingToCreate = this.route.snapshot.url[1].toString() === 'create';
     this.optionTransactionDetailsGroup = this.formBuilder.group({
-      date: ['', [Validators.required ]],
+      date: ['', [Validators.required]],
       portfolio: ['', [Validators.required]],
       existingOrNew: ['1', []],
-      option: ['', []],
-      optionType: [{value: '', disabled: true}, []],
-      stock: [{value: '', disabled: true}, []],
-      expirationDate: [{value: '', disabled: true}, []],
-      strikePrice: [{value: '', disabled: true}, []],
+      option: ['', [this.checkExistingOptionField(this)]],
+      optionType: [{value: '', disabled: true}, [this.checkNewOptionField(this)]],
+      stock: [{value: '', disabled: true}, [this.checkNewOptionField(this)]],
+      expirationDate: [{value: '', disabled: true}, [this.checkNewOptionField(this)]],
+      strikePrice: [{value: '', disabled: true}, [this.checkNewOptionField(this)]],
       activity: ['', [Validators.required]],
       numberOfContracts: ['', [Validators.required ]],
       amount: ['', [Validators.required ]]
@@ -221,6 +222,34 @@ export class OptionTransactionDetailsComponent implements OnInit {
     this.alertService.error(errorString);
   }
 
+  checkExistingOptionField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
+    return this.checkExistingOrNewOptionField(optionTranasctionDetailsComponent, '1');
+  }
+
+  checkNewOptionField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
+    return this.checkExistingOrNewOptionField(optionTranasctionDetailsComponent, '2');
+  }
+
+  checkExistingOrNewOptionField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent, radioButtonValue: string): ValidatorFn {
+    return (existingOptionControl: FormControl) => {
+      const optionTransactionDetailsGroup: FormGroup = optionTranasctionDetailsComponent.optionTransactionDetailsGroup;
+      // This does seem to get called with the controls are being built
+      // We don't need to do any validation if everything is not fully formed
+      if (optionTransactionDetailsGroup && optionTransactionDetailsGroup.controls) {
+        // We only need to check this field if the specified radio button is selected
+        if (optionTransactionDetailsGroup.get('existingOrNew').value === radioButtonValue) {
+          // When the specified radio button is selected, this control must be populated.  If it is not,
+          // return a "required" error
+          if (!existingOptionControl.value) {
+            return { required: true };
+          }
+        }
+      }
+      // Returning null means that there are no issues
+      return null;
+    };
+  }
+
   getErrorDate(): string {
     return this.optionTransactionDetailsGroup.get('date').hasError('required') ? 'Please enter a date' : '';
   }
@@ -246,3 +275,4 @@ export class OptionTransactionDetailsComponent implements OnInit {
   }
 
 }
+
