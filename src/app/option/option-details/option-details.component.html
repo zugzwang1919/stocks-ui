@@ -5,51 +5,53 @@
             Modify an Option
         </ng-template>
     </h2>
-    <form class="vertical-div" [formGroup]="optionDetailsGroup" (ngSubmit)="onSubmit()">
-        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Call or Put</mat-label>
-            <mat-select  formControlName="optionType">
-                <mat-option *ngFor="let optionType of optionTypes" [value]="optionType">
-                    {{optionType}}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="!optionDetailsGroup.controls['optionType'].valid &&  optionDetailsGroup.controls['optionType'].touched">
-                {{ getErrorOptionType() }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Stock Symbol</mat-label>
-            <mat-select  formControlName="stock">
-                <mat-option *ngFor="let stock of stocks" [value]="stock.id">
-                    {{stock.ticker}}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="!optionDetailsGroup.controls['stock'].valid &&  optionDetailsGroup.controls['stock'].touched">
-                {{ getErrorStock() }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Expiration Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="expirationDate">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="!optionDetailsGroup.controls['expirationDate'].valid &&  optionDetailsGroup.controls['expirationDate'].touched">
-                {{ getErrorExpirationDate() }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="standard-control-width" >
-            <input matInput placeholder="Strike Price" formControlName="strikePrice" [value]="optionDetailsGroup.controls['strikePrice'].value"/>
-            <mat-error *ngIf="!optionDetailsGroup.controls['strikePrice'].valid &&  optionDetailsGroup.controls['strikePrice'].touched">
-                {{ getErrorStrikePrice() }}
-            </mat-error>
-        </mat-form-field>
-        <div>
-            <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="busy || !optionDetailsGroup.valid">
-                <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
-                <ng-template #updateButtonText>
-                    Update
-                </ng-template>
-            </button>
-        </div>
-    </form>
+    <mat-card class="mat-elevation-z4">
+        <form class="vertical-div" [formGroup]="optionDetailsGroup" (ngSubmit)="onSubmit()">
+            <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                <mat-label>Call or Put</mat-label>
+                <mat-select  formControlName="optionType">
+                    <mat-option *ngFor="let optionType of optionTypes" [value]="optionType">
+                        {{optionType}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="!optionDetailsGroup.controls['optionType'].valid &&  optionDetailsGroup.controls['optionType'].touched">
+                    {{ getErrorOptionType() }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                <mat-label>Stock Symbol</mat-label>
+                <mat-select  formControlName="stock">
+                    <mat-option *ngFor="let stock of stocks" [value]="stock.id">
+                        {{stock.ticker}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="!optionDetailsGroup.controls['stock'].valid &&  optionDetailsGroup.controls['stock'].touched">
+                    {{ getErrorStock() }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                <mat-label>Expiration Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="expirationDate">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="!optionDetailsGroup.controls['expirationDate'].valid &&  optionDetailsGroup.controls['expirationDate'].touched">
+                    {{ getErrorExpirationDate() }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="standard-control-width" >
+                <input matInput placeholder="Strike Price" formControlName="strikePrice" [value]="optionDetailsGroup.controls['strikePrice'].value"/>
+                <mat-error *ngIf="!optionDetailsGroup.controls['strikePrice'].valid &&  optionDetailsGroup.controls['strikePrice'].touched">
+                    {{ getErrorStrikePrice() }}
+                </mat-error>
+            </mat-form-field>
+            <div>
+                <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="busy || !optionDetailsGroup.valid">
+                    <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
+                    <ng-template #updateButtonText>
+                        Update
+                    </ng-template>
+                </button>
+            </div>
+        </form>
+    </mat-card>
 </div>

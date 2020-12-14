@@ -5,21 +5,24 @@
             Modify an Existing Portfolio
         </ng-template>
     </h2>
-    <form class="vertical-div" [formGroup]="portfolioDetailsGroup" (ngSubmit)="onSubmit()">
-        <mat-form-field class="standard-control-width">
-            <mat-label>Portfolio Name</mat-label>
-            <input matInput placeholder="Portfolio Name" formControlName="portfolioName" />
-            <mat-error *ngIf="!portfolioDetailsGroup.controls['portfolioName'].valid &&  portfolioDetailsGroup.controls['portfolioName'].touched">
-              {{ getErrorForPortfolioName() }}
-            </mat-error>
-        </mat-form-field>
-        <div>
-            <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="!portfolioDetailsGroup.valid">
-                <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
-                <ng-template #updateButtonText>
-                    Update
-                </ng-template>
-            </button>
-        </div>
-    </form>
+    <mat-card class="mat-elevation-z4">
+        <form class="vertical-div" [formGroup]="portfolioDetailsGroup" (ngSubmit)="onSubmit()">
+            <mat-form-field class="standard-control-width">
+                <mat-label>Portfolio Name</mat-label>
+                <input matInput placeholder="Portfolio Name" formControlName="portfolioName" />
+                <mat-error *ngIf="!portfolioDetailsGroup.controls['portfolioName'].valid &&  portfolioDetailsGroup.controls['portfolioName'].touched">
+                {{ getErrorForPortfolioName() }}
+                </mat-error>
+            </mat-form-field>
+            <div>
+                <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="!portfolioDetailsGroup.valid">
+                    <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
+                    <ng-template #updateButtonText>
+                        Update
+                    </ng-template>
+                </button>
+            </div>
+        </form>
+    </mat-card>
 </div>
+

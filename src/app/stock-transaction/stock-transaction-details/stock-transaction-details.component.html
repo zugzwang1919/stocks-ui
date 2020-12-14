@@ -5,69 +5,71 @@
             Modify a Stock, ETF, or Mutual Fund Transaction
         </ng-template>
     </h2>
-    <form class="vertical-div" [formGroup]="stockTransactionDetailsGroup" (ngSubmit)="onSubmit()">
-        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Transaction Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="date">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['date'].valid &&  stockTransactionDetailsGroup.controls['date'].touched">
-                {{ getErrorDate() }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Portfolio Name</mat-label>
-            <mat-select  formControlName="portfolio">
-                <mat-option *ngFor="let portfolio of portfolios" [value]="portfolio.id">
-                    {{portfolio.portfolioName}}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['portfolio'].valid &&  stockTransactionDetailsGroup.controls['portfolio'].touched">
-                {{ getErrorPortfolio() }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Stock Symbol</mat-label>
-            <mat-select  formControlName="stock">
-                <mat-option *ngFor="let stock of stocks" [value]="stock.id">
-                    {{stock.ticker}}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['stock'].valid &&  stockTransactionDetailsGroup.controls['stock'].touched">
-                {{ getErrorStock() }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="standard-control-width" color="accent" appearance="standard">
-            <mat-label>Buy or Sell</mat-label>
-            <mat-select  formControlName="activity">
-                <mat-option *ngFor="let activity of activities" [value]="activity">
-                    {{activity}}
-                </mat-option>
-            </mat-select>
-            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['activity'].valid &&  stockTransactionDetailsGroup.controls['activity'].touched">
-                {{ getErrorActivity() }}
-            </mat-error>
-          </mat-form-field>
-        <mat-form-field class="standard-control-width" >
-            <mat-label>Number of Shares</mat-label>
-            <input matInput placeholder="Trade Size" formControlName="tradeSize" />
-            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['tradeSize'].valid &&  stockTransactionDetailsGroup.controls['tradeSize'].touched">
-              {{ getErrorTradeSize() }}
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="standard-control-width" >
-            <input matInput placeholder="Total Amount in Dollars" formControlName="amount" [value]="stockTransactionDetailsGroup.controls['amount'].value"/>
-            <mat-error *ngIf="!stockTransactionDetailsGroup.controls['amount'].valid &&  stockTransactionDetailsGroup.controls['amount'].touched">
-                {{ getErrorAmount() }}
-            </mat-error>
-        </mat-form-field>
-        <div>
-            <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="busy || !stockTransactionDetailsGroup.valid">
-                <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
-                <ng-template #updateButtonText>
-                    Update
-                </ng-template>
-            </button>
-        </div>
-    </form>
+    <mat-card class="mat-elevation-z4">
+        <form class="vertical-div" [formGroup]="stockTransactionDetailsGroup" (ngSubmit)="onSubmit()">
+            <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                <mat-label>Transaction Date</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="!stockTransactionDetailsGroup.controls['date'].valid &&  stockTransactionDetailsGroup.controls['date'].touched">
+                    {{ getErrorDate() }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                <mat-label>Portfolio Name</mat-label>
+                <mat-select  formControlName="portfolio">
+                    <mat-option *ngFor="let portfolio of portfolios" [value]="portfolio.id">
+                        {{portfolio.portfolioName}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="!stockTransactionDetailsGroup.controls['portfolio'].valid &&  stockTransactionDetailsGroup.controls['portfolio'].touched">
+                    {{ getErrorPortfolio() }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                <mat-label>Stock Symbol</mat-label>
+                <mat-select  formControlName="stock">
+                    <mat-option *ngFor="let stock of stocks" [value]="stock.id">
+                        {{stock.ticker}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="!stockTransactionDetailsGroup.controls['stock'].valid &&  stockTransactionDetailsGroup.controls['stock'].touched">
+                    {{ getErrorStock() }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="standard-control-width" color="accent" appearance="standard">
+                <mat-label>Buy or Sell</mat-label>
+                <mat-select  formControlName="activity">
+                    <mat-option *ngFor="let activity of activities" [value]="activity">
+                        {{activity}}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="!stockTransactionDetailsGroup.controls['activity'].valid &&  stockTransactionDetailsGroup.controls['activity'].touched">
+                    {{ getErrorActivity() }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="standard-control-width" >
+                <mat-label>Number of Shares</mat-label>
+                <input matInput placeholder="Trade Size" formControlName="tradeSize" />
+                <mat-error *ngIf="!stockTransactionDetailsGroup.controls['tradeSize'].valid &&  stockTransactionDetailsGroup.controls['tradeSize'].touched">
+                {{ getErrorTradeSize() }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="standard-control-width" >
+                <input matInput placeholder="Total Amount in Dollars" formControlName="amount" [value]="stockTransactionDetailsGroup.controls['amount'].value"/>
+                <mat-error *ngIf="!stockTransactionDetailsGroup.controls['amount'].valid &&  stockTransactionDetailsGroup.controls['amount'].touched">
+                    {{ getErrorAmount() }}
+                </mat-error>
+            </mat-form-field>
+            <div>
+                <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="busy || !stockTransactionDetailsGroup.valid">
+                    <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
+                    <ng-template #updateButtonText>
+                        Update
+                    </ng-template>
+                </button>
+            </div>
+        </form>
+    </mat-card>
 </div>
