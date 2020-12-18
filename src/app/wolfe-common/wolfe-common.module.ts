@@ -13,7 +13,7 @@ import { ActivityPipe } from './activity.pipe';
   ],
   exports: [
     ActivityPipe,
-    YesNoPipe
+    YesNoPipe,
   ],
   imports: [
     HttpClientModule

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { AbstractControl, FormBuilder, FormControl, FormGroup,  ValidatorFn,  Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup,  ValidationErrors,  ValidatorFn,  Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AlertService } from '../../general/alert/alert.service';
@@ -12,6 +12,7 @@ import { PortfolioService } from 'src/app/portfolio/portfolio.service';
 import { StockService } from 'src/app/stock/stock.service';
 import { Stock } from 'src/app/stock/stock';
 import { OptionDetailsComponent } from 'src/app/option/option-details/option-details.component';
+import { WolfeValidators } from 'src/app/wolfe-common/wolfe-validators';
 
 @Component({
   selector: 'app-option-transaction-details',
@@ -44,6 +45,7 @@ export class OptionTransactionDetailsComponent implements OnInit {
     private stockService: StockService,
     private route: ActivatedRoute,
     private router: Router,
+
     ) { }
 
   ngOnInit(): void {
@@ -54,13 +56,13 @@ export class OptionTransactionDetailsComponent implements OnInit {
       portfolio: ['', [Validators.required]],
       existingOrNew: ['1', []],
       option: ['', [this.checkExistingOptionField(this)]],
-      optionType: [{value: '', disabled: true}, [this.checkNewOptionField(this)]],
-      stock: [{value: '', disabled: true}, [this.checkNewOptionField(this)]],
-      expirationDate: [{value: '', disabled: true}, [this.checkNewOptionField(this)]],
-      strikePrice: [{value: '', disabled: true}, [this.checkNewOptionField(this)]],
+      optionType: [{value: '', disabled: true}, [this.checkNewOptionRequiredOnlyField(this)]],
+      stock: [{value: '', disabled: true}, [this.checkNewOptionRequiredOnlyField(this)]],
+      expirationDate: [{value: '', disabled: true}, [this.checkNewOptionRequiredOnlyField(this)]],
+      strikePrice: [{value: '', disabled: true}, [this.checkNewOptionStrikePriceField(this)]],
       activity: ['', [Validators.required]],
-      numberOfContracts: ['', [Validators.required ]],
-      amount: ['', [Validators.required ]]
+      numberOfContracts: ['', [Validators.required, WolfeValidators.validatePositiveInteger ]],
+      amount: ['', [Validators.required, WolfeValidators.validateCurrency ]]
     });
 
     this.busy = false;
@@ -223,15 +225,21 @@ export class OptionTransactionDetailsComponent implements OnInit {
   }
 
   checkExistingOptionField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
-    return this.checkExistingOrNewOptionField(optionTranasctionDetailsComponent, '1');
+    return this.validateExistingOrNewOptionField(optionTranasctionDetailsComponent, '1');
   }
 
-  checkNewOptionField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
-    return this.checkExistingOrNewOptionField(optionTranasctionDetailsComponent, '2');
+  checkNewOptionRequiredOnlyField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
+    return this.validateExistingOrNewOptionField(optionTranasctionDetailsComponent, '2');
   }
 
-  checkExistingOrNewOptionField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent, radioButtonValue: string): ValidatorFn {
-    return (existingOptionControl: FormControl) => {
+  checkNewOptionStrikePriceField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
+    return this.validateExistingOrNewOptionField(optionTranasctionDetailsComponent, '2', WolfeValidators.validateCurrency);
+  }
+
+  validateExistingOrNewOptionField( optionTranasctionDetailsComponent: OptionTransactionDetailsComponent,
+                                    radioButtonValue: string,
+                                    lowLevelValidator ?: ValidatorFn): ValidatorFn {
+    return (existingOrNewOptionControl: FormControl) => {
       const optionTransactionDetailsGroup: FormGroup = optionTranasctionDetailsComponent.optionTransactionDetailsGroup;
       // This does seem to get called with the controls are being built
       // We don't need to do any validation if everything is not fully formed
@@ -239,9 +247,14 @@ export class OptionTransactionDetailsComponent implements OnInit {
         // We only need to check this field if the specified radio button is selected
         if (optionTransactionDetailsGroup.get('existingOrNew').value === radioButtonValue) {
           // When the specified radio button is selected, this control must be populated.  If it is not,
-          // return a "required" error
-          if (!existingOptionControl.value) {
-            return { required: true };
+          // return a "required" error, so FIRST call the required validator
+          const possibleReturn = Validators.required(existingOrNewOptionControl);
+          if (possibleReturn) {
+            return possibleReturn;
+          }
+          // If the caller has an additional validator that should be performed call it
+          if (lowLevelValidator) {
+            return lowLevelValidator(existingOrNewOptionControl);
           }
         }
       }
@@ -249,6 +262,7 @@ export class OptionTransactionDetailsComponent implements OnInit {
       return null;
     };
   }
+
 
   getErrorDate(): string {
     return this.optionTransactionDetailsGroup.get('date').hasError('required') ? 'Please enter a date' : '';
@@ -266,12 +280,34 @@ export class OptionTransactionDetailsComponent implements OnInit {
     return this.optionTransactionDetailsGroup.get('option').hasError('required') ? 'Please select an option' : '';
   }
 
+  getErrorNewOptionType(): string {
+    return this.optionTransactionDetailsGroup.get('optionType').hasError('required') ? 'Please select an option type' : '';
+  }
+
+  getErrorNewOptionStock(): string {
+    return this.optionTransactionDetailsGroup.get('stock').hasError('required') ? 'Please select a stock' : '';
+  }
+
+  getErrorNewOptionExpirationDate(): string {
+    return this.optionTransactionDetailsGroup.get('expirationDate').hasError('required') ? 'Please select an expirtaion date' : '';
+  }
+
+  getErrorNewOptionStrikePrice(): string {
+    const strikePriceControl = this.optionTransactionDetailsGroup.get('strikePrice');
+    return  strikePriceControl.hasError('required') ? 'Please enter the option\'s strike price' :
+            strikePriceControl.hasError('currency') ? 'Please enter a valid dollar amount' : '';
+  }
+
   getErrorNumberOfContracts(): string {
-    return this.optionTransactionDetailsGroup.get('numberOfContracts').hasError('required') ? 'Please enter number of contracts' : '';
+    const numberOfContractsControl = this.optionTransactionDetailsGroup.get('numberOfContracts');
+    return numberOfContractsControl.hasError('required') ? 'Please enter number of contracts' :
+           numberOfContractsControl.hasError('positiveInteger') ? 'Must be a positive integer' : '';
   }
 
   getErrorAmount(): string {
-    return this.optionTransactionDetailsGroup.get('amount').hasError('required') ? 'Please enter a dollar amount.' : '';
+    const amountControl = this.optionTransactionDetailsGroup.get('amount');
+    return  amountControl.hasError('required') ? 'Please enter the transactional amount.' :
+            amountControl.hasError('currency') ? 'Please enter a valid dollar amount' : '';
   }
 
 }
