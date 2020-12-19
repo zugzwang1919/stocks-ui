@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { BenchmarkAnalysisResponse } from '../benchmark-analysis-response';
 import { IntermediateResult } from '../intermediate-result';
@@ -39,7 +40,20 @@ export class BenchmarkGraphComponent  {
     domain: ['#31708e', '#47683e', '#698561', '#a7b8a2', '#4e7045', '#839b7d']
   };
 
-  public yAxisTickFormattingFn = (value): string  => value + '%';
+
+
+  constructor(
+    private datePipe: DatePipe
+  ){}
+
+  // Format the X axis values (By default we get 'yyyy/MM/dd'.  Change it to 'MM/dd/yyyy')
+  public xAxisTickFormattingFn = (value: string): string  => {
+    const axisDate = new Date(value);
+    return this.datePipe.transform(axisDate, 'MM/dd/yyyy');
+  }
+  // Format the Y axis values (Add a percentage sign to the value)
+  public yAxisTickFormattingFn = (value: string): string  => value + '%';
+
 
 
   /************  Methods that we COULD hook into provided by ngx-charts  ***********/
