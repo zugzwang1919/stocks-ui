@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { Stock } from 'src/app/stock/stock';
@@ -29,7 +29,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
   entryIsVisible = true;
 
   analysisResultsDataSource = new MatTableDataSource();
-  analysisResultsDisplayedColumns: string[] = [   'ticker', 'proceeds', 'dividendProceeds',
+  analysisResultsDisplayedColumns: string[] = [   'ticker', 'proceeds', 'dividendPayments',
                                                   'optionsProceeds',
                                                   'totalGains', 'annualReturn'];
 
@@ -41,10 +41,12 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
   analysisResults: any = null;
   analysisResultsPresent = false;
 
-  @ViewChild(MatSort) set content(snapshotSort: MatSort) {
-    this.snapshotDataSource.sort = snapshotSort;
-  }
 
+
+  @ViewChildren(MatSort) set matSort(ms: QueryList<MatSort>) {
+    this.analysisResultsDataSource.sort = ms.first;
+    this.snapshotDataSource.sort = ms.last;
+  }
 
   constructor(
     protected alertService: AlertService,
@@ -167,7 +169,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
   private buildClosingSnapshotSection(resultsFromService) {
     const snapshotCalculations: any[] = resultsFromService.lifeCycles.filter(lc => lc.includedInSnapshot)
                                         .map(lc => { return {
-                                          ticker: lc.stock.ticker,
+                                          snapshotTicker: lc.stock.ticker,
                                           shares: lc.closingPosition.size,
                                           stockValue: lc.closingPosition.value,
                                           putExposure: lc.optionExposureToPutsAtRequestedEndDate,
