@@ -69,7 +69,7 @@ export class LifecycleDialogComponent {
   private buildEventFromOpeningPosition(openingPosition: any) {
     return {
       date: openingPosition.date,
-      stockActivity: 'Opening Position',
+      stockActivity: openingPosition.containsOlderTransactions ? 'Opening Position' : 'Buy',
       stockSize: openingPosition.size,
       stockProceeds: openingPosition.proceeds,
       dividendProceeds: '',
@@ -127,7 +127,7 @@ export class LifecycleDialogComponent {
   private buildEventFromClosingPosition(closingPosition: any) {
     return {
       date: closingPosition.date,
-      stockActivity: 'Closing Position',
+      stockActivity: closingPosition.positionActiveAtEndDate ? 'Closing Position' : 'Sell',
       stockSize: closingPosition.size,
       stockProceeds: closingPosition.value,
       dividendProceeds: '',
