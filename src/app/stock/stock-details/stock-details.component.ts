@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup,  Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 import { AlertService } from '../../general/alert/alert.service';
 import { StockService } from '../stock.service';
 import { Stock } from '../stock';
 import { BusyService } from 'src/app/general/busy/busy.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -14,14 +15,14 @@ import { BusyService } from 'src/app/general/busy/busy.service';
   templateUrl: './stock-details.component.html',
   styleUrls: ['./stock-details.component.sass']
 })
-export class StockDetailsComponent implements OnInit {
+export class StockDetailsComponent implements OnInit, OnDestroy {
 
 
   stockDetailsGroup: FormGroup;
   benchmark: FormControl;
-
   stock: Stock;
   attemptingToCreate: boolean;
+  routeSubscription: Subscription;
   busy = false;
 
   constructor(
@@ -29,21 +30,16 @@ export class StockDetailsComponent implements OnInit {
     private busyService: BusyService,
     private stockService: StockService,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router
     ) { }
 
   ngOnInit(): void {
-    this.attemptingToCreate = this.route.snapshot.url[1].toString() === 'create';
+
     this.stockDetailsGroup = this.formBuilder.group({
       ticker: [{ value: '', disabled: !this.attemptingToCreate}, [Validators.required ]],
       name: ['', [Validators.required ]]
     });
-    this.busy = false;
-
-    // NOTE:  Given the two way binding, all of the controls are set to undefined.
-    // NOTE:  Go ahead and set the checkbox to false, the other controls must be touched by the user.
-    this.benchmark = new FormControl(false);
 
     // Set things up so that any ticker will be converted to upper case
     this.stockDetailsGroup.get('ticker').valueChanges
@@ -54,26 +50,18 @@ export class StockDetailsComponent implements OnInit {
         this.stockDetailsGroup.get('ticker').patchValue(value.toUpperCase());
       });
 
-    // If we've received an edit request (i.e., a non-create request)
-    if (!this.attemptingToCreate) {
-      // Retrieve the requested stock & drop it into our "stock variable"
-      const id: number = +(this.route.snapshot.url[1].toString());
-      this.stockService.retrieve(id)
-      .subscribe(
-        // If this goes well, update the list of Stocks
-        foundStock =>  {
-          this.stock = foundStock;
-          // Set the data in the table to be the data that was returned from the service
-          this.stockDetailsGroup.get('ticker').setValue(foundStock.ticker);
-          this.stockDetailsGroup.get('name').setValue(foundStock.name);
-          this.benchmark.setValue(foundStock.benchmark);
-        },
-        // If the retrieval goes poorly, show the error
-        error => this.alertService.error(error)
-      );
+    // NOTE:  Given the two way binding, all of the controls are set to undefined.
+    // NOTE:  Go ahead and set the checkbox to false, the other controls must be touched by the user.
+    this.benchmark = new FormControl(false);
 
-    }
+    this.routeSubscription = this.activatedRoute.url.subscribe((urlSegments) => this.initialize(urlSegments));
   }
+
+  ngOnDestroy() {
+    this.routeSubscription.unsubscribe();
+  }
+
+
 
   onSubmit() {
     // reset any previous alerts
@@ -137,6 +125,29 @@ export class StockDetailsComponent implements OnInit {
 
   getErrorName(): string {
     return this.stockDetailsGroup.get('name').hasError('required') ? 'You must provide a name.' : '';
+  }
+
+  private initialize(urlSegments: UrlSegment[]) {
+    this.attemptingToCreate = urlSegments[1].toString() === 'create';
+    // If we've received an edit request (i.e., a non-create request)
+    if (!this.attemptingToCreate) {
+      // Retrieve the requested stock & drop it into our "stock variable"
+      const id: number = +(urlSegments[1].toString());
+      this.stockService.retrieve(id)
+      .subscribe(
+        // If this goes well, update the list of Stocks
+        foundStock =>  {
+          this.stock = foundStock;
+          // Set the data in the table to be the data that was returned from the service
+          this.stockDetailsGroup.get('ticker').setValue(foundStock.ticker);
+          this.stockDetailsGroup.get('name').setValue(foundStock.name);
+          this.benchmark.setValue(foundStock.benchmark);
+        },
+        // If the retrieval goes poorly, show the error
+        error => this.alertService.error(error)
+      );
+
+    }
   }
 
   private setBusyStatus(requestedSetting: boolean) {

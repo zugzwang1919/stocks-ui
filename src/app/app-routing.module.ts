@@ -38,10 +38,9 @@ const routes: Routes = [
   { path: 'option-transaction', component: OptionTransactionsComponent, canActivate: [LoggedInGuard]},
   { path: 'option-transaction/create', component: OptionTransactionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'option-transaction/:id', component: OptionTransactionDetailsComponent, canActivate: [LoggedInGuard]},
-  { path: 'portfolio', component: PortfoliosComponent, canActivate: [LoggedInGuard]},
+  { path: 'portfolio', component: PortfoliosComponent, canActivate: [LoggedInGuard], pathMatch: 'full'},
   { path: 'portfolio/:id', component: PortfolioDetailsComponent, canActivate: [LoggedInGuard]},
-  { path: 'stock', component: StocksComponent, canActivate: [LoggedInGuard]},
-  { path: 'stock/create', component: StockDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'stock', component: StocksComponent, canActivate: [LoggedInGuard], pathMatch: 'full'},
   { path: 'stock/:id', component: StockDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'stock-transaction', component: StockTransactionsComponent, canActivate: [LoggedInGuard]},
   { path: 'stock-transaction/create', component: StockTransactionDetailsComponent, canActivate: [LoggedInGuard]},
@@ -50,7 +49,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

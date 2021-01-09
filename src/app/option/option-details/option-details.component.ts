@@ -1,69 +1,58 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { FormBuilder, FormGroup,  Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 
 import { AlertService } from '../../general/alert/alert.service';
 import { OptionService } from '../option.service';
 import { Stock } from '../../stock/stock';
 import { StockService } from 'src/app/stock/stock.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-option-details',
   templateUrl: './option-details.component.html',
   styleUrls: ['./option-details.component.sass']
 })
-export class OptionDetailsComponent implements OnInit {
+export class OptionDetailsComponent implements OnInit, OnDestroy {
 
   optionDetailsGroup: FormGroup;
-
   retrievedOptionId: number;
-  attemptingToCreate: boolean;
-  busy: boolean;
+
+  routeSubscription: Subscription;
 
   optionTypes = [ 'CALL', 'PUT' ];
   stocks: Stock[] = [];
+
+  attemptingToCreate: boolean;
+  busy = false;
 
   constructor(
     private alertService: AlertService,
     private currencyPipe: CurrencyPipe,
     private formBuilder: FormBuilder,
     private optionService: OptionService,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private stockService: StockService,
   ) { }
 
   ngOnInit(): void {
-    this.attemptingToCreate = this.route.snapshot.url[1].toString() === 'create';
     this.optionDetailsGroup = this.formBuilder.group({
       optionType: ['', [Validators.required ]],
       stock: ['', [Validators.required]],
       expirationDate: ['', [Validators.required]],
       strikePrice: ['', [Validators.required ]]
     });
-    this.busy = false;
+
     this.populateStockDropDown();
 
-    // If we've received an edit request (i.e., a non-create request)
-    if (!this.attemptingToCreate) {
-      // Retrieve the requested option and save its ID
-      const id: number = +(this.route.snapshot.url[1].toString());
-      this.optionService.retrieve(id)
-      .subscribe(
-        // If this goes well, update the data in the form
-        foundOption =>  {
-          this.retrievedOptionId = foundOption.id;
-          // Set the data in the form to be the data that was returned from the service
-          this.optionDetailsGroup.get('optionType').setValue(foundOption.optionType);
-          this.optionDetailsGroup.get('stock').setValue(foundOption.stock.id);
-          this.optionDetailsGroup.get('expirationDate').setValue(foundOption.expirationDate);
-          this.optionDetailsGroup.get('strikePrice').setValue(this.currencyPipe.transform(foundOption.strikePrice));
-        },
-        // If the retrieval goes poorly, show the error
-        error => this.alertService.error(error)
-      );
-    }
+    this.routeSubscription = this.activatedRoute.url.subscribe((urlSegments) => this.initialize(urlSegments));
+  }
+
+
+  ngOnDestroy(): void {
+    this.routeSubscription.unsubscribe();
   }
 
   onSubmit() {
@@ -119,14 +108,6 @@ export class OptionDetailsComponent implements OnInit {
         );
       }
   }
-  private populateStockDropDown() {
-    this.stockService.retrieveAll()
-      .subscribe(
-        stocks => this.stocks = stocks,
-        error => this.alertService.error(error)
-      );
-  }
-
   getErrorOptionType(): string {
     return this.optionDetailsGroup.get('optionType').hasError('required') ? 'Please select PUT or CALL' : '';
   }
@@ -140,4 +121,34 @@ export class OptionDetailsComponent implements OnInit {
     return this.optionDetailsGroup.get('strikePrice').hasError('required') ? 'Please enter the option\'s strike price' : '';
   }
 
+  private populateStockDropDown() {
+    this.stockService.retrieveAll()
+      .subscribe(
+        stocks => this.stocks = stocks,
+        error => this.alertService.error(error)
+      );
+  }
+
+  private initialize(urlSegments: UrlSegment[]) {
+    this.attemptingToCreate = urlSegments[1].toString() === 'create';
+    // If we've received an edit request (i.e., a non-create request)
+    if (!this.attemptingToCreate) {
+      // Retrieve the requested option and save its ID
+      const id: number = +(urlSegments[1].toString());
+      this.optionService.retrieve(id)
+      .subscribe(
+        // If this goes well, update the data in the form
+        foundOption =>  {
+          this.retrievedOptionId = foundOption.id;
+          // Set the data in the form to be the data that was returned from the service
+          this.optionDetailsGroup.get('optionType').setValue(foundOption.optionType);
+          this.optionDetailsGroup.get('stock').setValue(foundOption.stock.id);
+          this.optionDetailsGroup.get('expirationDate').setValue(foundOption.expirationDate);
+          this.optionDetailsGroup.get('strikePrice').setValue(this.currencyPipe.transform(foundOption.strikePrice));
+        },
+        // If the retrieval goes poorly, show the error
+        error => this.alertService.error(error)
+      );
+    }
+  }
 }

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 
 import { AlertService } from '../../general/alert/alert.service';
@@ -12,41 +13,34 @@ import { PortfolioService } from '../portfolio.service';
   templateUrl: './portfolio-details.component.html',
   styleUrls: ['./portfolio-details.component.sass']
 })
-export class PortfolioDetailsComponent implements OnInit {
+export class PortfolioDetailsComponent implements OnInit, OnDestroy {
 
   portfolioDetailsGroup: FormGroup;
 
   retrievedPortfolioId: number;
   attemptingToCreate: boolean;
 
+  routeSubscription: Subscription;
+
   constructor(
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     private portfolioService: PortfolioService,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
 
   ) { }
 
   ngOnInit(): void {
-    this.attemptingToCreate = this.route.snapshot.url[1].toString() === 'create';
     this.portfolioDetailsGroup = this.formBuilder.group({
       portfolioName: ['',  [Validators.required ]]
     });
 
-    // If this is an edit request (i.e., a non-create request)
-    if (!this.attemptingToCreate) {
-      // Retrieve the requested portfolio & drop it into our Porfolio variable
-      const id: number = +(this.route.snapshot.url[1].toString());
-      this.portfolioService.retrieve(id)
-        .subscribe(
-          foundPortfolio => {
-            this.retrievedPortfolioId = foundPortfolio.id;
-            this.portfolioDetailsGroup.get('portfolioName').setValue(foundPortfolio.portfolioName);
-          },
-          error => this.alertService.error(error)
-        );
-    }
+    this.routeSubscription = this.activatedRoute.url.subscribe((urlSegments) => this.initialize(urlSegments));
+  }
+
+  ngOnDestroy() {
+    this.routeSubscription.unsubscribe();
   }
 
   onSubmit() {
@@ -82,4 +76,26 @@ export class PortfolioDetailsComponent implements OnInit {
   getErrorForPortfolioName(): string {
     return this.portfolioDetailsGroup.get('portfolioName').hasError('required') ? 'You must provide a portfolio name.' : '';
   }
+
+  private initialize(urlSegments: UrlSegment[]) {
+    this.attemptingToCreate = urlSegments[1].toString() === 'create';
+    // If we're setting up for a create request
+    if (this.attemptingToCreate) {
+      this.portfolioDetailsGroup.get('portfolioName').setValue('');
+    }
+    // If we're setting up for an edit request (i.e., a non-create request)
+    else {
+      // Retrieve the requested portfolio & drop it into our Porfolio variable
+      const id: number = +(urlSegments[1].toString());
+      this.portfolioService.retrieve(id)
+        .subscribe(
+          foundPortfolio => {
+            this.retrievedPortfolioId = foundPortfolio.id;
+            this.portfolioDetailsGroup.get('portfolioName').setValue(foundPortfolio.portfolioName);
+          },
+          error => this.alertService.error(error)
+        );
+    }
+  }
+
 }
