@@ -37,7 +37,7 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.stockDetailsGroup = this.formBuilder.group({
-      ticker: [{ value: '', disabled: !this.attemptingToCreate}, [Validators.required ]],
+      ticker: ['', [Validators.required ]],
       name: ['', [Validators.required ]]
     });
 
@@ -138,15 +138,19 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
         // If this goes well, update the list of Stocks
         foundStock =>  {
           this.stock = foundStock;
-          // Set the data in the table to be the data that was returned from the service
-          this.stockDetailsGroup.get('ticker').setValue(foundStock.ticker);
-          this.stockDetailsGroup.get('name').setValue(foundStock.name);
-          this.benchmark.setValue(foundStock.benchmark);
+          // Set the data in the form to be the data that was returned from the service
+          this.initializeValues(foundStock.ticker, foundStock.name, foundStock.benchmark);
+          // Do not allow the user to change the ticker
+          this.stockDetailsGroup.get('ticker').disable();
         },
         // If the retrieval goes poorly, show the error
         error => this.alertService.error(error)
       );
-
+    }
+    // For a create request
+    else {
+      this.initializeValues('', '', false);
+      this.stockDetailsGroup.get('ticker').enable();
     }
   }
 
@@ -159,4 +163,16 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
       this.busyService.finished(2929);
     }
   }
+
+  private initializeValues(ticker: string, name: string, isBenchmark: boolean) {
+    this.stockDetailsGroup.get('ticker').setValue(ticker);
+    this.stockDetailsGroup.get('name').setValue(name);
+    this.benchmark.setValue(isBenchmark);
+    // Mark all elements on the page as being pristine and untouched
+    this.stockDetailsGroup.markAsPristine();
+    this.stockDetailsGroup.markAsUntouched();
+    this.benchmark.markAsPristine();
+    this.benchmark.markAsUntouched();
+  }
+
 }
