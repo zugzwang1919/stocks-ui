@@ -170,7 +170,8 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
     this.benchmark.setValue(isBenchmark);
     // Mark all elements on the page as being pristine and untouched
     this.stockDetailsGroup.markAsPristine();
-    this.stockDetailsGroup.markAsUntouched();
+    this.stockDetailsGroup.get('ticker').markAsUntouched();
+    this.stockDetailsGroup.get('name').markAsUntouched();
     this.benchmark.markAsPristine();
     this.benchmark.markAsUntouched();
   }
