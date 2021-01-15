@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { AbstractControl, FormBuilder, FormControl, FormGroup,  ValidationErrors,  ValidatorFn,  Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 
 import { AlertService } from '../../general/alert/alert.service';
 import { Option } from '../../option/option';
@@ -13,19 +13,21 @@ import { StockService } from 'src/app/stock/stock.service';
 import { Stock } from 'src/app/stock/stock';
 import { OptionDetailsComponent } from 'src/app/option/option-details/option-details.component';
 import { WolfeValidators } from 'src/app/wolfe-common/wolfe-validators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-option-transaction-details',
   templateUrl: './option-transaction-details.component.html',
   styleUrls: ['./option-transaction-details.component.sass']
 })
-export class OptionTransactionDetailsComponent implements OnInit {
+export class OptionTransactionDetailsComponent implements OnInit, OnDestroy {
 
   optionTransactionDetailsGroup: FormGroup;
 
   retrievedOptionTransactionId: number;
   attemptingToCreate: boolean;
-  busy: boolean;
+  busy = false;
+  routeUrlSubscription: Subscription;
 
   activities = [ 'BUY_TO_OPEN', 'BUY_TO_CLOSE', 'SELL_TO_OPEN', 'SELL_TO_CLOSE' ];
   optionTypes = [ 'CALL', 'PUT' ];
@@ -43,14 +45,13 @@ export class OptionTransactionDetailsComponent implements OnInit {
     private optionTransactionService: OptionTransactionService,
     private portfolioService: PortfolioService,
     private stockService: StockService,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
 
     ) { }
 
   ngOnInit(): void {
 
-    this.attemptingToCreate = this.route.snapshot.url[1].toString() === 'create';
     this.optionTransactionDetailsGroup = this.formBuilder.group({
       date: ['', [Validators.required]],
       portfolio: ['', [Validators.required]],
@@ -65,35 +66,23 @@ export class OptionTransactionDetailsComponent implements OnInit {
       amount: ['', [Validators.required, WolfeValidators.validateCurrency ]]
     });
 
-    this.busy = false;
 
     this.populateOptionDropDown();
     this.populatePortfolioDropDown();
     this.populateStockDropDown();
     this.subscribeToRadioButtonChanges();
 
-    // If we've received an edit request (i.e., a non-create request)
-    if (!this.attemptingToCreate) {
-      // Retrieve the requested option transaction & save its ID
-      const id: number = +(this.route.snapshot.url[1].toString());
-      this.optionTransactionService.retrieve(id)
-      .subscribe(
-        // If this goes well, update the data in the form
-        foundOptionTransaction =>  {
-          this.retrievedOptionTransactionId = foundOptionTransaction.id;
-          // Set the data in the form to be the data that was returned from the service
-          this.optionTransactionDetailsGroup.get('date').setValue(foundOptionTransaction.date);
-          this.optionTransactionDetailsGroup.get('portfolio').setValue(foundOptionTransaction.portfolio.id);
-          this.optionTransactionDetailsGroup.get('option').setValue(foundOptionTransaction.option.id);
-          this.optionTransactionDetailsGroup.get('activity').setValue(foundOptionTransaction.activity);
-          this.optionTransactionDetailsGroup.get('numberOfContracts').setValue(foundOptionTransaction.numberOfContracts);
-          this.optionTransactionDetailsGroup.get('amount').setValue(this.currencyPipe.transform(foundOptionTransaction.amount));
-        },
-        // If the retrieval goes poorly, show the error
-        error => this.alertService.error(error)
-      );
-    }
+    // Subscribe to changes in the URL - This can occur when the user is looking at a transaction and then selects "Create new option transaction"
+    // or when the user just modifies the url to look at a different transaction (i.e. changing /option-transaction/2 to /option-transaction/19)
+    // Without this subscription, this component is unaware of any new request since ngOnInit() will not be called for a second time
+    this.routeUrlSubscription = this.activatedRoute.url.subscribe((urlSegments: UrlSegment[]) => this.initialize(urlSegments));
   }
+
+  // Once the user is finished with this page, unsuscribe to changes in the Activated Route's URL
+  ngOnDestroy() {
+    this.routeUrlSubscription.unsubscribe();
+  }
+
 
   onSubmit() {
     // reset any previous alerts
@@ -122,6 +111,92 @@ export class OptionTransactionDetailsComponent implements OnInit {
     else {
       this.createOrUpdateOptionTransaction();
     }
+  }
+
+  checkExistingOptionField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
+    return this.validateExistingOrNewOptionField(optionTranasctionDetailsComponent, '1');
+  }
+
+  checkNewOptionRequiredOnlyField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
+    return this.validateExistingOrNewOptionField(optionTranasctionDetailsComponent, '2');
+  }
+
+  checkNewOptionStrikePriceField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
+    return this.validateExistingOrNewOptionField(optionTranasctionDetailsComponent, '2', WolfeValidators.validateCurrency);
+  }
+
+  validateExistingOrNewOptionField( optionTranasctionDetailsComponent: OptionTransactionDetailsComponent,
+                                    radioButtonValue: string,
+                                    lowLevelValidator ?: ValidatorFn): ValidatorFn {
+    return (existingOrNewOptionControl: FormControl) => {
+      const optionTransactionDetailsGroup: FormGroup = optionTranasctionDetailsComponent.optionTransactionDetailsGroup;
+      // This does seem to get called with the controls are being built
+      // We don't need to do any validation if everything is not fully formed
+      if (optionTransactionDetailsGroup && optionTransactionDetailsGroup.controls) {
+        // We only need to check this field if the specified radio button is selected
+        if (optionTransactionDetailsGroup.get('existingOrNew').value === radioButtonValue) {
+          // When the specified radio button is selected, this control must be populated.  If it is not,
+          // return a "required" error, so FIRST call the required validator
+          const possibleReturn = Validators.required(existingOrNewOptionControl);
+          if (possibleReturn) {
+            return possibleReturn;
+          }
+          // If the caller has an additional validator that should be performed call it
+          if (lowLevelValidator) {
+            return lowLevelValidator(existingOrNewOptionControl);
+          }
+        }
+      }
+      // Returning null means that there are no issues
+      return null;
+    };
+  }
+
+
+  getErrorDate(): string {
+    return this.optionTransactionDetailsGroup.get('date').hasError('required') ? 'Please enter a date' : '';
+  }
+
+  getErrorPortfolio(): string {
+    return this.optionTransactionDetailsGroup.get('portfolio').hasError('required') ? 'Please select a portfolio' : '';
+  }
+
+  getErrorActivity(): string {
+    return this.optionTransactionDetailsGroup.get('activity').hasError('required') ? 'Please select either BUY or SELL' : '';
+  }
+
+  getErrorOption(): string {
+    return this.optionTransactionDetailsGroup.get('option').hasError('required') ? 'Please select an option' : '';
+  }
+
+  getErrorNewOptionType(): string {
+    return this.optionTransactionDetailsGroup.get('optionType').hasError('required') ? 'Please select an option type' : '';
+  }
+
+  getErrorNewOptionStock(): string {
+    return this.optionTransactionDetailsGroup.get('stock').hasError('required') ? 'Please select a stock' : '';
+  }
+
+  getErrorNewOptionExpirationDate(): string {
+    return this.optionTransactionDetailsGroup.get('expirationDate').hasError('required') ? 'Please select an expirtaion date' : '';
+  }
+
+  getErrorNewOptionStrikePrice(): string {
+    const strikePriceControl = this.optionTransactionDetailsGroup.get('strikePrice');
+    return  strikePriceControl.hasError('required') ? 'Please enter the option\'s strike price' :
+            strikePriceControl.hasError('currency') ? 'Please enter a valid dollar amount' : '';
+  }
+
+  getErrorNumberOfContracts(): string {
+    const numberOfContractsControl = this.optionTransactionDetailsGroup.get('numberOfContracts');
+    return numberOfContractsControl.hasError('required') ? 'Please enter number of contracts' :
+           numberOfContractsControl.hasError('positiveInteger') ? 'Must be a positive integer' : '';
+  }
+
+  getErrorAmount(): string {
+    const amountControl = this.optionTransactionDetailsGroup.get('amount');
+    return  amountControl.hasError('required') ? 'Please enter the transactional amount.' :
+            amountControl.hasError('currency') ? 'Please enter a valid dollar amount' : '';
   }
 
   private createOrUpdateOptionTransaction(newOptionId?: number) {
@@ -224,91 +299,32 @@ export class OptionTransactionDetailsComponent implements OnInit {
     this.alertService.error(errorString);
   }
 
-  checkExistingOptionField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
-    return this.validateExistingOrNewOptionField(optionTranasctionDetailsComponent, '1');
-  }
-
-  checkNewOptionRequiredOnlyField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
-    return this.validateExistingOrNewOptionField(optionTranasctionDetailsComponent, '2');
-  }
-
-  checkNewOptionStrikePriceField(optionTranasctionDetailsComponent: OptionTransactionDetailsComponent): ValidatorFn {
-    return this.validateExistingOrNewOptionField(optionTranasctionDetailsComponent, '2', WolfeValidators.validateCurrency);
-  }
-
-  validateExistingOrNewOptionField( optionTranasctionDetailsComponent: OptionTransactionDetailsComponent,
-                                    radioButtonValue: string,
-                                    lowLevelValidator ?: ValidatorFn): ValidatorFn {
-    return (existingOrNewOptionControl: FormControl) => {
-      const optionTransactionDetailsGroup: FormGroup = optionTranasctionDetailsComponent.optionTransactionDetailsGroup;
-      // This does seem to get called with the controls are being built
-      // We don't need to do any validation if everything is not fully formed
-      if (optionTransactionDetailsGroup && optionTransactionDetailsGroup.controls) {
-        // We only need to check this field if the specified radio button is selected
-        if (optionTransactionDetailsGroup.get('existingOrNew').value === radioButtonValue) {
-          // When the specified radio button is selected, this control must be populated.  If it is not,
-          // return a "required" error, so FIRST call the required validator
-          const possibleReturn = Validators.required(existingOrNewOptionControl);
-          if (possibleReturn) {
-            return possibleReturn;
-          }
-          // If the caller has an additional validator that should be performed call it
-          if (lowLevelValidator) {
-            return lowLevelValidator(existingOrNewOptionControl);
-          }
-        }
-      }
-      // Returning null means that there are no issues
-      return null;
-    };
+  private initialize(urlSegments: UrlSegment[]) {
+    this.attemptingToCreate = urlSegments[1].toString() === 'create';
+    // If we've received an edit request (i.e., a non-create request)
+    if (!this.attemptingToCreate) {
+      // Retrieve the requested option transaction & save its ID
+      const id: number = +(urlSegments[1].toString());
+      this.optionTransactionService.retrieve(id)
+      .subscribe(
+        // If this goes well, update the data in the form
+        foundOptionTransaction =>  {
+          this.retrievedOptionTransactionId = foundOptionTransaction.id;
+          // Set the data in the form to be the data that was returned from the service
+          this.optionTransactionDetailsGroup.get('date').setValue(foundOptionTransaction.date);
+          this.optionTransactionDetailsGroup.get('portfolio').setValue(foundOptionTransaction.portfolio.id);
+          this.optionTransactionDetailsGroup.get('option').setValue(foundOptionTransaction.option.id);
+          this.optionTransactionDetailsGroup.get('activity').setValue(foundOptionTransaction.activity);
+          this.optionTransactionDetailsGroup.get('numberOfContracts').setValue(foundOptionTransaction.numberOfContracts);
+          this.optionTransactionDetailsGroup.get('amount').setValue(this.currencyPipe.transform(foundOptionTransaction.amount));
+        },
+        // If the retrieval goes poorly, show the error
+        error => this.alertService.error(error)
+      );
+    }
   }
 
 
-  getErrorDate(): string {
-    return this.optionTransactionDetailsGroup.get('date').hasError('required') ? 'Please enter a date' : '';
-  }
-
-  getErrorPortfolio(): string {
-    return this.optionTransactionDetailsGroup.get('portfolio').hasError('required') ? 'Please select a portfolio' : '';
-  }
-
-  getErrorActivity(): string {
-    return this.optionTransactionDetailsGroup.get('activity').hasError('required') ? 'Please select either BUY or SELL' : '';
-  }
-
-  getErrorOption(): string {
-    return this.optionTransactionDetailsGroup.get('option').hasError('required') ? 'Please select an option' : '';
-  }
-
-  getErrorNewOptionType(): string {
-    return this.optionTransactionDetailsGroup.get('optionType').hasError('required') ? 'Please select an option type' : '';
-  }
-
-  getErrorNewOptionStock(): string {
-    return this.optionTransactionDetailsGroup.get('stock').hasError('required') ? 'Please select a stock' : '';
-  }
-
-  getErrorNewOptionExpirationDate(): string {
-    return this.optionTransactionDetailsGroup.get('expirationDate').hasError('required') ? 'Please select an expirtaion date' : '';
-  }
-
-  getErrorNewOptionStrikePrice(): string {
-    const strikePriceControl = this.optionTransactionDetailsGroup.get('strikePrice');
-    return  strikePriceControl.hasError('required') ? 'Please enter the option\'s strike price' :
-            strikePriceControl.hasError('currency') ? 'Please enter a valid dollar amount' : '';
-  }
-
-  getErrorNumberOfContracts(): string {
-    const numberOfContractsControl = this.optionTransactionDetailsGroup.get('numberOfContracts');
-    return numberOfContractsControl.hasError('required') ? 'Please enter number of contracts' :
-           numberOfContractsControl.hasError('positiveInteger') ? 'Must be a positive integer' : '';
-  }
-
-  getErrorAmount(): string {
-    const amountControl = this.optionTransactionDetailsGroup.get('amount');
-    return  amountControl.hasError('required') ? 'Please enter the transactional amount.' :
-            amountControl.hasError('currency') ? 'Please enter a valid dollar amount' : '';
-  }
 
 }
 

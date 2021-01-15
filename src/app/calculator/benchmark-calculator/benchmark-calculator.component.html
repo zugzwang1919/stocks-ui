@@ -17,19 +17,21 @@
                         </mat-radio-group>
                     </div>
                     <div *ngIf=shouldCustomDatesBeVisible() class="custom-date-div timeframe-child">
-                        <h5> Custom Dates </h5>
-                        <mat-form-field color="accent">
-                            <mat-label>Start Date</mat-label>
-                            <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="selectedStartDate">
-                            <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-                            <mat-datepicker #startDatePicker></mat-datepicker>
-                        </mat-form-field>
-                        <mat-form-field color="accent">
-                            <mat-label>End Date</mat-label>
-                            <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="selectedEndDate">
-                            <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-                            <mat-datepicker #endDatePicker></mat-datepicker>
-                        </mat-form-field>
+                        <mat-card class="mat-elevation-z4">
+                            <h5> Custom Dates </h5>
+                            <mat-form-field color="accent">
+                                <mat-label>Start Date</mat-label>
+                                <input matInput [matDatepicker]="startDatePicker" [(ngModel)]="selectedStartDate">
+                                <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #startDatePicker></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field color="accent">
+                                <mat-label>End Date</mat-label>
+                                <input matInput [matDatepicker]="endDatePicker" [(ngModel)]="selectedEndDate">
+                                <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #endDatePicker></mat-datepicker>
+                            </mat-form-field>
+                        </mat-card>
                     </div>
                 </div>
                 <h4 class="embedded-h4"> Portfolios to be Included </h4>

@@ -15,7 +15,7 @@
                 </mat-error>
             </mat-form-field>
             <div>
-                <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="!portfolioDetailsGroup.valid">
+                <button mat-raised-button color="accent" type="submit" class="submit-button" [disabled]="!portfolioDetailsGroup.valid || !portfolioDetailsGroup.dirty">
                     <span *ngIf="attemptingToCreate; else updateButtonText">Create</span>
                     <ng-template #updateButtonText>
                         Update
