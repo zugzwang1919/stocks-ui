@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 
 import { AlertService } from '../../general/alert/alert.service';
-import { Portfolio } from '../portfolio';
 import { PortfolioService } from '../portfolio.service';
 
 @Component({
@@ -81,7 +80,7 @@ export class PortfolioDetailsComponent implements OnInit, OnDestroy {
     this.attemptingToCreate = urlSegments[1].toString() === 'create';
     // If we're setting up for a create request
     if (this.attemptingToCreate) {
-      this.portfolioDetailsGroup.get('portfolioName').setValue('');
+      this.initializeElements('');
     }
     // If we're setting up for an edit request (i.e., a non-create request)
     else {
@@ -91,11 +90,20 @@ export class PortfolioDetailsComponent implements OnInit, OnDestroy {
         .subscribe(
           foundPortfolio => {
             this.retrievedPortfolioId = foundPortfolio.id;
-            this.portfolioDetailsGroup.get('portfolioName').setValue(foundPortfolio.portfolioName);
+            this.initializeElements(foundPortfolio.portfolioName);
           },
           error => this.alertService.error(error)
         );
     }
+  }
+
+  private initializeElements(portfolioName: string) {
+    const portfolioNameControl: AbstractControl = this.portfolioDetailsGroup.get('portfolioName');
+    // Set the portfolio name's value
+    portfolioNameControl.setValue(portfolioName);
+    // Mark everything as being pristine and untouched
+    portfolioNameControl.markAsPristine();
+    portfolioNameControl.markAsUntouched();
   }
 
 }
