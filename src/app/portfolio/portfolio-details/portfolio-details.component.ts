@@ -101,8 +101,9 @@ export class PortfolioDetailsComponent implements OnInit, OnDestroy {
     const portfolioNameControl: AbstractControl = this.portfolioDetailsGroup.get('portfolioName');
     // Set the portfolio name's value
     portfolioNameControl.setValue(portfolioName);
-    // Mark everything as being pristine and untouched
+    // Mark everything as being pristine
     portfolioNameControl.markAsPristine();
+    // Mark everything as being untouched so that validation won't occur on the first display after navigation
     portfolioNameControl.markAsUntouched();
   }
 

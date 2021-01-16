@@ -131,8 +131,12 @@ export class OptionDetailsComponent implements OnInit, OnDestroy {
 
   private initialize(urlSegments: UrlSegment[]) {
     this.attemptingToCreate = urlSegments[1].toString() === 'create';
-    // If we've received an edit request (i.e., a non-create request)
-    if (!this.attemptingToCreate) {
+    // If we're setting up for a create request
+    if (this.attemptingToCreate) {
+      this.initializeElements('', '', '', '');
+    }
+    // If we're setting upo for an edit request (i.e., a non-create request)
+    else {
       // Retrieve the requested option and save its ID
       const id: number = +(urlSegments[1].toString());
       this.optionService.retrieve(id)
@@ -141,14 +145,23 @@ export class OptionDetailsComponent implements OnInit, OnDestroy {
         foundOption =>  {
           this.retrievedOptionId = foundOption.id;
           // Set the data in the form to be the data that was returned from the service
-          this.optionDetailsGroup.get('optionType').setValue(foundOption.optionType);
-          this.optionDetailsGroup.get('stock').setValue(foundOption.stock.id);
-          this.optionDetailsGroup.get('expirationDate').setValue(foundOption.expirationDate);
-          this.optionDetailsGroup.get('strikePrice').setValue(this.currencyPipe.transform(foundOption.strikePrice));
+          this.initializeElements(foundOption.optionType, foundOption.stock.id, foundOption.expirationDate, foundOption.strikePrice);
         },
         // If the retrieval goes poorly, show the error
         error => this.alertService.error(error)
       );
     }
+  }
+
+  private initializeElements(optionType: string, stockId: string | number, expirationDate: string | Date, strikePrice: string | number) {
+    // Set the values
+    this.optionDetailsGroup.get('optionType').setValue(optionType);
+    this.optionDetailsGroup.get('stock').setValue(stockId);
+    this.optionDetailsGroup.get('expirationDate').setValue(expirationDate);
+    this.optionDetailsGroup.get('strikePrice').setValue(this.currencyPipe.transform(strikePrice));
+    // Mark all of the fields as being pristine
+    this.optionDetailsGroup.markAsPristine();
+    // Mart all of the fields as being untouched
+    this.optionDetailsGroup.markAsUntouched();
   }
 }

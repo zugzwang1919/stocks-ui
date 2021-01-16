@@ -301,8 +301,12 @@ export class OptionTransactionDetailsComponent implements OnInit, OnDestroy {
 
   private initialize(urlSegments: UrlSegment[]) {
     this.attemptingToCreate = urlSegments[1].toString() === 'create';
-    // If we've received an edit request (i.e., a non-create request)
-    if (!this.attemptingToCreate) {
+    // If we're preparing for a create request (i.e., a non-create request)
+    if (this.attemptingToCreate) {
+      this.initializeElements('', '', '', '', '', '', 1);
+    }
+    // If we're preparing for an edit request (i.e., a non-create request)
+    else {
       // Retrieve the requested option transaction & save its ID
       const id: number = +(urlSegments[1].toString());
       this.optionTransactionService.retrieve(id)
@@ -311,17 +315,31 @@ export class OptionTransactionDetailsComponent implements OnInit, OnDestroy {
         foundOptionTransaction =>  {
           this.retrievedOptionTransactionId = foundOptionTransaction.id;
           // Set the data in the form to be the data that was returned from the service
-          this.optionTransactionDetailsGroup.get('date').setValue(foundOptionTransaction.date);
-          this.optionTransactionDetailsGroup.get('portfolio').setValue(foundOptionTransaction.portfolio.id);
-          this.optionTransactionDetailsGroup.get('option').setValue(foundOptionTransaction.option.id);
-          this.optionTransactionDetailsGroup.get('activity').setValue(foundOptionTransaction.activity);
-          this.optionTransactionDetailsGroup.get('numberOfContracts').setValue(foundOptionTransaction.numberOfContracts);
-          this.optionTransactionDetailsGroup.get('amount').setValue(this.currencyPipe.transform(foundOptionTransaction.amount));
+          this.initializeElements(foundOptionTransaction.date, foundOptionTransaction.portfolio.id, foundOptionTransaction.option.id,
+                                  foundOptionTransaction.activity, foundOptionTransaction.numberOfContracts, foundOptionTransaction.amount, 2);
         },
         // If the retrieval goes poorly, show the error
         error => this.alertService.error(error)
       );
     }
+  }
+
+  private initializeElements( date: Date | string, portfolioId: number | string, optionId: number | string,
+                              activity: string, numberOfContracts: number | string, amount: number | string,
+                              newOrExisting: number) {
+
+    // Set the values
+    this.optionTransactionDetailsGroup.get('date').setValue(date);
+    this.optionTransactionDetailsGroup.get('portfolio').setValue(portfolioId);
+    this.optionTransactionDetailsGroup.get('option').setValue(optionId);
+    this.optionTransactionDetailsGroup.get('activity').setValue(activity);
+    this.optionTransactionDetailsGroup.get('numberOfContracts').setValue(numberOfContracts);
+    this.optionTransactionDetailsGroup.get('amount').setValue(this.currencyPipe.transform(amount));
+    this.optionTransactionDetailsGroup.get('newOrExisting').setValue(newOrExisting);
+    // Mark all elements as pristine (to disable the UPDATE button if the page is being displayed for update)
+    this.optionTransactionDetailsGroup.markAsPristine();
+    // Mark all elements as untouched (so that validation will not be triggered when the page is displayed)
+    this.optionTransactionDetailsGroup.markAsUntouched();
   }
 
 

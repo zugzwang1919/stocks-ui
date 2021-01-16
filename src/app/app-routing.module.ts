@@ -36,14 +36,12 @@ const routes: Routes = [
   { path: 'option/create', component: OptionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'option/:id', component: OptionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'option-transaction', component: OptionTransactionsComponent, canActivate: [LoggedInGuard]},
-  { path: 'option-transaction/create', component: OptionTransactionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'option-transaction/:id', component: OptionTransactionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'portfolio', component: PortfoliosComponent, canActivate: [LoggedInGuard], pathMatch: 'full'},
   { path: 'portfolio/:id', component: PortfolioDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'stock', component: StocksComponent, canActivate: [LoggedInGuard], pathMatch: 'full'},
   { path: 'stock/:id', component: StockDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'stock-transaction', component: StockTransactionsComponent, canActivate: [LoggedInGuard]},
-  { path: 'stock-transaction/create', component: StockTransactionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'stock-transaction/:id', component: StockTransactionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: '',   redirectTo: '/welcome', pathMatch: 'full' }
 ];
