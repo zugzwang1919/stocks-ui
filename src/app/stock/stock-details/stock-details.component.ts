@@ -165,14 +165,15 @@ export class StockDetailsComponent implements OnInit, OnDestroy {
   }
 
   private initializeValues(ticker: string, name: string, isBenchmark: boolean) {
+    // Set the values on the page
     this.stockDetailsGroup.get('ticker').setValue(ticker);
     this.stockDetailsGroup.get('name').setValue(name);
     this.benchmark.setValue(isBenchmark);
-    // Mark all elements on the page as being pristine and untouched
+    // Mark all elements on the page as being pristine
     this.stockDetailsGroup.markAsPristine();
-    this.stockDetailsGroup.get('ticker').markAsUntouched();
-    this.stockDetailsGroup.get('name').markAsUntouched();
     this.benchmark.markAsPristine();
+    // Mark all elements as being untouched so that validation won't occur when the page is initially displayed
+    this.stockDetailsGroup.markAsUntouched();
     this.benchmark.markAsUntouched();
   }
 
