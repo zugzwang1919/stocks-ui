@@ -1,0 +1,48 @@
+<div class="vertical-div">
+    <h2> Profile:</h2>
+    <mat-card class="mat-elevation-z4">
+        <mat-card class="mat-elevation-z4 inner-card">
+            <mat-checkbox [checked]="usesIdPwAuthentication" [disabled]="true">
+                Uses User Name and Password?
+            </mat-checkbox>
+            <mat-card *ngIf="usesIdPwAuthentication" class="mat-elevation-z4 inner-card">
+                <p class="wider-control-width">
+                    User Name: &nbsp; &nbsp; {{profile.userName}}
+                </p>
+                <p class="wider-control-width">
+                    Email Address: &nbsp; &nbsp; {{profile.emailAddress}}
+                </p>
+            </mat-card>
+        </mat-card>
+        <mat-card class="mat-elevation-z4 inner-card">
+            <mat-checkbox [checked]="usesGoogleAuthentication" [disabled]="true">
+                Uses Google Credentials?
+            </mat-checkbox>
+            <mat-card *ngIf="socialUser" class="mat-elevation-z4 inner-card">
+                <img src="{{socialUser.photoUrl}}" width="auto" height="50px">
+                <p class="wider-control-width">
+                    Name: &nbsp; &nbsp; {{socialUser.name}}
+                </p>
+                <p class="wider-control-width">
+                    Email Address: &nbsp; &nbsp; {{socialUser.email}}
+                </p>
+            </mat-card>
+        </mat-card>
+        <mat-card class="mat-elevation-z4 inner-card">
+            <p class="wider-control-width">
+                Number of Stocks: &nbsp; &nbsp; {{profile.numberOfStocks}}
+            </p>
+            <p class="wider-control-width">
+                Number of Stock Transactions: &nbsp; &nbsp; {{profile.numberOfStockTransactions}}
+            </p>
+            <p class="wider-control-width">
+                Number of Options: &nbsp; &nbsp; {{profile.numberOfOptions}}
+            </p>
+            <p class="wider-control-width">
+                Number of OptionTransactions: &nbsp; &nbsp; {{profile.numberOfOptionTransactions}}
+            </p>
+        </mat-card>
+
+
+    </mat-card>
+</div>

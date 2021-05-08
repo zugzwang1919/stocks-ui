@@ -21,7 +21,7 @@ export class StockService extends WolfeGenericService<Stock> {
   // NOTE: retrieve(), retrieveAll(), and delete() are picked up
   //       from the base class
 
-  retrieveAllBenchmarks() {
+  retrieveAllBenchmarks(): Observable<Stock[]> {
     return this.wolfeHttpService.get('/stock/benchmarks');
   }
 

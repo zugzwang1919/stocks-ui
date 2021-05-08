@@ -1,0 +1,20 @@
+<div class="vertical-div">
+    <h2> Profile:</h2>
+    <mat-card class="mat-elevation-z4 profile-card">
+        <mat-grid-list  cols="2" rowHeight="10:1">
+            <mat-grid-tile class="profile-tile">User Name:</mat-grid-tile>
+            <mat-grid-tile>{{profile.userName}}</mat-grid-tile>
+            <mat-grid-tile class="profile-tile">Number of Stocks:</mat-grid-tile>
+            <mat-grid-tile>{{profile.numberOfStocks}}</mat-grid-tile>
+            <mat-grid-tile>Number of Stocks Transactions:</mat-grid-tile>
+            <mat-grid-tile>{{profile.numberOfStockTransactions}}</mat-grid-tile>
+            <mat-grid-tile>Number of Options:</mat-grid-tile>
+            <mat-grid-tile>{{profile.numberOfOptions}}</mat-grid-tile>
+            <mat-grid-tile>Number of Option Transactions:</mat-grid-tile>
+            <mat-grid-tile>{{profile.numberOfOptionTransactions}}</mat-grid-tile>
+            <mat-grid-tile>ID / PW:</mat-grid-tile>
+            <mat-grid-tile>{{idPwSupported}}</mat-grid-tile>
+
+          </mat-grid-list>
+    </mat-card>
+</div>

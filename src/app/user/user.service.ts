@@ -8,6 +8,7 @@ import { WolfeHttpService } from '../wolfe-common/wolfe-http.service';
 import { UtilService } from '../wolfe-common/util.service';
 import { CurrentUserService } from 'src/app/user/current-user/current-user.service';
 import { User } from './user';
+import { Profile } from './profile';
 
 
 @Injectable({
@@ -45,5 +46,9 @@ export class UserService {
     logout(): void {
       // Simply clear the current user
       this.currentUserService.clean();
+    }
+
+    retrieveProfile(): Observable<Profile> {
+      return this.wolfeHttp.get('/profile');
     }
 }

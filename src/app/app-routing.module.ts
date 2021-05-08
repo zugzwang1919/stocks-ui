@@ -8,6 +8,7 @@ import { OptionTransactionsComponent } from './option-transaction/option-transac
 import { OptionTransactionDetailsComponent } from './option-transaction/option-transaction-details/option-transaction-details.component';
 import { PortfoliosComponent } from './portfolio/portfolios/portfolios.component';
 import { PortfolioDetailsComponent } from './portfolio/portfolio-details/portfolio-details.component';
+import { ProfileComponent } from './user/profile/profile.component';
 import { RegisterComponent } from './user/register/register.component';
 import { StocksComponent } from './stock/stocks/stocks.component';
 import { StockDetailsComponent } from './stock/stock-details/stock-details.component';
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: 'option-transaction/:id', component: OptionTransactionDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'portfolio', component: PortfoliosComponent, canActivate: [LoggedInGuard], pathMatch: 'full'},
   { path: 'portfolio/:id', component: PortfolioDetailsComponent, canActivate: [LoggedInGuard]},
+  { path: 'profile', component: ProfileComponent, canActivate: [LoggedInGuard]},
   { path: 'stock', component: StocksComponent, canActivate: [LoggedInGuard], pathMatch: 'full'},
   { path: 'stock/:id', component: StockDetailsComponent, canActivate: [LoggedInGuard]},
   { path: 'stock-transaction', component: StockTransactionsComponent, canActivate: [LoggedInGuard]},

@@ -9,13 +9,15 @@ import { environment } from '../..//environments/environment';
 import { WolfeAngularModule } from '../wolfe-angular/wolfe-angular.module';
 import { WolfeMaterialModule } from '../wolfe-material/wolfe-material.module';
 import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
   declarations: [
     LoginComponent,
     CurrentUserComponent,
-    RegisterComponent],
+    RegisterComponent,
+    ProfileComponent],
   imports: [
     // The Angular Modules that we tend to use
     WolfeAngularModule,
@@ -29,6 +31,7 @@ import { WolfeCommonModule } from '../wolfe-common/wolfe-common.module';
   exports: [
     CurrentUserComponent,
     LoginComponent,
+    ProfileComponent,
     RegisterComponent
   ],
   providers: [

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SocialUser } from 'angularx-social-login';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class CurrentUserService {
   private _token: string;
   private _isAdmin: boolean;
   userNameSubject: Subject<string> = new Subject();
-  socialUserSubject: Subject<SocialUser> = new Subject();
+  socialUserSubject: BehaviorSubject<SocialUser> = new BehaviorSubject(undefined);
 
   get token(): string { return this._token; }
   get userName(): string { return this._userName; }
