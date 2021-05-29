@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { MatTableDataSource } from '@angular/material/table';
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { Stock } from 'src/app/stock/stock';
@@ -13,6 +14,7 @@ import { TimeframeService } from '../timeframe.service';
 import { WolfeCalculatorBaseDirective } from '../wolfe-calculator-base-directive';
 import { MatDialog } from '@angular/material/dialog';
 import { LifecycleDialogComponent } from '../lifecycle-dialog/lifecycle-dialog.component';
+import { DateRange } from '@angular/material/datepicker';
 
 const BUSY_ID = 1926;
 const TIMEFRAME_COOKIE_NAME = 'wolfe-software.com_income-analysis_timeframe';
@@ -49,6 +51,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
   }
 
   constructor(
+    protected datePipe: DatePipe,
     protected alertService: AlertService,
     protected busyService: BusyService,
     private   calculatorService: CalculatorService,
@@ -90,8 +93,9 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
     // Save cookies before starting the analysis
     this.saveTimeframePortfoliosAndStocksToCookies();
 
+    const requestedEndDate: Date = this.timeframeService.calculateEndDate(this.selectedTimeframe, this.selectedEndDate);
     this.calculatorService.analyzeIncome( this.timeframeService.calculateStartDate(this.selectedTimeframe, this.selectedStartDate),
-                                          this.timeframeService.calculateEndDate(this.selectedTimeframe, this.selectedEndDate),
+                                          requestedEndDate,
                                           this.portfolioSelection.selected.map((p: Portfolio) => p.id),
                                           this.stockSelection.selected.map((t: Stock) => t.id),
                                           true,
@@ -100,7 +104,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
           // SUCCESS! ->  Show the results
           resultsFromService  =>  {
             this.analysisResults = resultsFromService;
-            this.updateResults(resultsFromService);
+            this.updateResults(resultsFromService, requestedEndDate);
             // Notify everyone that we're no longer busy
             this.setBusyState(false);
           },
@@ -134,7 +138,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
   /**********************************  PRIVATE METHODS *********************************/
 
 
-  private updateResults(resultsFromService) {
+  private updateResults(resultsFromService, requestedEndDate: Date) {
     this.analysisResults = resultsFromService;
     this.analysisResultsPresent = true;
     this.entryIsVisible = false;
@@ -143,7 +147,7 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
     this.buildAnalysisSection(resultsFromService);
 
     // Build the snapshot on the closing date
-    this.buildClosingSnapshotSection(resultsFromService);
+    this.buildClosingSnapshotSection(resultsFromService, requestedEndDate);
 
   }
 
@@ -166,17 +170,23 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
 
   }
 
-  private buildClosingSnapshotSection(resultsFromService) {
+  private buildClosingSnapshotSection(resultsFromService, requestedEndDate: Date) {
+    const comparisonEndDate: Date = requestedEndDate || new Date();
+    const comparisonFormattedEndDate: string = this.datePipe.transform(comparisonEndDate, 'YYYY-MM-dd');
     const snapshotCalculations: any[] = resultsFromService.lifeCycles.filter(lc => lc.includedInSnapshot)
-                                        .map(lc => { return {
-                                          snapshotTicker: lc.stock.ticker,
-                                          shares: lc.closingPosition.size,
-                                          stockValue: lc.closingPosition.value,
-                                          putExposure: lc.optionExposureToPutsAtRequestedEndDate,
-                                          totalLongExposure: lc.totalLongExposure,
-                                          callExposure: lc.optionExposureToCallsAtRequestedEndDate
-                                        };
-    });
+                                        .map(lc => {
+                                          // There may be some lifecycles that only have an option position open at the end of the lifecycle
+                                          // Look at each lifecycle and only include the stock info if there were stock
+                                          // positions at the end of the lifecycle
+                                          return {
+                                            snapshotTicker: lc.stock.ticker,
+                                            shares: comparisonFormattedEndDate === lc.closingPosition.date ? lc.closingPosition.size : 0,
+                                            stockValue: comparisonFormattedEndDate === lc.closingPosition.date ? lc.closingPosition.value : 0,
+                                            putExposure: lc.optionExposureToPutsAtRequestedEndDate,
+                                            totalLongExposure: lc.totalLongExposure,
+                                            callExposure: lc.optionExposureToCallsAtRequestedEndDate
+                                          };
+                                        });
     this.snapshotDataSource.data = snapshotCalculations;
   }
 
