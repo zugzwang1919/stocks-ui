@@ -1,12 +1,12 @@
 {
-  "dirty": true,
-  "raw": "350131a-dirty",
-  "hash": "350131a",
+  "dirty": false,
+  "raw": "47cf9f7",
+  "hash": "47cf9f7",
   "distance": null,
   "tag": null,
   "semver": null,
-  "suffix": "350131a-dirty",
+  "suffix": "47cf9f7",
   "semverString": null,
-  "buildDate": "2021-05-28T22:02:03.396Z",
-  "version": "21.05"
+  "buildDate": "2021-05-29T19:51:56.578Z",
+  "version": "21.06"
 }

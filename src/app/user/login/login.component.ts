@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,  Validators } from '@angular/forms';
 import { UserService } from '../user.service';
-import { LoginResponse } from './login-response';
+import { AuthenticationResponse } from '../../wolfe-common/authentication-response';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { CurrentUserService } from '../current-user/current-user.service';
@@ -56,10 +56,10 @@ export class LoginComponent implements OnInit {
     this.userService.login(userName, this.loginGroup.get('password').value)
       .subscribe(
 
-        (loginResponse: LoginResponse)  =>  {
+        (loginResponse: AuthenticationResponse)  =>  {
           // If this goes well...
           // Set the current user
-          this.currentUserService.setCurrentUser(userName, undefined, loginResponse.token, loginResponse.admin);
+          this.currentUserService.setCurrentUser(userName, undefined, loginResponse.token, loginResponse.admin, loginResponse.refreshToken);
           // and navigate to the next page if the user was heading somewhere.
           // if they weren't headed anywhere, just send them back to the main page ('/')
           this.router.navigate([this.futureUrl || '/']);
@@ -79,10 +79,10 @@ export class LoginComponent implements OnInit {
         // If the user is logging in
         this.userService.loginWithGoogle(socialUser.idToken)
           .subscribe(
-            (loginResponse: LoginResponse) => {
+            (loginResponse: AuthenticationResponse) => {
               // Only update this page (socialUser) and the CurrentUserComponent if the server accepts the request
               this.socialUser = socialUser;
-              this.currentUserService.setCurrentUser(undefined, socialUser, loginResponse.token, loginResponse.admin);
+              this.currentUserService.setCurrentUser(undefined, socialUser, loginResponse.token, loginResponse.admin, loginResponse.refreshToken);
               // and navigate to the next page if the user was heading somewhere.
               // if they weren't headed anywhere, just send them back to the main page ('/')
               this.router.navigate([this.futureUrl || '/']);

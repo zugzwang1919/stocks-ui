@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlertService } from 'src/app/general/alert/alert.service';
 import { UserService } from '../user.service';
 import { CurrentUserService } from '../current-user/current-user.service';
-import { LoginResponse } from '../login/login-response';
+import { AuthenticationResponse } from '../../wolfe-common/authentication-response';
 
 @Component({
   selector: 'app-register',
@@ -59,9 +59,9 @@ export class RegisterComponent implements OnInit {
         success =>  {
           this.userService.login(userName, password)
             .subscribe(
-              (lr: LoginResponse) => {
+              (lr: AuthenticationResponse) => {
                 // Set the current user
-                this.currentUserService.setCurrentUser(userName, undefined, lr.token, lr.admin);
+                this.currentUserService.setCurrentUser(userName, undefined, lr.token, lr.admin, lr.refreshToken);
                 // Navigate to the welcome page
                 this.router.navigate(['/welcome']);
               },

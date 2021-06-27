@@ -27,6 +27,11 @@ export class CurrentUserComponent implements OnInit {
     this.currentUserSubscription = this.currentUserService.userNameSubject
       .subscribe((value) => {
         this.currentUserName = value;
+        // If the userName has been deleted, it's indicative of the user being logged out or timed out
+        // If this occurs, let's navigate to the login page
+        if (!this.currentUserName) {
+          this.router.navigate(['/login']);
+        }
       });
     this.currentUserImageUrlSubscription = this.currentUserService.socialUserSubject
       .subscribe((socialUser: SocialUser) => {
@@ -36,8 +41,8 @@ export class CurrentUserComponent implements OnInit {
 
   handleLogout() {
     this.userService.logout();
-    // Navigate to the Welcome screen
-    this.router.navigate(['/welcome']);
+    // Navigate to the Login screen
+    this.router.navigate(['/login']);
   }
 
 }

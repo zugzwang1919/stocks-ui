@@ -54,9 +54,7 @@ export class WolfeGenericFilteredListDirective<T extends WolfeTrackedItem> exten
   }
 
   onFilterChange(ev: MatSelectChange) {
-    console.log('inside onFilterChange()');
     this.performFilter(this.filterFunction.bind(this));
-    console.log('leaving onFilterChange()');
   }
 
   filterFunction(item: any): boolean{

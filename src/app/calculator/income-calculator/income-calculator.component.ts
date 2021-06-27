@@ -180,8 +180,8 @@ export class IncomeCalculatorComponent extends WolfeCalculatorBaseDirective impl
                                           // positions at the end of the lifecycle
                                           return {
                                             snapshotTicker: lc.stock.ticker,
-                                            shares: comparisonFormattedEndDate === lc.closingPosition.date ? lc.closingPosition.size : 0,
-                                            stockValue: comparisonFormattedEndDate === lc.closingPosition.date ? lc.closingPosition.value : 0,
+                                            shares: comparisonFormattedEndDate === (lc.closingPosition && lc.closingPosition.date) ? lc.closingPosition.size : 0,
+                                            stockValue: (comparisonFormattedEndDate === lc.closingPosition && lc.closingPosition.date) ? lc.closingPosition.value : 0,
                                             putExposure: lc.optionExposureToPutsAtRequestedEndDate,
                                             totalLongExposure: lc.totalLongExposure,
                                             callExposure: lc.optionExposureToCallsAtRequestedEndDate
